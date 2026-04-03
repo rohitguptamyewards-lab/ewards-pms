@@ -43,6 +43,10 @@ Route::middleware(['auth'])->group(function () {
 
     // Features
     Route::get('/features', [FeatureController::class, 'index'])->name('features.index');
+    Route::get('/features/create', [FeatureController::class, 'create'])->name('features.create');
+    Route::post('/features', [FeatureController::class, 'storeWeb'])->name('features.store');
+    Route::get('/features/{id}', [FeatureController::class, 'showPage'])->name('features.show');
+    Route::put('/features/{id}', [FeatureController::class, 'updateWeb'])->name('features.update');
 
     // Reports
     Route::get('/reports/work-logs', [ReportController::class, 'workLogs'])->name('reports.work-logs');

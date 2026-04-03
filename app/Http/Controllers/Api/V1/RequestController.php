@@ -108,9 +108,17 @@ class RequestController extends Controller
                 ->toArray();
         }
 
+        $features = DB::table('features')
+            ->whereNull('deleted_at')
+            ->whereNotIn('status', ['released'])
+            ->orderBy('title')
+            ->select('id', 'title', 'status')
+            ->get();
+
         return Inertia::render('Requests/Show', [
-            'request' => $pmsRequest,
+            'request'  => $pmsRequest,
             'comments' => $comments,
+            'features' => $features,
         ]);
     }
 

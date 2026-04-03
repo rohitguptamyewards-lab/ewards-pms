@@ -1,6 +1,7 @@
 <script setup>
 import { Head, Link, router, usePage } from '@inertiajs/vue3';
 import { ref, computed } from 'vue';
+import axios from 'axios';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import StatusBadge from '@/Components/StatusBadge.vue';
 import CommentSection from '@/Components/CommentSection.vue';
@@ -9,7 +10,8 @@ defineOptions({ layout: AppLayout });
 
 const props = defineProps({
     request:  { type: Object, required: true },
-    comments: { type: Array, default: () => [] },
+    comments: { type: Array,  default: () => [] },
+    features: { type: Array,  default: () => [] },
 });
 
 const page = usePage();
@@ -66,6 +68,25 @@ const triageActionConfig = {
     defer:  { label: 'Defer Request',   btnClasses: 'bg-amber-500 hover:bg-amber-600' },
     reject: { label: 'Reject Request',  btnClasses: 'bg-red-600 hover:bg-red-700' },
 };
+
+// Feature linking
+const linkedFeatureId  = ref(props.request.linked_feature_id || '');
+const linkingFeature   = ref(false);
+const linkFeatureError = ref('');
+
+async function saveFeatureLink() {
+    linkingFeature.value = true;
+    linkFeatureError.value = '';
+    try {
+        await axios.put(`/api/v1/requests/${props.request.id}`, {
+            linked_feature_id: linkedFeatureId.value || null,
+        });
+    } catch (e) {
+        linkFeatureError.value = 'Failed to save.';
+    } finally {
+        linkingFeature.value = false;
+    }
+}
 </script>
 
 <template>
@@ -124,10 +145,39 @@ const triageActionConfig = {
                 </div>
             </div>
 
-            <!-- Linked Feature -->
-            <div v-if="request.feature" class="mt-4 border-t border-gray-100 pt-4">
+            <!-- Linked Feature (display) -->
+            <div v-if="request.linked_feature_id && !canTriage" class="mt-4 border-t border-gray-100 pt-4">
                 <p class="text-xs font-semibold uppercase tracking-wide text-gray-400">Linked Feature</p>
-                <p class="mt-1 text-sm font-medium text-gray-800">{{ request.feature.title }}</p>
+                <Link :href="`/features/${request.linked_feature_id}`" class="mt-1 inline-block text-sm font-medium text-[#5e16bd] hover:underline">
+                    {{ features.find(f => f.id === request.linked_feature_id)?.title || 'View Feature →' }}
+                </Link>
+            </div>
+
+            <!-- Feature linking (managers, accepted requests) -->
+            <div v-if="canTriage && request.status === 'accepted'" class="mt-4 border-t border-gray-100 pt-4">
+                <p class="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-400">Link to Feature</p>
+                <div class="flex items-center gap-2">
+                    <select
+                        v-model="linkedFeatureId"
+                        class="flex-1 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#5e16bd] focus:ring-1 focus:ring-[#5e16bd] outline-none"
+                    >
+                        <option value="">No linked feature</option>
+                        <option v-for="f in features" :key="f.id" :value="f.id">
+                            {{ f.title }} ({{ (f.status || '').replace(/_/g, ' ') }})
+                        </option>
+                    </select>
+                    <button
+                        @click="saveFeatureLink"
+                        :disabled="linkingFeature"
+                        class="shrink-0 rounded-lg bg-[#5e16bd] px-3 py-2 text-sm font-medium text-white hover:bg-[#4c12a1] disabled:opacity-50 transition-colors"
+                    >
+                        {{ linkingFeature ? '...' : 'Save' }}
+                    </button>
+                </div>
+                <p v-if="linkFeatureError" class="mt-1 text-xs text-red-600">{{ linkFeatureError }}</p>
+                <p v-else-if="linkedFeatureId" class="mt-1 text-xs text-gray-400">
+                    Linked to: <Link :href="`/features/${linkedFeatureId}`" class="text-[#5e16bd] hover:underline">view feature →</Link>
+                </p>
             </div>
 
             <!-- Triage Buttons (manager roles only, received status) -->

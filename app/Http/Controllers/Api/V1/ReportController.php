@@ -79,9 +79,13 @@ class ReportController extends Controller
             return response()->json($data);
         }
 
+        $teamMembers = \Illuminate\Support\Facades\DB::table('team_members')
+            ->where('is_active', true)->orderBy('name')->select('id', 'name')->get();
+
         return Inertia::render('Reports/Projects', [
-            'report' => $data,
-            'filters' => $filters,
+            'report'      => $data,
+            'filters'     => $filters,
+            'teamMembers' => $teamMembers,
         ]);
     }
 

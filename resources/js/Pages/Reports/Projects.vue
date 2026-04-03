@@ -8,8 +8,9 @@ import ProgressBar from '@/Components/ProgressBar.vue';
 defineOptions({ layout: AppLayout });
 
 const props = defineProps({
-    report:  { type: Object, default: () => ({ projects: [] }) },
-    filters: { type: Object, default: () => ({}) },
+    report:      { type: Object, default: () => ({ projects: [] }) },
+    filters:     { type: Object, default: () => ({}) },
+    teamMembers: { type: Array,  default: () => [] },
 });
 
 const localFilters = ref({
@@ -45,9 +46,18 @@ function clearFilters() {
                     <label class="mb-1 block text-xs font-semibold uppercase tracking-wide text-gray-400">Status</label>
                     <select v-model="localFilters.status" class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#5e16bd] focus:ring-1 focus:ring-[#5e16bd] outline-none">
                         <option value="">All Statuses</option>
+                        <option value="planning">Planning</option>
                         <option value="active">Active</option>
                         <option value="on_hold">On Hold</option>
                         <option value="completed">Completed</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                </div>
+                <div v-if="teamMembers.length" class="min-w-[180px]">
+                    <label class="mb-1 block text-xs font-semibold uppercase tracking-wide text-gray-400">Owner</label>
+                    <select v-model="localFilters.owner_id" class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#5e16bd] focus:ring-1 focus:ring-[#5e16bd] outline-none">
+                        <option value="">All Owners</option>
+                        <option v-for="m in teamMembers" :key="m.id" :value="m.id">{{ m.name }}</option>
                     </select>
                 </div>
                 <div class="flex gap-2">
