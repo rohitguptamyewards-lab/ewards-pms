@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mysql --version)",
+      "Bash(php -m)",
+      "Bash(php setup_database.php)",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(composer show:*)",
+      "Bash(php \"C:/Users/rohit/AppData/Roaming/Composer/vendor/bin/composer\" require inertiajs/inertia-laravel)",
+      "Bash(php \"C:/ProgramData/ComposerSetup/bin/composer.phar\" require inertiajs/inertia-laravel)",
+      "Bash(where composer.phar)",
+      "Read(//c/xampp/php/**)",
+      "Read(//c/Users/rohit/AppData/Local/ComposerSetup/bin/**)",
+      "Read(//c/Users/rohit/**)",
+      "Bash(where.exe composer:*)",
+      "Bash(php -r \"echo trim\\(shell_exec\\(''where.exe composer 2>NUL''\\)\\);\")",
+      "Read(//c/ProgramData/ComposerSetup/**)",
+      "Bash(ls /c/Users/rohit/composer*)",
+      "Bash(php -r \"echo getenv\\(''''COMPOSER_HOME''''\\);\")",
+      "Bash(php \"C:/Users/rohit/composer.phar\" require inertiajs/inertia-laravel)"
+    ]
+  }
+}

@@ -1,0 +1,39 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('work_logs', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->constrained('team_members')->restrictOnDelete();
+            $table->foreignId('project_id')->constrained('projects')->cascadeOnDelete();
+            $table->foreignId('task_id')->nullable()->constrained('tasks')->nullOnDelete();
+            $table->date('log_date');
+            $table->decimal('hours_spent', 5, 2);
+            $table->text('note')->nullable();
+            $table->text('blocker')->nullable();
+            $table->timestamps();
+            $table->softDeletes();
+
+            $table->index(['user_id', 'log_date']);
+            $table->index('project_id');
+            $table->index('task_id');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('work_logs');
+    }
+};

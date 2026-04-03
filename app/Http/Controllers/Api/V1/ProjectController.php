@@ -1,0 +1,159 @@
+<?php
+
+namespace App\Http\Controllers\Api\V1;
+
+use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreProjectRequest;
+use App\Repositories\ProjectRepository;
+use App\Services\ProjectService;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Inertia\Inertia;
+use Inertia\Response as InertiaResponse;
+
+class ProjectController extends Controller
+{
+    public function __construct(
+        private readonly ProjectService $projectService,
+        private readonly ProjectRepository $projectRepository,
+    ) {}
+
+    /**
+     * List projects with stats.
+     */
+    public function index(Request $request): InertiaResponse|JsonResponse
+    {
+        $projects = $this->projectRepository->findAll();
+
+        if ($request->wantsJson()) {
+            return response()->json($projects);
+        }
+
+        return Inertia::render('Projects/Index', [
+            'projects' => $projects,
+        ]);
+    }
+
+    /**
+     * Show the create form with team members list.
+     */
+    public function create(): InertiaResponse
+    {
+        $teamMembers = DB::table('team_members')
+            ->where('is_active', true)
+            ->select('id', 'name', 'role')
+            ->orderBy('name')
+            ->get();
+
+        return Inertia::render('Projects/Create', [
+            'teamMembers' => $teamMembers,
+        ]);
+    }
+
+    /**
+     * Store a new project and optionally add members.
+     */
+    public function store(StoreProjectRequest $request)
+    {
+        $data = $request->validated();
+        $memberIds = $data['member_ids'] ?? [];
+        unset($data['member_ids']);
+
+        $id = $this->projectRepository->create($data);
+
+        foreach ($memberIds as $memberId) {
+            $this->projectRepository->addMember($id, $memberId);
+        }
+
+        $project = $this->projectRepository->findById($id);
+
+        if ($request->wantsJson()) {
+            return response()->json($project, 201);
+        }
+
+        return redirect()->route('projects.show', $id)
+            ->with('success', 'Project created successfully.');
+    }
+
+    /**
+     * Show a single project with tasks, members, and stats.
+     */
+    public function show(Request $request, int $id): InertiaResponse|JsonResponse
+    {
+        $project = $this->projectRepository->findById($id);
+
+        // Fetch tasks for this project
+        $tasks = DB::table('tasks')
+            ->leftJoin('team_members', 'tasks.assigned_to', '=', 'team_members.id')
+            ->select('tasks.*', 'team_members.name as assignee_name')
+            ->where('tasks.project_id', $id)
+            ->whereNull('tasks.deleted_at')
+            ->orderBy('tasks.priority')
+            ->get();
+
+        $project->tasks = $tasks;
+
+        // Build task counts by status
+        $taskCounts = ['open' => 0, 'in_progress' => 0, 'blocked' => 0, 'done' => 0];
+        foreach ($tasks as $task) {
+            if (isset($taskCounts[$task->status])) {
+                $taskCounts[$task->status]++;
+            }
+        }
+
+        $stats = [
+            'progress' => $this->projectRepository->calculateProgress($id),
+            'effort' => $this->projectRepository->calculateEffort($id),
+            'total_effort' => $this->projectRepository->calculateEffort($id),
+            'task_counts' => $taskCounts,
+        ];
+
+        if ($request->wantsJson()) {
+            return response()->json([
+                'project' => $project,
+                'stats' => $stats,
+            ]);
+        }
+
+        return Inertia::render('Projects/Show', [
+            'project' => $project,
+            'stats' => $stats,
+        ]);
+    }
+
+    /**
+     * Update project fields.
+     */
+    public function update(Request $request, int $id): JsonResponse
+    {
+        $this->projectRepository->update($id, $request->all());
+        $project = $this->projectRepository->findById($id);
+
+        return response()->json($project);
+    }
+
+    /**
+     * Add a member to a project.
+     */
+    public function addMember(Request $request, int $id): JsonResponse
+    {
+        $request->validate([
+            'user_id' => 'required|integer|exists:team_members,id',
+        ]);
+
+        $this->projectRepository->addMember($id, $request->input('user_id'));
+
+        return response()->json(['message' => 'Member added successfully.']);
+    }
+
+    /**
+     * Remove a member from a project.
+     */
+    public function removeMember(int $projectId, int $userId): JsonResponse
+    {
+        $this->projectRepository->removeMember($projectId, $userId);
+
+        return response()->json(['message' => 'Member removed successfully.']);
+    }
+}
