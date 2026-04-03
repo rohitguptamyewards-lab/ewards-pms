@@ -13,7 +13,7 @@ use App\Http\Controllers\Api\V1\WorkLogController;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
-Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
+Route::prefix('v1')->middleware(['auth'])->group(function () {
     // Requests
     Route::get('requests/check-duplicates', [RequestController::class, 'checkDuplicates']);
     Route::post('requests/{id}/merge', [RequestController::class, 'merge']);
