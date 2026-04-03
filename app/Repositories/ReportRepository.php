@@ -34,12 +34,16 @@ class ReportRepository
             $query->where('work_logs.project_id', $filters['project_id']);
         }
 
-        if (!empty($filters['from'])) {
-            $query->where('work_logs.log_date', '>=', $filters['from']);
+        if (!empty($filters['task_id'])) {
+            $query->where('work_logs.task_id', $filters['task_id']);
         }
 
-        if (!empty($filters['to'])) {
-            $query->where('work_logs.log_date', '<=', $filters['to']);
+        if (!empty($filters['date_from'])) {
+            $query->where('work_logs.log_date', '>=', $filters['date_from']);
+        }
+
+        if (!empty($filters['date_to'])) {
+            $query->where('work_logs.log_date', '<=', $filters['date_to']);
         }
 
         $logs = $query->orderByDesc('work_logs.log_date')->get()->toArray();
@@ -152,6 +156,7 @@ class ReportRepository
             ->groupBy('projects.id', 'projects.name')
             ->orderByDesc('total_hours')
             ->get()
+            ->map(fn ($row) => ['name' => $row->project_name, 'hours' => (float) $row->total_hours])
             ->toArray();
 
         return [

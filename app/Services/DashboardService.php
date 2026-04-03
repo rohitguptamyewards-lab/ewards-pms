@@ -30,4 +30,19 @@ class DashboardService
     {
         return $this->dashboardRepository->getManagerData();
     }
+
+    public function assembleCEO(): array
+    {
+        return $this->dashboardRepository->getCEOData();
+    }
+
+    public function assembleMCTeam(): array
+    {
+        return $this->dashboardRepository->getMCTeamData();
+    }
+
+    public function assembleSales(int $userId): array
+    {
+        return $this->dashboardRepository->getSalesData($userId);
+    }
 }

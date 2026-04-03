@@ -13,6 +13,13 @@ const uploading = ref(false);
 const error = ref('');
 const dragOver = ref(false);
 
+// Link form state
+const showLinkForm = ref(false);
+const linkUrl = ref('');
+const linkName = ref('');
+const linkDescription = ref('');
+const savingLink = ref(false);
+
 const MAX_SIZE = 10 * 1024 * 1024; // 10MB
 
 function handleDrop(e) {
@@ -40,6 +47,7 @@ async function uploadFiles(files) {
         for (const file of files) {
             const formData = new FormData();
             formData.append('file', file);
+            formData.append('type', 'file');
             formData.append('documentable_type', props.documentableType);
             formData.append('documentable_id', props.documentableId);
             const { data } = await axios.post('/api/v1/documents', formData, {
@@ -54,6 +62,34 @@ async function uploadFiles(files) {
     }
 }
 
+async function saveLink() {
+    if (!linkUrl.value.trim() || !linkName.value.trim()) {
+        error.value = 'Link URL and name are required.';
+        return;
+    }
+    savingLink.value = true;
+    error.value = '';
+    try {
+        const { data } = await axios.post('/api/v1/documents', {
+            type: 'link',
+            documentable_type: props.documentableType,
+            documentable_id: props.documentableId,
+            link_url: linkUrl.value,
+            file_name: linkName.value,
+            description: linkDescription.value,
+        });
+        localDocs.value.push(data.data || data);
+        linkUrl.value = '';
+        linkName.value = '';
+        linkDescription.value = '';
+        showLinkForm.value = false;
+    } catch (e) {
+        error.value = e.response?.data?.message || 'Failed to save link.';
+    } finally {
+        savingLink.value = false;
+    }
+}
+
 async function deleteDoc(doc, index) {
     if (!confirm('Delete this document?')) return;
     try {
@@ -63,39 +99,100 @@ async function deleteDoc(doc, index) {
         error.value = 'Failed to delete document.';
     }
 }
+
+function docHref(doc) {
+    if (doc.type === 'link') return doc.link_url;
+    return `/api/v1/documents/${doc.id}`;
+}
 </script>
 
 <template>
     <div class="mt-6">
-        <h3 class="text-lg font-semibold text-gray-900">Documents</h3>
+        <div class="flex items-center justify-between mb-3">
+            <h3 class="text-lg font-semibold text-gray-900">Documents & Links</h3>
+            <button
+                @click="showLinkForm = !showLinkForm"
+                class="text-sm text-[#5e16bd] hover:text-[#361963] font-medium"
+            >
+                {{ showLinkForm ? 'Cancel' : '+ Add Link' }}
+            </button>
+        </div>
 
+        <!-- Link form -->
+        <div v-if="showLinkForm" class="mb-4 rounded-lg border border-[#ddd0f7] bg-[#f5f0ff] p-4 space-y-3">
+            <div>
+                <label class="mb-1 block text-xs font-medium text-gray-700">Link Name</label>
+                <input
+                    v-model="linkName"
+                    type="text"
+                    placeholder="e.g. Design Spec, Figma File..."
+                    class="block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-[#5e16bd] focus:ring-1 focus:ring-[#5e16bd]"
+                />
+            </div>
+            <div>
+                <label class="mb-1 block text-xs font-medium text-gray-700">URL</label>
+                <input
+                    v-model="linkUrl"
+                    type="url"
+                    placeholder="https://..."
+                    class="block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-[#5e16bd] focus:ring-1 focus:ring-[#5e16bd]"
+                />
+            </div>
+            <div>
+                <label class="mb-1 block text-xs font-medium text-gray-700">Description <span class="text-gray-400">(optional)</span></label>
+                <input
+                    v-model="linkDescription"
+                    type="text"
+                    placeholder="Brief description..."
+                    class="block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-[#5e16bd] focus:ring-1 focus:ring-[#5e16bd]"
+                />
+            </div>
+            <button
+                @click="saveLink"
+                :disabled="savingLink"
+                class="rounded-lg bg-[#5e16bd] px-4 py-2 text-sm font-medium text-white hover:bg-[#4c12a1] disabled:opacity-50"
+            >
+                {{ savingLink ? 'Saving...' : 'Save Link' }}
+            </button>
+        </div>
+
+        <!-- Document / link list -->
         <ul v-if="localDocs.length" class="mt-3 divide-y divide-gray-200 rounded-lg border border-gray-200">
             <li
                 v-for="(doc, index) in localDocs"
                 :key="doc.id"
                 class="flex items-center justify-between px-4 py-3"
             >
-                <a
-                    :href="doc.url || `/api/v1/documents/${doc.id}/download`"
-                    target="_blank"
-                    class="text-sm font-medium text-blue-600 hover:underline"
-                >
-                    {{ doc.original_name || doc.name }}
-                </a>
+                <div class="flex items-center gap-2 min-w-0">
+                    <span class="flex-shrink-0 text-xs font-medium px-1.5 py-0.5 rounded"
+                        :class="doc.type === 'link' ? 'bg-purple-100 text-purple-700' : 'bg-gray-100 text-gray-600'">
+                        {{ doc.type === 'link' ? 'Link' : 'File' }}
+                    </span>
+                    <a
+                        :href="docHref(doc)"
+                        target="_blank"
+                        class="text-sm font-medium text-[#5e16bd] hover:underline truncate"
+                    >
+                        {{ doc.file_name || doc.original_name || doc.name }}
+                    </a>
+                    <span v-if="doc.description" class="text-xs text-gray-400 truncate">— {{ doc.description }}</span>
+                </div>
                 <button
                     @click="deleteDoc(doc, index)"
-                    class="text-sm text-red-500 hover:text-red-700"
+                    class="ml-3 flex-shrink-0 text-sm text-red-500 hover:text-red-700"
                 >
                     Delete
                 </button>
             </li>
         </ul>
+        <p v-else class="mt-3 text-sm text-gray-400">No documents or links yet.</p>
 
+        <!-- File drag & drop -->
         <div
             @dragover.prevent="dragOver = true"
             @dragleave="dragOver = false"
             @drop.prevent="handleDrop"
-            :class="dragOver ? 'border-blue-500 bg-blue-50' : 'border-gray-300'"
+            :class="dragOver ? 'border-[#5e16bd] bg-[#f5f0ff]' : 'border-gray-300'"
             class="relative mt-3 flex cursor-pointer items-center justify-center rounded-lg border-2 border-dashed p-8 transition-colors"
         >
             <input

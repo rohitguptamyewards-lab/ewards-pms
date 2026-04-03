@@ -17,28 +17,61 @@ class DocumentController extends Controller
     ) {}
 
     /**
-     * Upload and store a document.
+     * Upload a file or save an external link as a document.
+     *
+     * For file uploads: send multipart form with 'file' field.
+     * For links: send JSON with 'type' = 'link', 'link_url', and 'file_name'.
      */
     public function store(Request $request): JsonResponse
     {
+        $type = $request->input('type', 'file');
+
         $request->validate([
-            'file' => 'required|file|max:10240', // 10 MB max
-            'documentable_type' => 'required|string|in:task,project,request,feature',
-            'documentable_id' => 'required|integer',
+            'type'             => ['nullable', 'in:file,link'],
+            'documentable_type' => ['required', 'string', 'in:task,project,request,feature'],
+            'documentable_id'  => ['required', 'integer'],
+            'description'      => ['nullable', 'string', 'max:500'],
         ]);
 
-        $file = $request->file('file');
-        $path = $file->store('documents', 'local');
+        if ($type === 'link') {
+            $request->validate([
+                'link_url'  => ['required', 'url', 'max:2000'],
+                'file_name' => ['required', 'string', 'max:255'],
+            ]);
 
-        $id = $this->documentRepository->create([
-            'documentable_type' => $request->input('documentable_type'),
-            'documentable_id' => $request->input('documentable_id'),
-            'uploaded_by' => auth()->id(),
-            'file_name' => $file->getClientOriginalName(),
-            'file_path' => $path,
-            'file_size' => $file->getSize(),
-            'mime_type' => $file->getMimeType(),
-        ]);
+            $id = $this->documentRepository->create([
+                'documentable_type' => $request->input('documentable_type'),
+                'documentable_id'   => $request->input('documentable_id'),
+                'uploaded_by'       => auth()->id(),
+                'file_name'         => $request->input('file_name'),
+                'file_path'         => null,
+                'file_size'         => null,
+                'mime_type'         => null,
+                'type'              => 'link',
+                'link_url'          => $request->input('link_url'),
+                'description'       => $request->input('description'),
+            ]);
+        } else {
+            $request->validate([
+                'file' => ['required', 'file', 'max:10240'],
+            ]);
+
+            $file = $request->file('file');
+            $path = $file->store('documents', 'local');
+
+            $id = $this->documentRepository->create([
+                'documentable_type' => $request->input('documentable_type'),
+                'documentable_id'   => $request->input('documentable_id'),
+                'uploaded_by'       => auth()->id(),
+                'file_name'         => $file->getClientOriginalName(),
+                'file_path'         => $path,
+                'file_size'         => $file->getSize(),
+                'mime_type'         => $file->getMimeType(),
+                'type'              => 'file',
+                'link_url'          => null,
+                'description'       => $request->input('description'),
+            ]);
+        }
 
         $document = $this->documentRepository->findById($id);
 
@@ -61,13 +94,16 @@ class DocumentController extends Controller
     }
 
     /**
-     * Delete a document and its file from storage.
+     * Delete a document and its file from storage (skipped for link-type).
      */
     public function destroy(int $id): JsonResponse
     {
         $document = $this->documentRepository->findById($id);
 
-        Storage::disk('local')->delete($document->file_path);
+        if (($document->type ?? 'file') === 'file' && $document->file_path) {
+            Storage::disk('local')->delete($document->file_path);
+        }
+
         $this->documentRepository->delete($id);
 
         return response()->json(['message' => 'Document deleted successfully.']);

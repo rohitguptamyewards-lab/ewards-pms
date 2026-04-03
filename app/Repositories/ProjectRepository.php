@@ -68,6 +68,33 @@ class ProjectRepository
     }
 
     /**
+     * Get projects where a user is an owner or member.
+     *
+     * @param int $userId
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     */
+    public function findByMember(int $userId)
+    {
+        $query = DB::table('projects')
+            ->leftJoin('team_members', 'projects.owner_id', '=', 'team_members.id')
+            ->leftJoin('project_members', 'projects.id', '=', 'project_members.project_id')
+            ->select(
+                'projects.*',
+                'team_members.name as owner_name',
+                DB::raw('(SELECT COUNT(*) FROM tasks WHERE tasks.project_id = projects.id AND tasks.deleted_at IS NULL) as task_count'),
+                DB::raw('(SELECT IFNULL(ROUND(SUM(CASE WHEN tasks.status = \'done\' THEN 1 ELSE 0 END) * 100.0 / NULLIF(COUNT(*), 0), 2), 0) FROM tasks WHERE tasks.project_id = projects.id AND tasks.deleted_at IS NULL) as progress')
+            )
+            ->whereNull('projects.deleted_at')
+            ->where(function ($q) use ($userId) {
+                $q->where('projects.owner_id', $userId)
+                  ->orWhere('project_members.user_id', $userId);
+            })
+            ->distinct();
+
+        return $query->orderByDesc('projects.created_at')->paginate(20);
+    }
+
+    /**
      * Insert a new project and return its ID.
      *
      * @param array $data
@@ -188,3 +215,4 @@ class ProjectRepository
         return round((float) $result, 2);
     }
 }
+

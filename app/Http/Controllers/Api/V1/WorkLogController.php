@@ -27,9 +27,15 @@ class WorkLogController extends Controller
     {
         $filters = $request->only(['project_id', 'task_id', 'user_id', 'date_from', 'date_to']);
 
-        // Default to current user's logs for web
-        if (! $request->wantsJson() && empty($filters['user_id'])) {
+        $managerRoles = ['cto', 'ceo', 'manager', 'mc_team'];
+        $roleRaw = auth()->user()->role;
+        $userRole = $roleRaw instanceof \App\Enums\Role ? $roleRaw->value : (string) $roleRaw;
+
+        // Non-managers can only ever see their own logs
+        if (! in_array($userRole, $managerRoles)) {
             $filters['user_id'] = auth()->id();
+        } elseif (! $request->wantsJson() && empty($filters['user_id'])) {
+            // Managers default to all logs on the web view (they can filter)
         }
 
         $query = DB::table('work_logs')
@@ -71,9 +77,22 @@ class WorkLogController extends Controller
             return response()->json($workLogs);
         }
 
+        $projectsForFilter = DB::table('projects')
+            ->whereNull('deleted_at')
+            ->orderBy('name')
+            ->select('id', 'name')
+            ->get();
+
+        $membersForFilter = in_array($userRole, $managerRoles)
+            ? DB::table('team_members')->where('is_active', true)->orderBy('name')->select('id', 'name')->get()
+            : collect();
+
         return Inertia::render('WorkLogs/Index', [
-            'workLogs' => $workLogs,
-            'filters' => $filters,
+            'workLogs'    => $workLogs,
+            'filters'     => $filters,
+            'projects'    => $projectsForFilter,
+            'teamMembers' => $membersForFilter,
+            'isManager'   => in_array($userRole, $managerRoles),
         ]);
     }
 
@@ -82,11 +101,26 @@ class WorkLogController extends Controller
      */
     public function create(): InertiaResponse
     {
-        $projects = DB::table('projects')
-            ->where('status', 'active')
-            ->select('id', 'name')
-            ->orderBy('name')
-            ->get();
+        $user    = auth()->user();
+        $roleRaw = $user->role;
+        $role    = $roleRaw instanceof \App\Enums\Role ? $roleRaw->value : (string) $roleRaw;
+        $isManager = in_array($role, ['cto', 'ceo', 'manager', 'mc_team']);
+
+        if ($isManager) {
+            $projects = DB::table('projects')
+                ->where('status', 'active')
+                ->select('id', 'name')
+                ->orderBy('name')
+                ->get();
+        } else {
+            $projects = DB::table('projects')
+                ->join('project_members', 'projects.id', '=', 'project_members.project_id')
+                ->where('project_members.user_id', $user->id)
+                ->where('projects.status', 'active')
+                ->select('projects.id', 'projects.name')
+                ->orderBy('projects.name')
+                ->get();
+        }
 
         // Attach tasks per project
         foreach ($projects as $project) {
@@ -149,3 +183,5 @@ class WorkLogController extends Controller
         return response()->json(['message' => 'Work log deleted successfully.']);
     }
 }
+
+

@@ -24,7 +24,16 @@ class ProjectController extends Controller
      */
     public function index(Request $request): InertiaResponse|JsonResponse
     {
-        $projects = $this->projectRepository->findAll();
+        $user    = auth()->user();
+        $roleRaw = $user->role;
+        $role    = $roleRaw instanceof \App\Enums\Role ? $roleRaw->value : (string) $roleRaw;
+        $isManager = in_array($role, ['cto', 'ceo', 'manager', 'mc_team']);
+
+        if ($isManager) {
+            $projects = $this->projectRepository->findAll();
+        } else {
+            $projects = $this->projectRepository->findByMember($user->id);
+        }
 
         if ($request->wantsJson()) {
             return response()->json($projects);
@@ -116,9 +125,52 @@ class ProjectController extends Controller
             ]);
         }
 
+        // Work logs for this project
+        $workLogs = DB::table('work_logs')
+            ->leftJoin('team_members', 'work_logs.user_id', '=', 'team_members.id')
+            ->leftJoin('tasks', 'work_logs.task_id', '=', 'tasks.id')
+            ->select('work_logs.*', 'team_members.name as user_name', 'tasks.title as task_title')
+            ->where('work_logs.project_id', $id)
+            ->whereNull('work_logs.deleted_at')
+            ->orderByDesc('work_logs.log_date')
+            ->get();
+
+        // Documents for this project
+        $documents = DB::table('documents')
+            ->where('documentable_type', 'project')
+            ->where('documentable_id', $id)
+            ->whereNull('deleted_at')
+            ->orderByDesc('created_at')
+            ->get();
+
+        // Comments for this project
+        $comments = DB::table('comments')
+            ->leftJoin('team_members', 'comments.user_id', '=', 'team_members.id')
+            ->select('comments.*', 'team_members.name as user_name')
+            ->where('comments.commentable_type', 'project')
+            ->where('comments.commentable_id', $id)
+            ->whereNull('comments.parent_id')
+            ->whereNull('comments.deleted_at')
+            ->orderByDesc('comments.created_at')
+            ->get();
+
+        foreach ($comments as $comment) {
+            $comment->replies = DB::table('comments')
+                ->leftJoin('team_members', 'comments.user_id', '=', 'team_members.id')
+                ->select('comments.*', 'team_members.name as user_name')
+                ->where('comments.parent_id', $comment->id)
+                ->whereNull('comments.deleted_at')
+                ->orderBy('comments.created_at')
+                ->get()
+                ->toArray();
+        }
+
         return Inertia::render('Projects/Show', [
-            'project' => $project,
-            'stats' => $stats,
+            'project'  => $project,
+            'stats'    => $stats,
+            'workLogs' => $workLogs,
+            'documents' => $documents,
+            'comments' => $comments,
         ]);
     }
 
@@ -157,3 +209,4 @@ class ProjectController extends Controller
         return response()->json(['message' => 'Member removed successfully.']);
     }
 }
+

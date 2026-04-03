@@ -41,6 +41,43 @@ class TaskRepository
     }
 
     /**
+     * Get all tasks across projects with optional filters.
+     *
+     * @param array $filters Supported: project_id, user_id, status, deadline_to
+     * @return array
+     */
+    public function findAll(array $filters = []): array
+    {
+        $query = DB::table('tasks')
+            ->leftJoin('projects', 'tasks.project_id', '=', 'projects.id')
+            ->leftJoin('team_members', 'tasks.assigned_to', '=', 'team_members.id')
+            ->select(
+                'tasks.*',
+                'projects.name as project_name',
+                'team_members.name as assignee_name'
+            )
+            ->whereNull('tasks.deleted_at');
+
+        if (!empty($filters['project_id'])) {
+            $query->where('tasks.project_id', $filters['project_id']);
+        }
+
+        if (!empty($filters['user_id'])) {
+            $query->where('tasks.assigned_to', $filters['user_id']);
+        }
+
+        if (!empty($filters['status'])) {
+            $query->where('tasks.status', $filters['status']);
+        }
+
+        if (!empty($filters['deadline_to'])) {
+            $query->where('tasks.deadline', '<=', $filters['deadline_to']);
+        }
+
+        return $query->orderByDesc('tasks.created_at')->get()->toArray();
+    }
+
+    /**
      * Find a single task by ID with project and assignee names.
      *
      * @param int $id

@@ -155,7 +155,7 @@ class RequestController extends Controller
     /**
      * Triage a request (accept, defer, reject, etc.).
      */
-    public function triage(Request $request, int $id): JsonResponse
+    public function triage(Request $request, int $id)
     {
         $request->validate([
             'action' => 'required|string|in:accept,defer,reject',
@@ -168,11 +168,14 @@ class RequestController extends Controller
             $request->input('reason'),
         );
 
-        $pmsRequest = $this->requestRepository->findById($id);
+        if ($request->wantsJson()) {
+            return response()->json([
+                'message' => 'Request triaged successfully.',
+                'request' => $this->requestRepository->findById($id),
+            ]);
+        }
 
-        return response()->json([
-            'message' => 'Request triaged successfully.',
-            'request' => $pmsRequest,
-        ]);
+        return redirect()->route('requests.show', $id)
+            ->with('success', 'Request triaged successfully.');
     }
 }

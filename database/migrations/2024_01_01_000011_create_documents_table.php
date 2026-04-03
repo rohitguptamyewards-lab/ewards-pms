@@ -17,7 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('documentable_id');
             $table->foreignId('uploaded_by')->constrained('team_members')->cascadeOnDelete();
             $table->string('file_name');
-            $table->string('file_path', 500);
+            $table->string('file_path', 500)->nullable();
             $table->unsignedInteger('file_size')->nullable();
             $table->string('mime_type', 100)->nullable();
             $table->timestamps();

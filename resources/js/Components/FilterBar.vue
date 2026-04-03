@@ -36,7 +36,7 @@ function reset() {
                 v-if="Array.isArray(opts)"
                 v-model="local[key]"
                 @change="apply"
-                class="block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                class="block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-[#5e16bd] focus:ring-1 focus:ring-[#5e16bd]"
             >
                 <option value="">All</option>
                 <option v-for="opt in opts" :key="opt.value ?? opt" :value="opt.value ?? opt">
@@ -48,7 +48,7 @@ function reset() {
                 v-model="local[key]"
                 type="date"
                 @change="apply"
-                class="block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                class="block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-[#5e16bd] focus:ring-1 focus:ring-[#5e16bd]"
             />
             <input
                 v-else
@@ -56,7 +56,7 @@ function reset() {
                 type="text"
                 :placeholder="`Search ${key}...`"
                 @input="apply"
-                class="block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                class="block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-[#5e16bd] focus:ring-1 focus:ring-[#5e16bd]"
             />
         </div>
         <button

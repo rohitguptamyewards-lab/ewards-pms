@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\ProjectPriority;
 use App\Enums\ProjectStatus;
 use App\Traits\Auditable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -22,6 +23,7 @@ class Project extends Model
         'description',
         'owner_id',
         'status',
+        'priority',
         'start_date',
         'end_date',
     ];
@@ -29,9 +31,10 @@ class Project extends Model
     protected function casts(): array
     {
         return [
-            'status' => ProjectStatus::class,
+            'status'     => ProjectStatus::class,
+            'priority'   => ProjectPriority::class,
             'start_date' => 'date',
-            'end_date' => 'date',
+            'end_date'   => 'date',
         ];
     }
 

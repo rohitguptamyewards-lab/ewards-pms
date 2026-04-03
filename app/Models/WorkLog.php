@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\WorkLogStatus;
 use App\Traits\Auditable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -20,6 +21,7 @@ class WorkLog extends Model
         'task_id',
         'log_date',
         'hours_spent',
+        'status',
         'note',
         'blocker',
     ];
@@ -27,8 +29,9 @@ class WorkLog extends Model
     protected function casts(): array
     {
         return [
-            'log_date' => 'date',
+            'log_date'    => 'date',
             'hours_spent' => 'decimal:2',
+            'status'      => WorkLogStatus::class,
         ];
     }
 

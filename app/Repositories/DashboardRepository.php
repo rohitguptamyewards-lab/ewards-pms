@@ -173,4 +173,163 @@ class DashboardRepository
             'untriagedRequests' => $untriagedRequests,
         ];
     }
+
+    /**
+     * CEO dashboard: high-level business view — pipeline counts, no task/person details.
+     */
+    public function getCEOData(): array
+    {
+        $featurePipelineRows = DB::table('features')
+            ->select('status', DB::raw('COUNT(*) as count'))
+            ->whereNull('deleted_at')
+            ->groupBy('status')
+            ->get();
+
+        $featurePipeline = [];
+        foreach ($featurePipelineRows as $row) {
+            $featurePipeline[$row->status] = (int) $row->count;
+        }
+
+        $requestPipelineRows = DB::table('requests')
+            ->select('status', DB::raw('COUNT(*) as count'))
+            ->whereNull('deleted_at')
+            ->groupBy('status')
+            ->get();
+
+        $requestPipeline = [];
+        foreach ($requestPipelineRows as $row) {
+            $requestPipeline[$row->status] = (int) $row->count;
+        }
+
+        $activeProjects = DB::table('projects')
+            ->where('status', 'active')
+            ->whereNull('deleted_at')
+            ->count();
+
+        $teamSize = DB::table('team_members')
+            ->where('is_active', true)
+            ->whereNull('deleted_at')
+            ->count();
+
+        $totalHoursThisMonth = DB::table('work_logs')
+            ->whereNull('deleted_at')
+            ->whereYear('log_date', now()->year)
+            ->whereMonth('log_date', now()->month)
+            ->sum('hours_spent');
+
+        return [
+            'featurePipeline'    => $featurePipeline,
+            'requestPipeline'    => $requestPipeline,
+            'activeProjects'     => $activeProjects,
+            'teamSize'           => $teamSize,
+            'hoursThisMonth'     => round((float) $totalHoursThisMonth, 1),
+        ];
+    }
+
+    /**
+     * MC Team dashboard: request-centric — untriaged queue + merchant-blocked.
+     */
+    public function getMCTeamData(): array
+    {
+        $untriagedRequests = DB::table('requests')
+            ->leftJoin('merchants', 'requests.merchant_id', '=', 'merchants.id')
+            ->leftJoin('team_members', 'requests.requested_by', '=', 'team_members.id')
+            ->select(
+                'requests.id',
+                'requests.title',
+                'requests.type',
+                'requests.urgency',
+                'requests.demand_count',
+                'requests.created_at',
+                'merchants.name as merchant_name',
+                'team_members.name as requester_name'
+            )
+            ->where('requests.status', 'received')
+            ->whereNull('requests.deleted_at')
+            ->orderBy('requests.urgency')
+            ->orderBy('requests.created_at')
+            ->get()
+            ->toArray();
+
+        $merchantBlockedRequests = DB::table('requests')
+            ->leftJoin('merchants', 'requests.merchant_id', '=', 'merchants.id')
+            ->leftJoin('team_members', 'requests.requested_by', '=', 'team_members.id')
+            ->select(
+                'requests.id',
+                'requests.title',
+                'requests.type',
+                'requests.status',
+                'requests.demand_count',
+                'requests.created_at',
+                'merchants.name as merchant_name',
+                'team_members.name as requester_name'
+            )
+            ->where('requests.urgency', 'merchant_blocked')
+            ->whereNotIn('requests.status', ['rejected', 'completed'])
+            ->whereNull('requests.deleted_at')
+            ->orderBy('requests.created_at')
+            ->get()
+            ->toArray();
+
+        $total           = DB::table('requests')->whereNull('deleted_at')->count();
+        $untriaged       = DB::table('requests')->where('status', 'received')->whereNull('deleted_at')->count();
+        $accepted        = DB::table('requests')->where('status', 'accepted')->whereNull('deleted_at')->count();
+        $merchantBlocked = DB::table('requests')
+            ->where('urgency', 'merchant_blocked')
+            ->whereNotIn('status', ['rejected', 'completed'])
+            ->whereNull('deleted_at')
+            ->count();
+
+        return [
+            'untriagedRequests'       => $untriagedRequests,
+            'merchantBlockedRequests' => $merchantBlockedRequests,
+            'stats' => [
+                'total'           => $total,
+                'untriaged'       => $untriaged,
+                'accepted'        => $accepted,
+                'merchantBlocked' => $merchantBlocked,
+            ],
+        ];
+    }
+
+    /**
+     * Sales dashboard: only the requests this user submitted.
+     */
+    public function getSalesData(int $userId): array
+    {
+        $myRequests = DB::table('requests')
+            ->leftJoin('merchants', 'requests.merchant_id', '=', 'merchants.id')
+            ->select(
+                'requests.id',
+                'requests.title',
+                'requests.type',
+                'requests.urgency',
+                'requests.status',
+                'requests.demand_count',
+                'requests.created_at',
+                'merchants.name as merchant_name'
+            )
+            ->where('requests.requested_by', $userId)
+            ->whereNull('requests.deleted_at')
+            ->orderByDesc('requests.created_at')
+            ->get()
+            ->toArray();
+
+        $statsRows = DB::table('requests')
+            ->select('status', DB::raw('COUNT(*) as count'))
+            ->where('requested_by', $userId)
+            ->whereNull('deleted_at')
+            ->groupBy('status')
+            ->get();
+
+        $stats = [];
+        foreach ($statsRows as $row) {
+            $stats[$row->status] = (int) $row->count;
+        }
+
+        return [
+            'myRequests' => $myRequests,
+            'stats'      => $stats,
+        ];
+    }
 }

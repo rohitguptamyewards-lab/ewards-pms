@@ -14,6 +14,14 @@ class StoreTaskRequest extends FormRequest
         return true;
     }
 
+    protected function prepareForValidation(): void
+    {
+        // Inject projectId from the route if not already in the request body
+        if ($this->route('projectId') && !$this->has('project_id')) {
+            $this->merge(['project_id' => (int) $this->route('projectId')]);
+        }
+    }
+
     /**
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */

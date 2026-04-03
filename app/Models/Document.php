@@ -22,6 +22,9 @@ class Document extends Model
         'file_path',
         'file_size',
         'mime_type',
+        'type',
+        'link_url',
+        'description',
     ];
 
     public function documentable(): MorphTo

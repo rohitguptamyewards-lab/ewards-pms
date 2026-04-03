@@ -18,6 +18,16 @@ return new class extends Migration
             $table->string('password');
             $table->string('role'); // cto, ceo, sales, developer, tester, analyst
             $table->boolean('is_active')->default(true);
+            $table->string('department')->nullable();
+            $table->date('joining_date')->nullable();
+            $table->decimal('weekly_capacity', 5, 2)->default(40);
+            $table->decimal('working_hours', 5, 2)->default(8);
+            $table->string('timezone')->default('UTC');
+            $table->boolean('contractor_flag')->default(false);
+            $table->boolean('freelancer_flag')->default(false);
+            $table->string('git_username')->nullable();
+            $table->json('notification_preferences')->nullable();
+            $table->unsignedBigInteger('cost_rate_id')->nullable();
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();

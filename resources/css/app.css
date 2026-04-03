@@ -9,9 +9,25 @@
 @theme {
     --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
-    --color-primary: #2563eb;
-    --color-primary-dark: #1d4ed8;
-    --color-danger: #dc2626;
-    --color-warning: #f59e0b;
-    --color-success: #16a34a;
+
+    /* eWards Brand Colors */
+    --color-ew-primary:        #5e16bd;
+    --color-ew-primary-dark:   #4c12a1;
+    --color-ew-primary-darker: #361963;
+    --color-ew-sidebar:        #1e0a45;
+    --color-ew-sidebar-hover:  #2d1569;
+    --color-ew-sidebar-active: #5e16bd;
+    --color-ew-light:          #f5f0ff;
+    --color-ew-lighter:        #faf7ff;
+    --color-ew-highlight:      #ece1ff;
+    --color-ew-border:         #ddd0f7;
+    --color-ew-orange:         #f97316;
+    --color-ew-orange-dark:    #ea6a00;
+
+    /* Legacy aliases (keep existing vars working) */
+    --color-primary:      #5e16bd;
+    --color-primary-dark: #4c12a1;
+    --color-danger:       #dc2626;
+    --color-warning:      #f59e0b;
+    --color-success:      #16a34a;
 }

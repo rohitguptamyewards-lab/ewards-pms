@@ -9,6 +9,7 @@ use App\Services\TaskService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
 
@@ -18,6 +19,39 @@ class TaskController extends Controller
         private readonly TaskService $taskService,
         private readonly TaskRepository $taskRepository,
     ) {}
+
+    /**
+     * List all tasks (web) with optional filters for the tasks index page.
+     */
+    public function indexAll(Request $request): InertiaResponse
+    {
+        $filters = $request->only(['project_id', 'user_id', 'status', 'deadline_to']);
+
+        $user    = auth()->user();
+        $roleRaw = $user->role;
+        $role    = $roleRaw instanceof \App\Enums\Role ? $roleRaw->value : (string) $roleRaw;
+        $isManager = in_array($role, ['cto', 'ceo', 'manager', 'mc_team']);
+
+        // Non-managers only see tasks assigned to them
+        if (! $isManager) {
+            $filters['user_id'] = $user->id;
+        }
+
+        $tasks = $this->taskRepository->findAll($filters);
+
+        $projects = DB::table('projects')
+            ->whereNull('deleted_at')->orderBy('name')->select('id', 'name')->get();
+
+        $teamMembers = DB::table('team_members')
+            ->where('is_active', true)->orderBy('name')->select('id', 'name')->get();
+
+        return Inertia::render('Tasks/Index', [
+            'tasks'       => $tasks,
+            'filters'     => $filters,
+            'projects'    => $projects,
+            'teamMembers' => $teamMembers,
+        ]);
+    }
 
     /**
      * List tasks for a specific project.
@@ -80,10 +114,17 @@ class TaskController extends Controller
                 ->toArray();
         }
 
+        $teamMembers = \DB::table('team_members')
+            ->where('is_active', true)
+            ->orderBy('name')
+            ->select('id', 'name', 'role')
+            ->get();
+
         return Inertia::render('Tasks/Show', [
-            'task' => $task,
-            'workLogs' => $workLogs,
-            'comments' => $comments,
+            'task'        => $task,
+            'workLogs'    => $workLogs,
+            'comments'    => $comments,
+            'teamMembers' => $teamMembers,
         ]);
     }
 
@@ -107,7 +148,12 @@ class TaskController extends Controller
             'status' => 'required|string|in:open,in_progress,blocked,done',
         ]);
 
-        $this->taskService->changeStatus($id, $request->input('status'));
+        try {
+            $this->taskService->changeStatus($id, $request->input('status'));
+        } catch (\InvalidArgumentException $e) {
+            throw ValidationException::withMessages(['status' => $e->getMessage()]);
+        }
+
         $task = $this->taskRepository->findById($id);
 
         return response()->json([
@@ -116,3 +162,5 @@ class TaskController extends Controller
         ]);
     }
 }
+
+

@@ -2,8 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\WorkLogStatus;
 use App\Models\Task;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreWorkLogRequest extends FormRequest
 {
@@ -18,12 +20,13 @@ class StoreWorkLogRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'project_id' => ['required', 'integer', 'exists:projects,id'],
-            'task_id' => ['required', 'integer', 'exists:tasks,id'],
-            'log_date' => ['required', 'date'],
+            'project_id'  => ['required', 'integer', 'exists:projects,id'],
+            'task_id'     => ['nullable', 'integer', 'exists:tasks,id'],
+            'log_date'    => ['required', 'date'],
             'hours_spent' => ['required', 'numeric', 'min:0.25', 'max:24'],
-            'note' => ['nullable', 'string'],
-            'blocker' => ['nullable', 'string'],
+            'status'      => ['required', Rule::in(array_column(WorkLogStatus::cases(), 'value'))],
+            'note'        => ['nullable', 'string'],
+            'blocker'     => ['nullable', 'string'],
         ];
     }
 
