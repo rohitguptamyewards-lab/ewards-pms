@@ -51,7 +51,8 @@ class DashboardRepository
             ->join('project_members', 'projects.id', '=', 'project_members.project_id')
             ->select(
                 'projects.*',
-                DB::raw("(SELECT IFNULL(SUM(wl.hours_spent), 0) FROM work_logs wl WHERE wl.project_id = projects.id AND wl.user_id = {$userId} AND wl.deleted_at IS NULL) as my_hours")
+                DB::raw("(SELECT IFNULL(SUM(wl.hours_spent), 0) FROM work_logs wl WHERE wl.project_id = projects.id AND wl.user_id = {$userId} AND wl.deleted_at IS NULL) as my_hours"),
+                DB::raw("(SELECT IFNULL(ROUND(SUM(CASE WHEN t.status = 'done' THEN 1 ELSE 0 END) * 100.0 / NULLIF(COUNT(*), 0), 2), 0) FROM tasks t WHERE t.project_id = projects.id AND t.deleted_at IS NULL) as progress")
             )
             ->where('project_members.user_id', $userId)
             ->where('projects.status', 'active')

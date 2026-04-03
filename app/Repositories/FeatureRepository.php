@@ -18,9 +18,11 @@ class FeatureRepository
     {
         $query = DB::table('features')
             ->leftJoin('modules', 'features.module_id', '=', 'modules.id')
+            ->leftJoin('team_members', 'features.assigned_to', '=', 'team_members.id')
             ->select(
                 'features.*',
                 'modules.name as module_name',
+                'team_members.name as assignee_name',
                 DB::raw('(SELECT COUNT(*) FROM requests WHERE requests.linked_feature_id = features.id AND requests.deleted_at IS NULL) as request_count')
             )
             ->whereNull('features.deleted_at');
