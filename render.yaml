@@ -49,7 +49,7 @@ services:
         sync: false
       - key: MAIL_PASSWORD
         sync: false
-      - key: MAIL_ENCRYPTION
+      - key: MAIL_SCHEME
         value: tls
       - key: MAIL_FROM_ADDRESS
         sync: false
