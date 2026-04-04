@@ -102,7 +102,10 @@ class TeamMemberController extends Controller
                 $plainPassword,
             );
         } catch (\Throwable $e) {
-            // Don't fail member creation if email fails
+            \Illuminate\Support\Facades\Log::warning('Welcome email failed', [
+                'email' => $validated['email'],
+                'error' => $e->getMessage(),
+            ]);
         }
 
         return redirect()->route('team-members.index')->with('success', 'Team member created successfully.');
