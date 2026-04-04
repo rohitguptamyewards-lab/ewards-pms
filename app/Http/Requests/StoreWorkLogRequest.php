@@ -23,17 +23,23 @@ class StoreWorkLogRequest extends FormRequest
             'project_id'  => ['required', 'integer', 'exists:projects,id'],
             'task_id'     => ['nullable', 'integer', 'exists:tasks,id'],
             'log_date'    => ['required', 'date'],
-            'hours_spent' => ['required', 'numeric', 'min:0.25', 'max:24'],
+            'start_time'  => ['required', 'date_format:H:i'],
+            'end_time'    => ['required', 'date_format:H:i', 'after:start_time'],
             'status'      => ['required', Rule::in(array_column(WorkLogStatus::cases(), 'value'))],
             'note'        => ['nullable', 'string'],
             'blocker'     => ['nullable', 'string'],
         ];
     }
 
+    public function messages(): array
+    {
+        return [
+            'end_time.after' => 'End time must be after start time.',
+        ];
+    }
+
     /**
      * Configure the validator instance.
-     *
-     * If the related task has status=blocked, then the blocker field is required.
      */
     public function withValidator(\Illuminate\Validation\Validator $validator): void
     {

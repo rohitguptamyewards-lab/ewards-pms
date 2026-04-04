@@ -7,15 +7,26 @@ defineOptions({ layout: AppLayout });
 
 const props = defineProps({
     projects: { type: Array, default: () => [] },
+    lastEndTime: { type: String, default: null },
 });
 
 const today = new Date().toISOString().slice(0, 10);
+
+// Default start_time to lastEndTime (HH:MM) or current time
+function defaultStartTime() {
+    if (props.lastEndTime) {
+        return props.lastEndTime.slice(0, 5); // "HH:MM:SS" → "HH:MM"
+    }
+    const now = new Date();
+    return `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+}
 
 const form = useForm({
     project_id:  '',
     task_id:     '',
     log_date:    today,
-    hours_spent: 1,
+    start_time:  defaultStartTime(),
+    end_time:    '',
     status:      'done',
     note:        '',
     blocker:     '',
@@ -25,6 +36,17 @@ const filteredTasks = computed(() => {
     if (!form.project_id) return [];
     const project = props.projects.find(p => p.id === Number(form.project_id));
     return project?.tasks || [];
+});
+
+// Calculate hours from start/end time
+const calculatedHours = computed(() => {
+    if (!form.start_time || !form.end_time) return null;
+    const [sh, sm] = form.start_time.split(':').map(Number);
+    const [eh, em] = form.end_time.split(':').map(Number);
+    const diffMin = (eh * 60 + em) - (sh * 60 + sm);
+    if (diffMin <= 0) return null;
+    const hours = diffMin / 60;
+    return Math.round(hours * 100) / 100;
 });
 
 watch(() => form.project_id, () => {
@@ -97,38 +119,63 @@ function submit() {
                     <p v-if="form.errors.task_id" class="mt-1 text-xs text-red-600">{{ form.errors.task_id }}</p>
                 </div>
 
-                <!-- Date + Hours row -->
-                <div class="grid grid-cols-2 gap-4">
+                <!-- Date -->
+                <div>
+                    <label for="log_date" class="mb-1.5 block text-sm font-semibold text-gray-700">
+                        Date <span class="text-red-500">*</span>
+                    </label>
+                    <input
+                        id="log_date"
+                        v-model="form.log_date"
+                        type="date"
+                        required
+                        class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#5e16bd] focus:bg-white focus:ring-1 focus:ring-[#5e16bd] outline-none transition"
+                        :class="{ 'border-red-400': form.errors.log_date }"
+                    />
+                    <p v-if="form.errors.log_date" class="mt-1 text-xs text-red-600">{{ form.errors.log_date }}</p>
+                </div>
+
+                <!-- Start Time + End Time + Calculated Hours -->
+                <div class="grid grid-cols-3 gap-4">
                     <div>
-                        <label for="log_date" class="mb-1.5 block text-sm font-semibold text-gray-700">
-                            Date <span class="text-red-500">*</span>
+                        <label for="start_time" class="mb-1.5 block text-sm font-semibold text-gray-700">
+                            Start Time <span class="text-red-500">*</span>
                         </label>
                         <input
-                            id="log_date"
-                            v-model="form.log_date"
-                            type="date"
+                            id="start_time"
+                            v-model="form.start_time"
+                            type="time"
                             required
                             class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#5e16bd] focus:bg-white focus:ring-1 focus:ring-[#5e16bd] outline-none transition"
-                            :class="{ 'border-red-400': form.errors.log_date }"
+                            :class="{ 'border-red-400': form.errors.start_time }"
                         />
-                        <p v-if="form.errors.log_date" class="mt-1 text-xs text-red-600">{{ form.errors.log_date }}</p>
+                        <p v-if="lastEndTime && form.start_time === lastEndTime?.slice(0, 5)" class="mt-1 text-xs text-gray-400">
+                            Auto-filled from last log
+                        </p>
+                        <p v-if="form.errors.start_time" class="mt-1 text-xs text-red-600">{{ form.errors.start_time }}</p>
                     </div>
                     <div>
-                        <label for="hours_spent" class="mb-1.5 block text-sm font-semibold text-gray-700">
-                            Hours Spent <span class="text-red-500">*</span>
+                        <label for="end_time" class="mb-1.5 block text-sm font-semibold text-gray-700">
+                            End Time <span class="text-red-500">*</span>
                         </label>
                         <input
-                            id="hours_spent"
-                            v-model.number="form.hours_spent"
-                            type="number"
-                            step="0.25"
-                            min="0.25"
-                            max="24"
+                            id="end_time"
+                            v-model="form.end_time"
+                            type="time"
                             required
                             class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#5e16bd] focus:bg-white focus:ring-1 focus:ring-[#5e16bd] outline-none transition"
-                            :class="{ 'border-red-400': form.errors.hours_spent }"
+                            :class="{ 'border-red-400': form.errors.end_time }"
                         />
-                        <p v-if="form.errors.hours_spent" class="mt-1 text-xs text-red-600">{{ form.errors.hours_spent }}</p>
+                        <p v-if="form.errors.end_time" class="mt-1 text-xs text-red-600">{{ form.errors.end_time }}</p>
+                    </div>
+                    <div>
+                        <label class="mb-1.5 block text-sm font-semibold text-gray-700">Hours</label>
+                        <div
+                            class="flex h-[42px] items-center rounded-lg border border-gray-200 bg-gray-100 px-3 text-sm font-medium"
+                            :class="calculatedHours ? 'text-[#5e16bd]' : 'text-gray-400'"
+                        >
+                            {{ calculatedHours ? `${calculatedHours} hrs` : '--' }}
+                        </div>
                     </div>
                 </div>
 
@@ -208,7 +255,7 @@ function submit() {
                     </Link>
                     <button
                         type="submit"
-                        :disabled="form.processing"
+                        :disabled="form.processing || !calculatedHours"
                         class="inline-flex items-center gap-2 rounded-lg bg-[#5e16bd] px-6 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[#4c12a1] disabled:opacity-50 transition-colors"
                     >
                         <svg v-if="form.processing" class="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">

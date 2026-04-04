@@ -127,6 +127,23 @@ class WorkLogRepository
     }
 
     /**
+     * Get the last work log's end_time for a user on a given date.
+     */
+    public function getLastEndTime(int $userId, string $date): ?string
+    {
+        $row = DB::table('work_logs')
+            ->where('user_id', $userId)
+            ->where('log_date', $date)
+            ->whereNotNull('end_time')
+            ->whereNull('deleted_at')
+            ->orderByDesc('end_time')
+            ->select('end_time')
+            ->first();
+
+        return $row?->end_time;
+    }
+
+    /**
      * Insert a new work log and return its ID.
      *
      * @param array $data

@@ -20,6 +20,8 @@ class WorkLog extends Model
         'project_id',
         'task_id',
         'log_date',
+        'start_time',
+        'end_time',
         'hours_spent',
         'status',
         'note',

@@ -129,6 +129,7 @@ function formatDate(dateStr) {
                             <th v-if="isManager" class="px-5 py-3.5">User</th>
                             <th class="px-5 py-3.5">Project</th>
                             <th class="px-5 py-3.5">Task</th>
+                            <th class="px-5 py-3.5">Time</th>
                             <th class="px-5 py-3.5">Status</th>
                             <th class="px-5 py-3.5 text-right">Hours</th>
                             <th class="px-5 py-3.5">Note</th>
@@ -145,6 +146,12 @@ function formatDate(dateStr) {
                             <td v-if="isManager" class="px-5 py-3.5 font-medium text-gray-700">{{ log.user_name || '—' }}</td>
                             <td class="px-5 py-3.5 font-medium text-gray-800">{{ log.project_name || '—' }}</td>
                             <td class="px-5 py-3.5 text-gray-600">{{ log.task_title || '—' }}</td>
+                            <td class="px-5 py-3.5 text-gray-500 whitespace-nowrap tabular-nums text-xs">
+                                <template v-if="log.start_time && log.end_time">
+                                    {{ log.start_time?.slice(0,5) }} – {{ log.end_time?.slice(0,5) }}
+                                </template>
+                                <span v-else class="text-gray-300">—</span>
+                            </td>
                             <td class="px-5 py-3.5">
                                 <span :class="{
                                     'bg-emerald-100 text-emerald-700': log.status === 'done',
@@ -167,7 +174,7 @@ function formatDate(dateStr) {
                             </td>
                         </tr>
                         <tr v-if="!workLogs.data?.length">
-                            <td :colspan="isManager ? 8 : 7" class="px-5 py-12 text-center">
+                            <td :colspan="isManager ? 9 : 8" class="px-5 py-12 text-center">
                                 <svg class="mx-auto mb-3 h-10 w-10 text-gray-200" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>

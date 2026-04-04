@@ -132,8 +132,12 @@ class WorkLogController extends Controller
                 ->toArray();
         }
 
+        $today = now()->toDateString();
+        $lastEndTime = $this->workLogService->getLastEndTime($user->id, $today);
+
         return Inertia::render('WorkLogs/Create', [
-            'projects' => $projects,
+            'projects'    => $projects,
+            'lastEndTime' => $lastEndTime,
         ]);
     }
 

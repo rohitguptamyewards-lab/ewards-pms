@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Repositories\WorkLogRepository;
+use Carbon\Carbon;
 use InvalidArgumentException;
 
 class WorkLogService
@@ -14,12 +15,7 @@ class WorkLogService
     /**
      * Create a work log entry with validation.
      *
-     * If the associated task is blocked, the blocker field must not be empty.
-     *
-     * @param array $data
-     * @return int The new work log ID.
-     *
-     * @throws InvalidArgumentException If a blocked task log is missing the blocker field.
+     * Calculates hours_spent from start_time and end_time.
      */
     public function create(array $data): int
     {
@@ -32,6 +28,13 @@ class WorkLogService
             }
         }
 
+        // Calculate hours_spent from start_time and end_time
+        if (!empty($data['start_time']) && !empty($data['end_time'])) {
+            $start = Carbon::createFromFormat('H:i', $data['start_time']);
+            $end = Carbon::createFromFormat('H:i', $data['end_time']);
+            $data['hours_spent'] = round($end->diffInMinutes($start) / 60, 2);
+        }
+
         // Remove non-column keys before passing to repository
         unset($data['task_status']);
 
@@ -39,11 +42,15 @@ class WorkLogService
     }
 
     /**
+     * Get the last work log's end_time for a user on a given date.
+     */
+    public function getLastEndTime(int $userId, string $date): ?string
+    {
+        return $this->workLogRepository->getLastEndTime($userId, $date);
+    }
+
+    /**
      * Get total hours logged by a user on a specific date.
-     *
-     * @param int    $userId
-     * @param string $date Date in Y-m-d format
-     * @return float
      */
     public function getDailyTotals(int $userId, string $date): float
     {
