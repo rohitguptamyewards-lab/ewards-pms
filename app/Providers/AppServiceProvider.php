@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -32,6 +33,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Force HTTPS in production (Render's load balancer terminates SSL)
+        if ($this->app->environment('production')) {
+            URL::forceScheme('https');
+        }
+
         // Morph map — keeps short type strings in DB consistent with model lookups.
         // Deadline.deadlineable and PmsNotification.notifiable rely on these.
         Relation::morphMap([
