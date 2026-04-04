@@ -39,10 +39,10 @@ return [
 
         'smtp' => [
             'transport' => 'smtp',
-            'scheme' => in_array(env('MAIL_SCHEME'), ['smtp', 'smtps']) ? env('MAIL_SCHEME') : null,
+            'scheme' => env('MAIL_SCHEME', 'smtps'),
             'url' => env('MAIL_URL'),
             'host' => env('MAIL_HOST', 'smtp.gmail.com'),
-            'port' => env('MAIL_PORT', 587),
+            'port' => env('MAIL_PORT', 465),
             'username' => env('MAIL_USERNAME'),
             'password' => env('MAIL_PASSWORD'),
             'timeout' => null,
