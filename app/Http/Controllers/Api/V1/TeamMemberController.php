@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Models\TeamMember;
+use App\Services\EmailNotificationService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -87,7 +88,22 @@ class TeamMemberController extends Controller
             'git_username'     => 'nullable|string|max:255',
         ]);
 
+        $plainPassword = $validated['password'];
+
         TeamMember::create($validated);
+
+        // Send welcome email with credentials
+        try {
+            $emailService = app(EmailNotificationService::class);
+            $emailService->onTeamMemberCreated(
+                $validated['email'],
+                $validated['name'],
+                $validated['role'],
+                $plainPassword,
+            );
+        } catch (\Throwable $e) {
+            // Don't fail member creation if email fails
+        }
 
         return redirect()->route('team-members.index')->with('success', 'Team member created successfully.');
     }

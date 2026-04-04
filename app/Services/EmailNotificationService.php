@@ -285,6 +285,28 @@ class EmailNotificationService
         $this->sendToEmails([$request->email], $subject, $heading, $body, $url, 'View Request');
     }
 
+    /**
+     * Send welcome email to a newly created team member with their credentials.
+     */
+    public function onTeamMemberCreated(string $email, string $name, string $role, string $plainPassword): void
+    {
+        $roleLabel = ucfirst(str_replace('_', ' ', $role));
+        $loginUrl = $this->baseUrl() . '/login';
+        $docsUrl = $this->baseUrl() . '/documentation';
+
+        $subject = "Welcome to eWards PMS - Your Account is Ready";
+        $heading = "Welcome to eWards PMS, {$name}!";
+        $body = "Your account has been created on eWards Project Management System.\n\n"
+            . "Here are your login credentials:\n"
+            . "Email: {$email}\n"
+            . "Password: {$plainPassword}\n"
+            . "Role: {$roleLabel}\n\n"
+            . "Please change your password after your first login.\n\n"
+            . "You can also view the complete project documentation here:\n{$docsUrl}";
+
+        $this->sendToEmails([$email], $subject, $heading, $body, $loginUrl, 'Login to eWards PMS');
+    }
+
     public function onBugSlaCreated(int $featureId, string $severity): void
     {
         $feature = DB::table('features')
