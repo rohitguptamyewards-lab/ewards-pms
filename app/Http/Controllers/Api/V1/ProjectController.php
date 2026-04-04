@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreProjectRequest;
 use App\Repositories\ProjectRepository;
+use App\Services\EmailNotificationService;
 use App\Services\ProjectService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -17,6 +18,7 @@ class ProjectController extends Controller
     public function __construct(
         private readonly ProjectService $projectService,
         private readonly ProjectRepository $projectRepository,
+        private readonly EmailNotificationService $emailService,
     ) {}
 
     /**
@@ -135,11 +137,10 @@ class ProjectController extends Controller
             ->orderByDesc('work_logs.log_date')
             ->get();
 
-        // Documents for this project
+        // Documents for this project (documents table has no soft deletes)
         $documents = DB::table('documents')
             ->where('documentable_type', 'project')
             ->where('documentable_id', $id)
-            ->whereNull('deleted_at')
             ->orderByDesc('created_at')
             ->get();
 
@@ -194,7 +195,14 @@ class ProjectController extends Controller
             'user_id' => 'required|integer|exists:team_members,id',
         ]);
 
-        $this->projectRepository->addMember($id, $request->input('user_id'));
+        $userId = $request->input('user_id');
+        $this->projectRepository->addMember($id, $userId);
+
+        try {
+            $this->emailService->onProjectMemberAdded($id, $userId);
+        } catch (\Throwable $e) {
+            // Never let email failure break the action
+        }
 
         return response()->json(['message' => 'Member added successfully.']);
     }

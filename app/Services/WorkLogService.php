@@ -32,7 +32,7 @@ class WorkLogService
         if (!empty($data['start_time']) && !empty($data['end_time'])) {
             $start = Carbon::createFromFormat('H:i', $data['start_time']);
             $end = Carbon::createFromFormat('H:i', $data['end_time']);
-            $data['hours_spent'] = round($end->diffInMinutes($start) / 60, 2);
+            $data['hours_spent'] = round(abs($end->diffInMinutes($start)) / 60, 2);
         }
 
         // Remove non-column keys before passing to repository

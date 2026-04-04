@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreBugSlaRecordRequest;
 use App\Repositories\BugSlaRecordRepository;
 use App\Services\BugSlaService;
+use App\Services\EmailNotificationService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -17,6 +18,7 @@ class BugSlaRecordController extends Controller
     public function __construct(
         private readonly BugSlaService $bugSlaService,
         private readonly BugSlaRecordRepository $bugSlaRepo,
+        private readonly EmailNotificationService $emailService,
     ) {}
 
     private function isManager(): bool
@@ -64,7 +66,14 @@ class BugSlaRecordController extends Controller
 
     public function storeWeb(StoreBugSlaRecordRequest $request)
     {
-        $this->bugSlaService->create($request->validated());
+        $data = $request->validated();
+        $this->bugSlaService->create($data);
+
+        try {
+            $this->emailService->onBugSlaCreated($data['feature_id'], $data['severity']);
+        } catch (\Throwable $e) {
+            // Never let email failure break the action
+        }
 
         return redirect()->route('bug-sla.index')
             ->with('success', 'Bug SLA record created.');

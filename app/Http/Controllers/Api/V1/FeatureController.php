@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Repositories\FeatureRepository;
+use App\Services\EmailNotificationService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -14,6 +15,7 @@ class FeatureController extends Controller
 {
     public function __construct(
         private readonly FeatureRepository $featureRepository,
+        private readonly EmailNotificationService $emailService,
     ) {}
 
     private function managerRoles(): array
@@ -162,7 +164,21 @@ class FeatureController extends Controller
             'business_impact' => 'nullable|string',
         ]);
 
+        // Check if status is changing for email notification
+        $oldFeature = $this->featureRepository->findById($id);
+        $oldStatus = $oldFeature->status ?? null;
+
         $this->featureRepository->update($id, $data);
+
+        // Send email if status changed
+        $newStatus = $data['status'] ?? null;
+        if ($newStatus && $oldStatus && $newStatus !== $oldStatus) {
+            try {
+                $this->emailService->onFeatureStatusChanged($id, $oldStatus, $newStatus, auth()->id());
+            } catch (\Throwable $e) {
+                // Never let email failure break the action
+            }
+        }
 
         return redirect()->route('features.show', $id)->with('success', 'Feature updated.');
     }

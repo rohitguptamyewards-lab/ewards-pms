@@ -1,0 +1,1543 @@
+<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
+<head>
+<meta charset="utf-8">
+<title>eWards PMS - Complete Project Documentation</title>
+<!--[if gte mso 9]><xml><w:WordDocument><w:View>Print</w:View><w:Zoom>100</w:Zoom></w:WordDocument></xml><![endif]-->
+<style>
+    @page { size: A4; margin: 1in; }
+    body { font-family: 'Segoe UI', Calibri, Arial, sans-serif; font-size: 11pt; line-height: 1.6; color: #222; max-width: 800px; margin: 0 auto; }
+    h1 { font-size: 28pt; color: #5e16bd; text-align: center; margin-top: 60px; page-break-before: always; border-bottom: 3px solid #5e16bd; padding-bottom: 10px; }
+    h1:first-of-type { page-break-before: auto; margin-top: 0; }
+    h2 { font-size: 18pt; color: #5e16bd; margin-top: 30px; border-bottom: 1px solid #ddd; padding-bottom: 5px; }
+    h3 { font-size: 14pt; color: #333; margin-top: 20px; }
+    h4 { font-size: 12pt; color: #5e16bd; margin-top: 15px; }
+    p { margin: 8px 0; text-align: justify; }
+    table { border-collapse: collapse; width: 100%; margin: 15px 0; font-size: 10pt; }
+    th { background-color: #5e16bd; color: white; padding: 8px 10px; text-align: left; font-weight: 600; }
+    td { border: 1px solid #ddd; padding: 6px 10px; vertical-align: top; }
+    tr:nth-child(even) { background-color: #f9f7ff; }
+    .cover { text-align: center; padding: 100px 0; }
+    .cover h1 { font-size: 36pt; border: none; margin: 0; }
+    .cover .subtitle { font-size: 16pt; color: #666; margin-top: 10px; }
+    .cover .version { font-size: 12pt; color: #999; margin-top: 30px; }
+    .badge { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 9pt; font-weight: 600; }
+    .badge-purple { background: #ece1ff; color: #5e16bd; }
+    .badge-green { background: #d1fae5; color: #065f46; }
+    .badge-red { background: #fee2e2; color: #991b1b; }
+    .badge-blue { background: #dbeafe; color: #1e40af; }
+    .badge-yellow { background: #fef3c7; color: #92400e; }
+    .badge-gray { background: #f3f4f6; color: #374151; }
+    .note { background: #f5f0ff; border-left: 4px solid #5e16bd; padding: 10px 15px; margin: 15px 0; border-radius: 0 8px 8px 0; }
+    .warning { background: #fef3c7; border-left: 4px solid #f59e0b; padding: 10px 15px; margin: 15px 0; border-radius: 0 8px 8px 0; }
+    .flow-step { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 10px 15px; margin: 8px 0; }
+    .flow-arrow { text-align: center; font-size: 16pt; color: #5e16bd; margin: 5px 0; }
+    .toc a { text-decoration: none; color: #5e16bd; }
+    .toc li { margin: 4px 0; }
+    ul { margin: 5px 0 5px 20px; }
+    li { margin: 3px 0; }
+    code { background: #f3f4f6; padding: 1px 4px; border-radius: 3px; font-family: Consolas, monospace; font-size: 10pt; }
+    .section-intro { font-size: 11pt; color: #555; font-style: italic; margin-bottom: 15px; }
+    .check { color: #059669; font-weight: bold; }
+    .cross { color: #dc2626; font-weight: bold; }
+    .partial { color: #f59e0b; font-weight: bold; }
+</style>
+</head>
+<body>
+
+<!-- ======================= COVER PAGE ======================= -->
+<div class="cover">
+    <br><br><br>
+    <h1 style="font-size:40pt; border:none; page-break-before:auto;">eWards PMS</h1>
+    <p class="subtitle">Project Management System</p>
+    <p class="subtitle" style="font-size:14pt;">Complete Project Documentation</p>
+    <br><br>
+    <p style="text-align:center; font-size:12pt; color:#666;">Implementation Guide | Technical Reference | User Manual</p>
+    <br><br><br>
+    <p class="version">Version 1.0</p>
+    <p class="version">April 2026</p>
+    <p class="version">Prepared for: eWards Team</p>
+</div>
+
+<!-- ======================= TABLE OF CONTENTS ======================= -->
+<h1 style="page-break-before:always;">Table of Contents</h1>
+<div class="toc">
+<ol>
+    <li><a href="#summary">Executive Summary (Non-Technical Overview)</a></li>
+    <li><a href="#tech-stack">Technology Stack</a></li>
+    <li><a href="#roles">User Roles & Access Control</a></li>
+    <li><a href="#role-matrix">Role-wise Feature Access Matrix</a></li>
+    <li><a href="#seed-users">Test/Seed Users & Login Details</a></li>
+    <li><a href="#modules">Complete Module Documentation</a>
+        <ol type="a">
+            <li>Dashboard</li>
+            <li>Projects</li>
+            <li>Tasks</li>
+            <li>Features & Kanban Board</li>
+            <li>Requests (Merchant Requests)</li>
+            <li>Initiatives</li>
+            <li>Ideas</li>
+            <li>Decisions</li>
+            <li>Sprints</li>
+            <li>Work Logs</li>
+            <li>Activity Logs</li>
+            <li>Journal (Work Journal)</li>
+            <li>Releases</li>
+            <li>Changelogs</li>
+            <li>Deadlines</li>
+            <li>Bug SLA</li>
+            <li>Blockers</li>
+            <li>Merchant Communications</li>
+            <li>Team Members</li>
+            <li>Onboarding</li>
+            <li>Offboarding</li>
+            <li>Bus Factor</li>
+            <li>Capacity Planning</li>
+            <li>Leave Entries</li>
+            <li>Reports</li>
+            <li>Cost Rates & Cost Dashboard</li>
+            <li>Cost vs Impact Analysis</li>
+            <li>CEO Dashboard</li>
+            <li>AI Tools</li>
+            <li>AI Dashboard</li>
+            <li>Prompt Templates</li>
+            <li>AI Knowledge Base</li>
+            <li>Git Providers</li>
+            <li>Git Repositories</li>
+            <li>Personal Dashboard & Review Prep</li>
+            <li>Comments & Documents</li>
+            <li>Notifications</li>
+            <li>Audit Logs</li>
+        </ol>
+    </li>
+    <li><a href="#database">Complete Database Schema</a></li>
+    <li><a href="#api">Complete API Reference</a></li>
+    <li><a href="#flows">Application Flows</a></li>
+    <li><a href="#architecture">Architecture & Implementation Guide</a></li>
+</ol>
+</div>
+
+<!-- ======================= 1. EXECUTIVE SUMMARY ======================= -->
+<h1 id="summary">1. Executive Summary</h1>
+<p class="section-intro">This section is written in simple language for non-technical team members to understand what this system does and how each part works.</p>
+
+<h2>What is eWards PMS?</h2>
+<p>eWards PMS (Project Management System) is a web application built specifically for the eWards team. It is a single platform where the entire team can manage their daily work, track projects, log hours, report bugs, plan sprints, and much more. Think of it as your one-stop shop for everything related to work management.</p>
+
+<p>Instead of using multiple tools (spreadsheets for tracking hours, emails for merchant communication, separate apps for bug tracking), everything lives in one place. Every team member logs in and sees a dashboard customized for their role.</p>
+
+<h2>Who Uses It?</h2>
+<p>Everyone in the eWards team uses this system, but each person sees different things based on their role:</p>
+<ul>
+    <li><b>CTO (Arjun)</b> - Sees everything. Technical dashboards, cost analysis, AI tool tracking, team performance.</li>
+    <li><b>CEO (Priya)</b> - Sees the big picture. Business metrics, feature pipeline, roadmap progress, team health.</li>
+    <li><b>Manager (Neha)</b> - Manages day-to-day operations. Team workload, sprint planning, task assignments, reports.</li>
+    <li><b>MC Team (Amit)</b> - Handles merchant requests. Triages incoming requests, tracks merchant communications.</li>
+    <li><b>Sales (Kavitha)</b> - Submits requests from merchants. Tracks status of submitted requests.</li>
+    <li><b>Developer (Rohit)</b> - Does coding work. Logs daily hours, updates task status, writes journal entries.</li>
+    <li><b>Tester (Sneha)</b> - Tests features. Logs bugs, tracks SLA, verifies fixes.</li>
+    <li><b>Analyst (Deepak)</b> - Analyzes data. Writes specs, reviews features, does research.</li>
+</ul>
+
+<h2>Quick Overview of Every Module</h2>
+<table>
+    <tr><th>Module</th><th>What It Does (Simple Explanation)</th><th>Who Uses It</th></tr>
+    <tr><td><b>Dashboard</b></td><td>Your home page when you log in. Shows a summary of your work - open tasks, hours logged, pending items. Each role sees a different dashboard.</td><td>Everyone</td></tr>
+    <tr><td><b>Projects</b></td><td>All the big projects the team is working on. Each project has tasks, team members, and deadlines.</td><td>Everyone (Managers create, others view their projects)</td></tr>
+    <tr><td><b>Tasks</b></td><td>Individual work items inside projects. Like "Build login page" or "Fix payment bug". Each task is assigned to someone.</td><td>Everyone sees their assigned tasks</td></tr>
+    <tr><td><b>Features</b></td><td>Bigger work items than tasks. A feature is like "Add Google Pay support" which may have many tasks inside it. Features go through stages: Backlog > In Progress > In Review > QA > Released.</td><td>Everyone views, Managers create/edit</td></tr>
+    <tr><td><b>Kanban Board</b></td><td>A visual board showing all features as cards organized in columns by their status. You can see at a glance what's being worked on, what's in testing, etc.</td><td>Everyone</td></tr>
+    <tr><td><b>Requests</b></td><td>When a merchant asks for something (new feature, bug fix, improvement), it comes here as a request. The team reviews and either accepts, links to a feature, or rejects it.</td><td>Sales submits, MC Team triages, Managers review</td></tr>
+    <tr><td><b>Initiatives</b></td><td>Big strategic goals like "Improve merchant onboarding experience" or "Reduce payment failures by 50%". Multiple features can belong to one initiative.</td><td>Managers create, Everyone views</td></tr>
+    <tr><td><b>Ideas</b></td><td>Anyone on the team can submit an idea. Good ideas get promoted to features or initiatives.</td><td>Everyone</td></tr>
+    <tr><td><b>Decisions</b></td><td>Important decisions are recorded here with context, options considered, and why a particular option was chosen. This prevents "why did we do this?" questions later.</td><td>Managers create, Everyone views</td></tr>
+    <tr><td><b>Sprints</b></td><td>A sprint is a 1-2 week work cycle. The team picks features to work on, estimates hours, and tracks progress. At the end, you see what got done.</td><td>Managers plan, Everyone participates</td></tr>
+    <tr><td><b>Work Logs</b></td><td>Every team member logs their daily work hours here. You select a project, enter start time and end time, and the system calculates hours automatically.</td><td>Everyone logs their own hours</td></tr>
+    <tr><td><b>Activity Logs</b></td><td>More detailed than work logs. Tracks what type of work you did (coding, testing, reviewing), which feature, how long, and whether you used AI tools.</td><td>Everyone logs their own activities</td></tr>
+    <tr><td><b>Journal</b></td><td>A daily diary. Write what you accomplished, what's blocking you, what you'll do tomorrow, and how you're feeling (mood). Managers can see the team's journals.</td><td>Everyone writes, Managers read team journals</td></tr>
+    <tr><td><b>Releases</b></td><td>When code is deployed to staging or production, it's recorded here with version number, features included, and who deployed it.</td><td>Managers</td></tr>
+    <tr><td><b>Changelogs</b></td><td>Public-facing release notes. Someone writes it, a manager approves it, then it gets published.</td><td>Anyone drafts, Managers approve/publish</td></tr>
+    <tr><td><b>Deadlines</b></td><td>Set due dates for features, releases, or any item. The system tracks if you're on track, at risk, or overdue.</td><td>Managers</td></tr>
+    <tr><td><b>Bug SLA</b></td><td>When a bug is found, it gets a severity level (P0=Critical to P3=Low). Each severity has a fix deadline (SLA). The system tracks if the SLA is met or breached.</td><td>Developers, Testers, Managers</td></tr>
+    <tr><td><b>Blockers</b></td><td>When something is blocking a feature from progressing (waiting for API, need design, dependency on another team), it's logged here.</td><td>Everyone</td></tr>
+    <tr><td><b>Merchant Communications</b></td><td>Every call, email, or meeting with a merchant is logged here. If a promise was made (like "we'll deliver this by Friday"), it's tracked.</td><td>MC Team, Sales, Managers</td></tr>
+    <tr><td><b>Team Members</b></td><td>Directory of all team members with their roles, projects, and performance stats.</td><td>Everyone</td></tr>
+    <tr><td><b>Onboarding</b></td><td>When a new person joins, a checklist is created: set up laptop, meet the team, get access to tools, etc. The manager tracks completion.</td><td>Managers only</td></tr>
+    <tr><td><b>Offboarding</b></td><td>When someone leaves, a checklist ensures proper handover: transfer knowledge, revoke access, document processes.</td><td>Managers only</td></tr>
+    <tr><td><b>Bus Factor</b></td><td>Shows risk analysis: if only one person knows how a module works, that's dangerous. The system identifies single points of failure.</td><td>Managers only</td></tr>
+    <tr><td><b>Capacity Planning</b></td><td>Shows how much work each team member can handle. Factors in leave days, existing assignments, and weekly hours.</td><td>Managers only</td></tr>
+    <tr><td><b>Leave Entries</b></td><td>Calendar of team member vacations, sick days, and holidays. Feeds into capacity planning.</td><td>Managers only</td></tr>
+    <tr><td><b>Reports</b></td><td>Three types: Work Log Report (who worked how many hours), Project Report (project progress), Individual Report (per-person analysis).</td><td>Managers</td></tr>
+    <tr><td><b>Cost Dashboard</b></td><td>How much each feature/module costs in developer hours and money. Shows ROI and maintenance costs.</td><td>CTO only</td></tr>
+    <tr><td><b>Cost vs Impact</b></td><td>Compares the cost of building a feature versus its business impact (revenue, retention, etc).</td><td>CTO, CEO, Manager</td></tr>
+    <tr><td><b>Cost Rates</b></td><td>Set hourly cost rates for team members to calculate feature costs.</td><td>CTO only</td></tr>
+    <tr><td><b>CEO Dashboard</b></td><td>High-level business view: roadmap completion, module-wise ROI, team health, risk indicators.</td><td>CTO, CEO only</td></tr>
+    <tr><td><b>AI Tools</b></td><td>Registry of AI tools the team uses (ChatGPT, Copilot, etc). Tracks licenses, costs, and who has access.</td><td>CTO only</td></tr>
+    <tr><td><b>AI Dashboard</b></td><td>Analytics on how the team uses AI: adoption rates, time saved, which tools are most effective.</td><td>CTO only</td></tr>
+    <tr><td><b>Prompt Templates</b></td><td>Reusable prompt templates for AI tools. The team shares effective prompts.</td><td>CTO only</td></tr>
+    <tr><td><b>AI Knowledge Base</b></td><td>Collection of AI best practices and guidelines for the team.</td><td>CTO only</td></tr>
+    <tr><td><b>Git Providers</b></td><td>Connect GitHub, GitLab, or CodeCommit accounts to track code activity.</td><td>Managers only</td></tr>
+    <tr><td><b>Git Repositories</b></td><td>Link specific code repositories. Set up webhooks to track pushes, pull requests, etc.</td><td>Managers only</td></tr>
+    <tr><td><b>Personal Dashboard</b></td><td>Your personal work history: features delivered, hours logged, projects involved.</td><td>Everyone</td></tr>
+    <tr><td><b>Review Prep</b></td><td>Auto-generated summary for performance reviews. Pulls from your journals, work logs, and activity logs.</td><td>Everyone</td></tr>
+</table>
+
+<h2>How It All Connects</h2>
+<p>Here's the big picture of how data flows through the system:</p>
+
+<div class="flow-step"><b>1. Ideas & Requests Come In</b> - Merchants ask for things (Requests), team members suggest ideas (Ideas)</div>
+<div class="flow-arrow">&#8595;</div>
+<div class="flow-step"><b>2. Triage & Planning</b> - MC Team/Managers review requests, good ideas get promoted to Features</div>
+<div class="flow-arrow">&#8595;</div>
+<div class="flow-step"><b>3. Features & Initiatives</b> - Features are grouped under Initiatives (big goals). Priorities and deadlines are set.</div>
+<div class="flow-arrow">&#8595;</div>
+<div class="flow-step"><b>4. Sprint Planning</b> - Features are added to Sprints (1-2 week work cycles) based on team Capacity</div>
+<div class="flow-arrow">&#8595;</div>
+<div class="flow-step"><b>5. Daily Work</b> - Developers, Testers, Analysts work on features. They log Work Logs, Activity Logs, and write Journal entries</div>
+<div class="flow-arrow">&#8595;</div>
+<div class="flow-step"><b>6. Quality & Tracking</b> - Bugs get tracked with SLA deadlines. Blockers are logged. Decisions are documented.</div>
+<div class="flow-arrow">&#8595;</div>
+<div class="flow-step"><b>7. Release</b> - Completed features are deployed. Release notes are created. Changelogs are published.</div>
+<div class="flow-arrow">&#8595;</div>
+<div class="flow-step"><b>8. Analysis</b> - CEO Dashboard shows business metrics. Cost Dashboard shows spending. Reports show team performance.</div>
+
+
+<!-- ======================= 2. TECH STACK ======================= -->
+<h1 id="tech-stack">2. Technology Stack</h1>
+
+<h2>What Technologies Are Used?</h2>
+<table>
+    <tr><th>Component</th><th>Technology</th><th>Purpose</th></tr>
+    <tr><td><b>Backend (Server)</b></td><td>Laravel 12 (PHP 8.3)</td><td>Handles all business logic, database queries, authentication, API endpoints</td></tr>
+    <tr><td><b>Frontend (UI)</b></td><td>Vue.js 3</td><td>The user interface - everything you see and click on in the browser</td></tr>
+    <tr><td><b>Bridge</b></td><td>Inertia.js</td><td>Connects Laravel and Vue seamlessly. Makes it behave like a single-page app without a separate API</td></tr>
+    <tr><td><b>Styling</b></td><td>Tailwind CSS</td><td>Makes the UI look clean and modern with utility-based CSS classes</td></tr>
+    <tr><td><b>Database</b></td><td>PostgreSQL (Neon)</td><td>Stores all data - users, projects, tasks, logs, everything</td></tr>
+    <tr><td><b>Build Tool</b></td><td>Vite</td><td>Bundles JavaScript and CSS for production</td></tr>
+    <tr><td><b>Routing</b></td><td>Ziggy</td><td>Makes Laravel routes accessible in JavaScript</td></tr>
+    <tr><td><b>Deployment</b></td><td>Render.com + Docker</td><td>The app runs inside a Docker container on Render's free tier</td></tr>
+    <tr><td><b>Version Control</b></td><td>Git + GitHub</td><td>Code is stored and versioned on GitHub</td></tr>
+    <tr><td><b>Authentication</b></td><td>Laravel Session Auth</td><td>Email + password login with session cookies</td></tr>
+</table>
+
+<h2>Architecture Overview</h2>
+<p>The application follows a <b>monolithic architecture</b> with the following layers:</p>
+<ul>
+    <li><b>Controllers</b> - Receive requests from the browser, call services, return responses</li>
+    <li><b>Services</b> - Business logic layer. Calculations, validations, data processing</li>
+    <li><b>Repositories</b> - Database access layer. All SQL queries live here</li>
+    <li><b>Models</b> - Define database table structures and relationships</li>
+    <li><b>Enums</b> - Define allowed values for fields like status, priority, role</li>
+    <li><b>Vue Pages</b> - Frontend components that render the UI</li>
+    <li><b>Layouts</b> - Shared page structure (sidebar, header) used by all pages</li>
+</ul>
+
+<p><b>File Structure:</b></p>
+<ul>
+    <li><code>app/Http/Controllers/Api/V1/</code> - All controllers (one per module)</li>
+    <li><code>app/Services/</code> - Business logic services</li>
+    <li><code>app/Repositories/</code> - Database query repositories</li>
+    <li><code>app/Models/</code> - Eloquent models</li>
+    <li><code>app/Enums/</code> - All enum definitions</li>
+    <li><code>resources/js/Pages/</code> - Vue page components (81 total)</li>
+    <li><code>resources/js/Layouts/</code> - Layout components (sidebar, header)</li>
+    <li><code>database/migrations/</code> - Database table definitions</li>
+    <li><code>database/seeders/</code> - Test data seeding</li>
+    <li><code>routes/web.php</code> - Web routes (182 routes)</li>
+    <li><code>routes/api.php</code> - API routes (106 routes)</li>
+</ul>
+
+
+<!-- ======================= 3. ROLES ======================= -->
+<h1 id="roles">3. User Roles & Access Control</h1>
+
+<h2>All Roles Defined in the System</h2>
+<table>
+    <tr><th>Role</th><th>Category</th><th>Description</th><th>Dashboard Type</th></tr>
+    <tr><td><b>CTO</b></td><td>Leadership</td><td>Chief Technology Officer. Has access to EVERYTHING - all modules, all data, all team members' work. Can see cost analysis, AI analytics, and technical intelligence.</td><td>Manager Dashboard (execution view)</td></tr>
+    <tr><td><b>CEO</b></td><td>Leadership</td><td>Chief Executive Officer. Sees the big business picture - feature pipeline, roadmap progress, team health metrics. Does NOT see individual cost rates or AI tool details.</td><td>CEO Dashboard (business view)</td></tr>
+    <tr><td><b>Manager</b></td><td>Management</td><td>Project/Team Manager. Manages daily operations - assigns tasks, plans sprints, reviews work logs, handles onboarding/offboarding.</td><td>Manager Dashboard (execution view)</td></tr>
+    <tr><td><b>MC Team</b></td><td>Management</td><td>Merchant Communications Team. Primary job is to triage incoming merchant requests. Can also manage features and see team data.</td><td>MC Team Dashboard (triage view)</td></tr>
+    <tr><td><b>Sales</b></td><td>Contributor</td><td>Sales Representative. Submits requests from merchants into the system. Can track the status of their submitted requests.</td><td>Sales Dashboard (requests view)</td></tr>
+    <tr><td><b>Developer</b></td><td>Contributor</td><td>Software Developer. Works on assigned tasks and features. Logs daily hours, writes journal entries, reports blockers.</td><td>Individual Dashboard (personal view)</td></tr>
+    <tr><td><b>Tester</b></td><td>QA</td><td>Quality Assurance Tester. Tests features, reports bugs, tracks bug SLA compliance, verifies fixes.</td><td>QA Dashboard (testing view)</td></tr>
+    <tr><td><b>Analyst</b></td><td>Individual</td><td>Data/Business Analyst. Writes specifications, gathers requirements, conducts research, reviews feature specs.</td><td>Individual Dashboard (personal view)</td></tr>
+</table>
+
+<h2>Role Groupings</h2>
+<p>Internally, the system groups roles for access control:</p>
+<table>
+    <tr><th>Group Name</th><th>Roles Included</th><th>What They Can Do Extra</th></tr>
+    <tr><td><b>Manager Roles</b></td><td>CTO, CEO, Manager, MC Team</td><td>See all work logs, all activity logs, all tasks. Can create/edit features. Can access team management tools.</td></tr>
+    <tr><td><b>Leadership</b></td><td>CTO, CEO</td><td>Access CEO Dashboard, business metrics</td></tr>
+    <tr><td><b>CTO Only</b></td><td>CTO</td><td>Cost dashboard, AI intelligence suite, cost rates</td></tr>
+    <tr><td><b>Dev/Test</b></td><td>CTO, CEO, Manager, Developer, Tester</td><td>Bug SLA tracking</td></tr>
+    <tr><td><b>All Roles</b></td><td>Everyone</td><td>Dashboard, work logs, journal, activity logs, projects, ideas, team directory</td></tr>
+</table>
+
+
+<!-- ======================= 4. ROLE MATRIX ======================= -->
+<h1 id="role-matrix">4. Role-wise Feature Access Matrix</h1>
+
+<p>This table shows exactly which modules are available to which role. <span class="check">&#10003;</span> = Full Access, <span class="cross">&#10007;</span> = No Access, <span class="partial">~</span> = Limited Access</p>
+
+<table style="font-size: 9pt;">
+    <tr>
+        <th>Module</th>
+        <th>CTO</th>
+        <th>CEO</th>
+        <th>Manager</th>
+        <th>MC Team</th>
+        <th>Sales</th>
+        <th>Developer</th>
+        <th>Tester</th>
+        <th>Analyst</th>
+    </tr>
+    <tr><td><b>Dashboard (Own)</b></td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td></tr>
+    <tr><td><b>Projects (View All)</b></td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="partial">~ Own</td><td class="partial">~ Own</td><td class="partial">~ Own</td></tr>
+    <tr><td><b>Projects (Create)</b></td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td></tr>
+    <tr><td><b>Tasks (View All)</b></td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="partial">~ Assigned</td><td class="partial">~ Assigned</td><td class="partial">~ Assigned</td></tr>
+    <tr><td><b>Features (View)</b></td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td></tr>
+    <tr><td><b>Features (Create/Edit)</b></td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td></tr>
+    <tr><td><b>Kanban Board</b></td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td></tr>
+    <tr><td><b>Requests</b></td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td></tr>
+    <tr><td><b>Initiatives</b></td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td></tr>
+    <tr><td><b>Ideas</b></td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td></tr>
+    <tr><td><b>Decisions</b></td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td></tr>
+    <tr><td><b>Sprints</b></td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td></tr>
+    <tr><td><b>Work Logs (Own)</b></td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td></tr>
+    <tr><td><b>Work Logs (Team)</b></td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td></tr>
+    <tr><td><b>Activity Logs (Own)</b></td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td></tr>
+    <tr><td><b>Activity Logs (Team)</b></td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td></tr>
+    <tr><td><b>Journal (Own)</b></td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td></tr>
+    <tr><td><b>Team Journal</b></td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td></tr>
+    <tr><td><b>Releases</b></td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td></tr>
+    <tr><td><b>Changelogs</b></td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td></tr>
+    <tr><td><b>Deadlines</b></td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td></tr>
+    <tr><td><b>Bug SLA</b></td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="cross">&#10007;</td></tr>
+    <tr><td><b>Merchant Comms</b></td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td></tr>
+    <tr><td><b>Team Members</b></td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td></tr>
+    <tr><td><b>Onboarding</b></td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td></tr>
+    <tr><td><b>Offboarding</b></td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td></tr>
+    <tr><td><b>Bus Factor</b></td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td></tr>
+    <tr><td><b>Capacity Planning</b></td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td></tr>
+    <tr><td><b>Leave Entries</b></td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td></tr>
+    <tr><td><b>Reports</b></td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td></tr>
+    <tr><td><b>CEO Dashboard</b></td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td></tr>
+    <tr><td><b>Cost Dashboard</b></td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td></tr>
+    <tr><td><b>Cost vs Impact</b></td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td></tr>
+    <tr><td><b>Cost Rates</b></td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td></tr>
+    <tr><td><b>AI Tools</b></td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td></tr>
+    <tr><td><b>AI Dashboard</b></td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td></tr>
+    <tr><td><b>Prompt Templates</b></td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td></tr>
+    <tr><td><b>AI Knowledge Base</b></td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td></tr>
+    <tr><td><b>Git Providers</b></td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td></tr>
+    <tr><td><b>Git Repositories</b></td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td></tr>
+    <tr><td><b>Personal Dashboard</b></td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td></tr>
+    <tr><td><b>Review Prep</b></td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td></tr>
+</table>
+
+
+<!-- ======================= 5. SEED USERS ======================= -->
+<h1 id="seed-users">5. Test Users & Login Details</h1>
+
+<table>
+    <tr><th>ID</th><th>Name</th><th>Email (Username)</th><th>Password</th><th>Role</th></tr>
+    <tr><td>1</td><td>Arjun Mehta</td><td>arjun@example.com</td><td>password</td><td>CTO</td></tr>
+    <tr><td>2</td><td>Priya Sharma</td><td>priya@example.com</td><td>password</td><td>CEO</td></tr>
+    <tr><td>3</td><td>Kavitha Nair</td><td>kavitha@example.com</td><td>password</td><td>Sales</td></tr>
+    <tr><td>4</td><td>Rohit Verma</td><td>rohit@example.com</td><td>password</td><td>Developer</td></tr>
+    <tr><td>5</td><td>Sneha Patel</td><td>sneha@example.com</td><td>password</td><td>Tester</td></tr>
+    <tr><td>6</td><td>Deepak Rao</td><td>deepak@example.com</td><td>password</td><td>Analyst</td></tr>
+    <tr><td>7</td><td>Neha Gupta</td><td>neha@example.com</td><td>password</td><td>Manager</td></tr>
+    <tr><td>8</td><td>Amit Kumar</td><td>amit@example.com</td><td>password</td><td>MC Team</td></tr>
+</table>
+
+<div class="note">
+    <b>How to login:</b> Go to the app URL, enter the email and password from the table above. Each user will see a different dashboard based on their role.
+</div>
+
+
+<!-- ======================= 6. MODULE DOCUMENTATION ======================= -->
+<h1 id="modules">6. Complete Module Documentation</h1>
+
+<!-- === DASHBOARD === -->
+<h2>6a. Dashboard</h2>
+<h3>What Is It?</h3>
+<p>The dashboard is the first page you see after logging in. It gives you a quick summary of your work and the team's status. Each role sees a completely different dashboard tailored to their needs.</p>
+
+<h3>Dashboard Types by Role</h3>
+
+<h4>Manager Dashboard (CTO & Manager)</h4>
+<p><b>URL:</b> <code>/</code> (home page)</p>
+<p><b>What it shows:</b></p>
+<ul>
+    <li><b>Active Projects</b> - Number of projects currently being worked on</li>
+    <li><b>Open Tasks</b> - Total tasks that are not yet completed</li>
+    <li><b>Blocked Tasks</b> - Tasks stuck due to some issue</li>
+    <li><b>Overdue Tasks</b> - Tasks past their deadline</li>
+    <li><b>Team Workload</b> - How many hours each team member has logged</li>
+    <li><b>Untriaged Requests</b> - Merchant requests waiting to be reviewed</li>
+</ul>
+<p><b>Why:</b> Managers need to know at a glance if anything needs attention - blocked work, overdue items, or unreviewed requests.</p>
+
+<h4>CEO Dashboard (CEO only)</h4>
+<p><b>URL:</b> <code>/</code> (home page for CEO) and <code>/dashboard/ceo</code></p>
+<p><b>What it shows:</b></p>
+<ul>
+    <li><b>Feature Pipeline</b> - How many features are in each stage (backlog, in progress, released, etc.)</li>
+    <li><b>Request Pipeline</b> - Status of all merchant requests</li>
+    <li><b>Active Projects</b> - Count of ongoing projects</li>
+    <li><b>Team Size</b> - Total number of active team members</li>
+    <li><b>Hours This Month</b> - Total hours logged by the entire team</li>
+    <li><b>Roadmap Completion %</b> - How much of the planned roadmap is done</li>
+    <li><b>Module-wise ROI</b> - Return on investment per module</li>
+    <li><b>Risk Indicators</b> - Things that need CEO attention</li>
+</ul>
+<p><b>Why:</b> The CEO cares about the business impact, not individual tasks. This shows pipeline health and ROI.</p>
+
+<h4>MC Team Dashboard (MC Team only)</h4>
+<p><b>URL:</b> <code>/</code></p>
+<p><b>What it shows:</b></p>
+<ul>
+    <li><b>Untriaged Requests</b> - Requests that haven't been reviewed yet</li>
+    <li><b>Merchant Blocked Requests</b> - Urgent requests where a merchant is blocked</li>
+    <li><b>Request Statistics</b> - Counts by type, urgency, and status</li>
+</ul>
+<p><b>Why:</b> MC Team's primary job is to handle merchant requests quickly, especially urgent ones.</p>
+
+<h4>Sales Dashboard (Sales only)</h4>
+<p><b>URL:</b> <code>/</code></p>
+<p><b>What it shows:</b></p>
+<ul>
+    <li><b>My Requests</b> - All requests submitted by this salesperson</li>
+    <li><b>Request Statistics</b> - How many are pending, accepted, rejected</li>
+</ul>
+
+<h4>Individual Dashboard (Developer, Tester, Analyst)</h4>
+<p><b>URL:</b> <code>/</code></p>
+<p><b>What it shows:</b></p>
+<ul>
+    <li><b>Today's Work Logs</b> - What you've logged today</li>
+    <li><b>My Open Tasks</b> - Tasks assigned to you that are not done</li>
+    <li><b>My Projects</b> - Projects you're a member of</li>
+    <li><b>Weekly Hours</b> - How many hours you've worked this week</li>
+</ul>
+
+<!-- === PROJECTS === -->
+<h2>6b. Projects</h2>
+<h3>What Is It?</h3>
+<p>A project is a collection of related work. For example, "eWards Mobile App" or "Payment Gateway Integration" is a project. Each project has team members, tasks, and deadlines.</p>
+
+<h3>Pages</h3>
+<table>
+    <tr><th>Page</th><th>URL</th><th>What It Does</th></tr>
+    <tr><td>Projects List</td><td><code>/projects</code></td><td>Shows all projects with name, owner, status, progress bar, task count, total effort hours</td></tr>
+    <tr><td>Create Project</td><td><code>/projects/create</code></td><td>Form to create a new project: name, description, owner, priority, status, start/end dates</td></tr>
+    <tr><td>Project Detail</td><td><code>/projects/{id}</code></td><td>Full project view: tasks list, team members, documents, comments, timeline</td></tr>
+</table>
+
+<h3>Fields</h3>
+<table>
+    <tr><th>Field</th><th>Required?</th><th>Options</th><th>Description</th></tr>
+    <tr><td>Name</td><td>Yes</td><td>Free text</td><td>Project name (e.g., "Payment Gateway v2")</td></tr>
+    <tr><td>Description</td><td>No</td><td>Free text</td><td>What the project is about</td></tr>
+    <tr><td>Status</td><td>Yes</td><td>Active, Completed, On Hold</td><td>Current state of the project</td></tr>
+    <tr><td>Priority</td><td>Yes</td><td>Low, Medium, High, Critical</td><td>How important this project is</td></tr>
+    <tr><td>Owner</td><td>Yes</td><td>Select team member</td><td>Who is responsible for this project</td></tr>
+    <tr><td>Start Date</td><td>No</td><td>Date picker</td><td>When work begins</td></tr>
+    <tr><td>End Date</td><td>No</td><td>Date picker</td><td>Target completion date</td></tr>
+</table>
+
+<h3>Who Can Access?</h3>
+<ul>
+    <li><b>Managers (CTO, CEO, Manager, MC Team):</b> See all projects. Can create new projects.</li>
+    <li><b>Others (Developer, Tester, Analyst):</b> See only projects they are members of.</li>
+    <li><b>Sales:</b> No project access.</li>
+</ul>
+
+<h3>Related Database Table</h3>
+<p>Table: <code>projects</code> | Related: <code>project_members</code> (links users to projects)</p>
+
+<!-- === TASKS === -->
+<h2>6c. Tasks</h2>
+<h3>What Is It?</h3>
+<p>Tasks are individual work items inside a project. For example, within the "Payment Gateway" project, there might be tasks like "Set up Razorpay SDK", "Build checkout UI", "Write unit tests".</p>
+
+<h3>Pages</h3>
+<table>
+    <tr><th>Page</th><th>URL</th><th>What It Does</th></tr>
+    <tr><td>Tasks List</td><td><code>/tasks</code></td><td>All tasks with filters for project, user, status, deadline</td></tr>
+    <tr><td>Task Detail</td><td><code>/tasks/{id}</code></td><td>Full task view with comments, work logs, status history</td></tr>
+</table>
+
+<h3>Fields</h3>
+<table>
+    <tr><th>Field</th><th>Required?</th><th>Options</th><th>Description</th></tr>
+    <tr><td>Title</td><td>Yes</td><td>Free text</td><td>Short description of the task</td></tr>
+    <tr><td>Description</td><td>No</td><td>Free text</td><td>Detailed explanation</td></tr>
+    <tr><td>Project</td><td>Yes</td><td>Select project</td><td>Which project this task belongs to</td></tr>
+    <tr><td>Assigned To</td><td>No</td><td>Select team member</td><td>Who should do this task</td></tr>
+    <tr><td>Status</td><td>Yes</td><td>Open, In Progress, Blocked, Done</td><td>Current status</td></tr>
+    <tr><td>Priority</td><td>Yes</td><td>P0 (Critical), P1 (High), P2 (Medium), P3 (Low)</td><td>How urgent</td></tr>
+    <tr><td>Deadline</td><td>No</td><td>Date picker</td><td>When it must be done</td></tr>
+    <tr><td>Estimated Hours</td><td>No</td><td>Number</td><td>How many hours this should take</td></tr>
+</table>
+
+<h3>Task Statuses Flow</h3>
+<div class="flow-step"><b>Open</b> - Task is created but not started</div>
+<div class="flow-arrow">&#8595;</div>
+<div class="flow-step"><b>In Progress</b> - Someone is actively working on it</div>
+<div class="flow-arrow">&#8595;</div>
+<div class="flow-step"><b>Done</b> - Task is completed</div>
+<p><i>OR at any point it can become:</i></p>
+<div class="flow-step" style="border-color: #dc2626;"><b>Blocked</b> - Something is preventing progress</div>
+
+<!-- === FEATURES === -->
+<h2>6d. Features & Kanban Board</h2>
+<h3>What Is It?</h3>
+<p>A feature is a bigger piece of work than a task. While a task might be "Add login button", a feature would be "Complete User Authentication System" which includes many tasks. Features go through a multi-stage pipeline from idea to release.</p>
+
+<h3>Feature Status Pipeline</h3>
+<table>
+    <tr><th>Status</th><th>What It Means</th></tr>
+    <tr><td><span class="badge badge-gray">Backlog</span></td><td>Feature is defined but not started yet. Waiting to be picked up.</td></tr>
+    <tr><td><span class="badge badge-purple">In Progress</span></td><td>Development work has started.</td></tr>
+    <tr><td><span class="badge badge-blue">In Review</span></td><td>Code is written and being reviewed by peers.</td></tr>
+    <tr><td><span class="badge badge-yellow">Ready for QA</span></td><td>Code review passed. Ready for testing.</td></tr>
+    <tr><td><span class="badge badge-yellow">In QA</span></td><td>Testers are actively testing this feature.</td></tr>
+    <tr><td><span class="badge badge-green">Ready for Release</span></td><td>Testing passed. Ready to deploy.</td></tr>
+    <tr><td><span class="badge badge-green">Released</span></td><td>Feature is live in production.</td></tr>
+    <tr><td><span class="badge badge-gray">Deferred</span></td><td>Postponed to a later time.</td></tr>
+    <tr><td><span class="badge badge-red">Rejected</span></td><td>Feature will not be built.</td></tr>
+</table>
+
+<h3>Feature Fields</h3>
+<table>
+    <tr><th>Field</th><th>Options</th><th>Description</th></tr>
+    <tr><td>Title</td><td>Free text</td><td>Feature name</td></tr>
+    <tr><td>Description</td><td>Free text</td><td>Detailed description</td></tr>
+    <tr><td>Type</td><td>New Feature, Bug Fix, Improvement, Tech Debt, Research</td><td>What kind of work</td></tr>
+    <tr><td>Priority</td><td>P0, P1, P2, P3</td><td>Importance level</td></tr>
+    <tr><td>Module</td><td>Select module</td><td>Which product module this belongs to</td></tr>
+    <tr><td>Initiative</td><td>Select initiative</td><td>Which strategic initiative this supports</td></tr>
+    <tr><td>Origin</td><td>Request, Initiative, Tech Debt, Bug, Idea</td><td>Where this feature came from</td></tr>
+    <tr><td>Status</td><td>See pipeline above</td><td>Current stage</td></tr>
+    <tr><td>Rollout State</td><td>Internal, Beta Pilot, Gradual GA, Full GA, Sunset</td><td>How widely this is deployed</td></tr>
+    <tr><td>Assigned To</td><td>Select team member</td><td>Primary developer</td></tr>
+    <tr><td>QA Owner</td><td>Select team member</td><td>Primary tester</td></tr>
+    <tr><td>Estimated Hours</td><td>Number</td><td>Expected development time</td></tr>
+    <tr><td>Business Impact</td><td>Free text</td><td>Why this matters to the business</td></tr>
+    <tr><td>Cost Type</td><td>One-time, Recurring</td><td>Is this a one-time build or ongoing maintenance</td></tr>
+</table>
+
+<h3>Kanban Board</h3>
+<p><b>URL:</b> <code>/features/kanban</code></p>
+<p>The Kanban Board shows all features as cards arranged in columns by their status. You can visually see how many features are in each stage. This helps identify bottlenecks - for example, if too many features are stuck "In Review", it means the team needs to do more code reviews.</p>
+
+<!-- === REQUESTS === -->
+<h2>6e. Requests (Merchant Requests)</h2>
+<h3>What Is It?</h3>
+<p>When a merchant (customer) needs something - a new feature, a bug fix, or an improvement - the Sales or MC team submits it as a Request. The request then goes through triage to decide what action to take.</p>
+
+<h3>Request Flow</h3>
+<div class="flow-step"><b>Received</b> - Sales person submits the request</div>
+<div class="flow-arrow">&#8595;</div>
+<div class="flow-step"><b>Under Review</b> - MC Team or Manager is evaluating it</div>
+<div class="flow-arrow">&#8595;</div>
+<div class="flow-step"><b>Linked</b> - Request is linked to an existing or new feature (accepted)</div>
+<p><i>OR:</i></p>
+<div class="flow-step"><b>Deferred</b> - Will be considered later</div>
+<div class="flow-step"><b>Rejected</b> - Will not be implemented</div>
+<div class="flow-step"><b>Fulfilled</b> - The requested feature has been delivered</div>
+
+<h3>Fields</h3>
+<table>
+    <tr><th>Field</th><th>Options</th><th>Description</th></tr>
+    <tr><td>Title</td><td>Free text</td><td>Short description of what's needed</td></tr>
+    <tr><td>Description</td><td>Free text</td><td>Detailed explanation</td></tr>
+    <tr><td>Type</td><td>Bug, New Feature, Improvement</td><td>Category of request</td></tr>
+    <tr><td>Urgency</td><td>Merchant Blocked, Merchant Unhappy, Nice to Have</td><td>How urgent is this</td></tr>
+    <tr><td>Merchant</td><td>Select merchant</td><td>Which merchant is requesting this</td></tr>
+    <tr><td>Revenue Impact</td><td>Number (in INR)</td><td>How much revenue is at stake</td></tr>
+    <tr><td>Demand Count</td><td>Number</td><td>How many merchants want this same thing</td></tr>
+</table>
+
+<!-- === INITIATIVES === -->
+<h2>6f. Initiatives</h2>
+<h3>What Is It?</h3>
+<p>An initiative is a big strategic goal. It's larger than a feature - it's more like a theme or objective. For example: "Improve Merchant Onboarding" might be an initiative that includes 5-10 features.</p>
+
+<h3>Fields</h3>
+<table>
+    <tr><th>Field</th><th>Options</th><th>Description</th></tr>
+    <tr><td>Title</td><td>Free text</td><td>Initiative name</td></tr>
+    <tr><td>Description</td><td>Free text</td><td>What this initiative is about</td></tr>
+    <tr><td>Origin Type</td><td>Strategic, Data Insight, Tech Debt, Client Demand</td><td>Where this idea came from</td></tr>
+    <tr><td>Business Case</td><td>Free text</td><td>Why the business should invest in this</td></tr>
+    <tr><td>Expected Impact</td><td>Revenue, Retention, Ops Efficiency, Platform Stability</td><td>What business outcome this drives</td></tr>
+    <tr><td>Owner</td><td>Select team member</td><td>Who drives this initiative</td></tr>
+    <tr><td>Status</td><td>Planning, Active, At Risk, Completed, Archived</td><td>Current state</td></tr>
+    <tr><td>Estimated Features</td><td>Number</td><td>How many features this will require</td></tr>
+    <tr><td>Deadline</td><td>Date</td><td>Target completion date</td></tr>
+</table>
+
+<!-- === IDEAS === -->
+<h2>6g. Ideas</h2>
+<h3>What Is It?</h3>
+<p>Anyone on the team can submit an idea. It could be "What if we added a chatbot for merchant support?" or "We should use Redis for caching". Ideas get reviewed and good ones are promoted to features or initiatives.</p>
+
+<h3>Idea Flow</h3>
+<div class="flow-step"><b>New</b> - Idea just submitted</div>
+<div class="flow-arrow">&#8595;</div>
+<div class="flow-step"><b>Under Review</b> - Being evaluated by the team</div>
+<div class="flow-arrow">&#8595;</div>
+<div class="flow-step"><b>Promoted</b> - Accepted! Converted to a Feature or Initiative</div>
+<p><i>OR:</i></p>
+<div class="flow-step"><b>Archived</b> - Not pursuing this idea right now</div>
+
+<!-- === DECISIONS === -->
+<h2>6h. Decisions</h2>
+<h3>What Is It?</h3>
+<p>When the team makes an important decision (like "We'll use PostgreSQL instead of MySQL" or "We'll ship feature X without mobile support"), it's recorded here. This prevents confusion later about why something was done a certain way.</p>
+
+<h3>Fields</h3>
+<table>
+    <tr><th>Field</th><th>Description</th></tr>
+    <tr><td>Title</td><td>What was decided</td></tr>
+    <tr><td>Context</td><td>Why this decision needed to be made</td></tr>
+    <tr><td>Options Considered</td><td>What alternatives were evaluated</td></tr>
+    <tr><td>Chosen Option</td><td>What was selected</td></tr>
+    <tr><td>Rationale</td><td>Why this option was chosen over others</td></tr>
+    <tr><td>Decision Maker</td><td>Who made the final call</td></tr>
+    <tr><td>Linked To</td><td>Which feature, initiative, or module this relates to</td></tr>
+    <tr><td>Status</td><td>Proposed, Open, Decided, Superseded</td></tr>
+</table>
+
+<!-- === SPRINTS === -->
+<h2>6i. Sprints</h2>
+<h3>What Is It?</h3>
+<p>A sprint is a fixed time period (usually 1-2 weeks) where the team commits to completing specific features. At the start of a sprint, features are picked and hours are committed. At the end, you review what got done.</p>
+
+<h3>Sprint Lifecycle</h3>
+<div class="flow-step"><b>Planning</b> - Sprint is being set up. Add features, set capacity, define the goal.</div>
+<div class="flow-arrow">&#8595;</div>
+<div class="flow-step"><b>Active</b> - Sprint is running. Team is working on committed features.</div>
+<div class="flow-arrow">&#8595;</div>
+<div class="flow-step"><b>Completed</b> - Sprint is over. Review what was done vs. what was planned.</div>
+<div class="flow-arrow">&#8595;</div>
+<div class="flow-step"><b>Archived</b> - Historical record.</div>
+
+<h3>Fields</h3>
+<table>
+    <tr><th>Field</th><th>Description</th></tr>
+    <tr><td>Sprint Number</td><td>Auto-incremented (Sprint 1, Sprint 2, etc.)</td></tr>
+    <tr><td>Goal</td><td>What the sprint aims to achieve</td></tr>
+    <tr><td>Start Date / End Date</td><td>Sprint duration</td></tr>
+    <tr><td>Total Capacity Hours</td><td>How many hours the team has available</td></tr>
+    <tr><td>Committed Hours</td><td>How many hours are committed to features</td></tr>
+    <tr><td>Features</td><td>List of features added to this sprint with their committed hours</td></tr>
+</table>
+
+<h3>Carry-Over</h3>
+<p>If a feature isn't completed during a sprint, it can be "carried over" to the next sprint with a reason: Blocked, Underestimated, Scope Crept, or Deprioritised.</p>
+
+<!-- === WORK LOGS === -->
+<h2>6j. Work Logs</h2>
+<h3>What Is It?</h3>
+<p>Every team member logs their daily work hours here. You select a project, optionally a task, enter start and end time, and the system automatically calculates how many hours you worked.</p>
+
+<h3>How It Works</h3>
+<ol>
+    <li>Go to Work Logs > Log Work</li>
+    <li>Select a Project (and optionally a Task)</li>
+    <li>Enter the Date (defaults to today)</li>
+    <li>Enter Start Time (auto-filled from your last log's end time)</li>
+    <li>Enter End Time</li>
+    <li>Hours are calculated automatically (End Time - Start Time)</li>
+    <li>Select Status: Done, In Progress, or Blocked</li>
+    <li>Add a Note about what you worked on (optional)</li>
+    <li>If Blocked, describe the blocker</li>
+    <li>Click "Log Work" to save</li>
+</ol>
+
+<h3>Smart Auto-fill</h3>
+<p>When you create a new work log, the Start Time is automatically set to the End Time of your last log for today. This way, if you logged 9:00-12:00, your next log will start at 12:00.</p>
+
+<h3>Fields</h3>
+<table>
+    <tr><th>Field</th><th>Required?</th><th>Description</th></tr>
+    <tr><td>Project</td><td>Yes</td><td>Which project you worked on</td></tr>
+    <tr><td>Task</td><td>No</td><td>Specific task (optional, loads based on selected project)</td></tr>
+    <tr><td>Date</td><td>Yes</td><td>When you did the work (defaults to today)</td></tr>
+    <tr><td>Start Time</td><td>Yes</td><td>When you started (auto-filled from last log)</td></tr>
+    <tr><td>End Time</td><td>Yes</td><td>When you stopped</td></tr>
+    <tr><td>Hours</td><td>Auto-calculated</td><td>Calculated from End - Start time</td></tr>
+    <tr><td>Status</td><td>Yes</td><td>Done / In Progress / Blocked</td></tr>
+    <tr><td>Note</td><td>No</td><td>What you worked on</td></tr>
+    <tr><td>Blocker</td><td>Required if Blocked</td><td>What's blocking you</td></tr>
+</table>
+
+<!-- === ACTIVITY LOGS === -->
+<h2>6k. Activity Logs</h2>
+<h3>What Is It?</h3>
+<p>Activity Logs are more detailed than Work Logs. While Work Logs track "I worked on Project X for 3 hours", Activity Logs track "I spent 2 hours doing code review on Feature Y, and I used GitHub Copilot which saved me about 1 hour".</p>
+
+<h3>Activity Types (Different per Role)</h3>
+<table>
+    <tr><th>Role</th><th>Available Activity Types</th></tr>
+    <tr><td>Developer</td><td>Coding, Bug Fixing, Code Review, Investigation/Debugging, Deployment, Documentation, Meeting</td></tr>
+    <tr><td>Tester</td><td>Test Case Writing, Manual Testing, Bug Reporting, Regression Testing, Verification, Environment Setup, Meeting</td></tr>
+    <tr><td>Analyst</td><td>Specification Writing, Requirement Gathering, Technical Documentation, Test Scenario Writing, Spec Review/Revision, Research, Meeting</td></tr>
+</table>
+
+<h3>AI Tracking Fields</h3>
+<p>When you check "I used AI", additional fields appear:</p>
+<table>
+    <tr><th>Field</th><th>Options</th><th>What It Means</th></tr>
+    <tr><td>AI Tool</td><td>Select from registered tools</td><td>Which AI tool did you use (ChatGPT, Copilot, etc.)</td></tr>
+    <tr><td>Capability</td><td>Code, Debug, Architecture, Content, Research</td><td>What did you use it for</td></tr>
+    <tr><td>Contribution</td><td>Low, Medium, High</td><td>How much did AI contribute to the work</td></tr>
+    <tr><td>Outcome</td><td>Helpful, Partially Helpful, Misleading, Not Useful</td><td>Was the AI output actually useful</td></tr>
+    <tr><td>Time Saved</td><td>Same, 30min, 1-2h, Half Day+, Cost More Time</td><td>How much time did AI save (or cost)</td></tr>
+</table>
+
+<!-- === JOURNAL === -->
+<h2>6l. Journal (Work Journal)</h2>
+<h3>What Is It?</h3>
+<p>A daily diary for every team member. Each day, you write about what you accomplished, what's blocking you, what you plan for tomorrow, and how you're feeling. Managers can view the team's journal entries.</p>
+
+<h3>Fields</h3>
+<table>
+    <tr><th>Field</th><th>Required?</th><th>Description</th></tr>
+    <tr><td>Date</td><td>Yes</td><td>Which day this entry is for (one entry per day)</td></tr>
+    <tr><td>Accomplishments</td><td>Yes</td><td>What did you get done today?</td></tr>
+    <tr><td>Blockers</td><td>No</td><td>Anything preventing you from making progress?</td></tr>
+    <tr><td>Plan for Tomorrow</td><td>No</td><td>What will you work on next?</td></tr>
+    <tr><td>Reflections</td><td>No</td><td>Any learnings, thoughts, or observations?</td></tr>
+    <tr><td>Mood</td><td>No</td><td>How are you feeling? Great / Good / Neutral / Struggling / Blocked</td></tr>
+    <tr><td>Tags</td><td>No</td><td>Categorize your entry (e.g., "frontend", "deployment")</td></tr>
+    <tr><td>Private</td><td>No</td><td>If checked, only you can see this entry</td></tr>
+</table>
+
+<h3>Streak Tracking</h3>
+<p>The system tracks how many consecutive days you've written journal entries. This encourages daily journaling habits.</p>
+
+<h3>Team Journal (Manager View)</h3>
+<p><b>URL:</b> <code>/journal/team</code></p>
+<p>Managers see all team members' journal entries in one place. They can spot who's struggling, who's blocked, and who hasn't submitted their journal.</p>
+
+<!-- === RELEASES === -->
+<h2>6m. Releases</h2>
+<h3>What Is It?</h3>
+<p>When code is deployed (put live), a release record is created. It tracks which version was deployed, which features were included, who deployed it, and whether it went to staging (testing environment) or production (live environment).</p>
+
+<h3>Fields</h3>
+<table>
+    <tr><th>Field</th><th>Description</th></tr>
+    <tr><td>Version</td><td>Version number (e.g., "2.3.1")</td></tr>
+    <tr><td>Release Date</td><td>When it was deployed</td></tr>
+    <tr><td>Environment</td><td>Staging or Production</td></tr>
+    <tr><td>Deployed By</td><td>Who did the deployment</td></tr>
+    <tr><td>Notes</td><td>Any deployment notes</td></tr>
+    <tr><td>Features</td><td>List of features included in this release</td></tr>
+</table>
+
+<!-- === CHANGELOGS === -->
+<h2>6n. Changelogs</h2>
+<h3>What Is It?</h3>
+<p>Changelogs are public-facing release notes. They describe what changed in each release in user-friendly language. They go through an approval workflow before being published.</p>
+
+<h3>Workflow</h3>
+<div class="flow-step"><b>Draft</b> - Someone writes the changelog entry</div>
+<div class="flow-arrow">&#8595;</div>
+<div class="flow-step"><b>Approved</b> - A manager reviews and approves it</div>
+<div class="flow-arrow">&#8595;</div>
+<div class="flow-step"><b>Published</b> - It's live and visible to everyone</div>
+
+<!-- === DEADLINES === -->
+<h2>6o. Deadlines</h2>
+<h3>What Is It?</h3>
+<p>Set due dates for features, releases, or any work item. The system tracks whether you're on track, at risk (close to deadline), overdue (past deadline), met (completed on time), or missed (completed late).</p>
+
+<h3>Deadline Types</h3>
+<table>
+    <tr><th>Type</th><th>Description</th></tr>
+    <tr><td>Hard</td><td>Cannot be moved. Must be met (e.g., regulatory compliance)</td></tr>
+    <tr><td>Target</td><td>Aim for this date but some flexibility allowed</td></tr>
+    <tr><td>Soft</td><td>Nice to have, can be pushed</td></tr>
+    <tr><td>Recurring</td><td>Repeats periodically</td></tr>
+</table>
+
+<h3>Reminders</h3>
+<p>The system sends reminders at 7 days, 3 days, and 1 day before the deadline.</p>
+
+<!-- === BUG SLA === -->
+<h2>6p. Bug SLA</h2>
+<h3>What Is It?</h3>
+<p>SLA stands for "Service Level Agreement". When a bug is found, it gets a severity level which determines how quickly it must be fixed. The system automatically tracks if the fix deadline (SLA) is met or breached.</p>
+
+<h3>SLA Deadlines by Severity</h3>
+<table>
+    <tr><th>Severity</th><th>Description</th><th>Fix Deadline</th></tr>
+    <tr><td><span class="badge badge-red">P0 - Critical</span></td><td>System is down or major feature is broken for all users</td><td><b>4 hours</b></td></tr>
+    <tr><td><span class="badge badge-yellow">P1 - High</span></td><td>Major feature is broken for some users or important workflow is impacted</td><td><b>24 hours</b></td></tr>
+    <tr><td><span class="badge badge-blue">P2 - Medium</span></td><td>Minor feature broken or workaround available</td><td><b>72 hours</b></td></tr>
+    <tr><td><span class="badge badge-gray">P3 - Low</span></td><td>Cosmetic issue or minor inconvenience</td><td><b>Next Sprint</b></td></tr>
+</table>
+
+<h3>Fields</h3>
+<table>
+    <tr><th>Field</th><th>Description</th></tr>
+    <tr><td>Feature</td><td>Which feature has the bug</td></tr>
+    <tr><td>Severity</td><td>P0, P1, P2, or P3</td></tr>
+    <tr><td>SLA Deadline</td><td>Auto-calculated based on severity</td></tr>
+    <tr><td>Breached At</td><td>If the deadline passed without a fix, this records when</td></tr>
+    <tr><td>Reopen Count</td><td>How many times this bug was fixed and then reopened (came back)</td></tr>
+    <tr><td>Root Cause</td><td>Spec Gap, Code Error, Environment, Third Party</td></tr>
+    <tr><td>Origin</td><td>QA Found (found during testing) or Production Found (found by users)</td></tr>
+</table>
+
+<!-- === BLOCKERS === -->
+<h2>6q. Blockers</h2>
+<h3>What Is It?</h3>
+<p>When something is preventing a feature from progressing, a blocker is logged. For example: "Waiting for payment API credentials from Razorpay" or "Design not ready yet". Blockers are tracked until resolved.</p>
+
+<h3>Blocker Flow</h3>
+<div class="flow-step"><b>Active</b> - The issue exists and is blocking progress</div>
+<div class="flow-arrow">&#8595;</div>
+<div class="flow-step"><b>Resolved</b> - The issue has been fixed. Records who resolved it and how.</div>
+
+<!-- === MERCHANT COMMS === -->
+<h2>6r. Merchant Communications</h2>
+<h3>What Is It?</h3>
+<p>Every interaction with a merchant (customer) is logged here - calls, emails, meetings. If any commitment is made (like "We'll deliver this feature by Friday"), it's tracked with a date. The system flags slipped commitments.</p>
+
+<h3>Fields</h3>
+<table>
+    <tr><th>Field</th><th>Description</th></tr>
+    <tr><td>Merchant</td><td>Which merchant was contacted</td></tr>
+    <tr><td>Team Member</td><td>Who had the conversation</td></tr>
+    <tr><td>Feature</td><td>Which feature was discussed (optional)</td></tr>
+    <tr><td>Channel</td><td>Call, Email, or Meeting</td></tr>
+    <tr><td>Summary</td><td>What was discussed</td></tr>
+    <tr><td>Commitment Made?</td><td>Yes/No - was a promise made?</td></tr>
+    <tr><td>Commitment Date</td><td>By when was the promise made?</td></tr>
+</table>
+
+<div class="warning"><b>Slipped Commitment:</b> If the commitment date has passed and the feature isn't delivered, the system flags it as a slipped commitment. This helps managers follow up.</div>
+
+<!-- === TEAM MEMBERS === -->
+<h2>6s. Team Members</h2>
+<h3>What Is It?</h3>
+<p>A directory of all team members. Shows each person's name, role, email, projects they're working on, total hours logged, and number of active tasks.</p>
+
+<h3>Pages</h3>
+<table>
+    <tr><th>Page</th><th>URL</th><th>What It Shows</th></tr>
+    <tr><td>Team Directory</td><td><code>/team-members</code></td><td>List of all active team members with role, project count, task count, hours</td></tr>
+    <tr><td>Member Profile</td><td><code>/team-members/{id}</code></td><td>Detailed profile: projects, tasks, recent work logs, performance summary</td></tr>
+</table>
+
+<!-- === ONBOARDING === -->
+<h2>6t. Onboarding</h2>
+<h3>What Is It?</h3>
+<p>When a new person joins the team, a checklist is created to ensure they get set up properly. A manager starts the onboarding process and tracks completion.</p>
+
+<h3>Default Onboarding Checklist</h3>
+<ol>
+    <li>Welcome meeting with team lead</li>
+    <li>Development environment setup</li>
+    <li>Read project documentation</li>
+    <li>Buddy walkthrough of codebase</li>
+    <li>Complete first assigned task</li>
+    <li>Attend first standup/team meeting</li>
+    <li>30-day review with manager</li>
+</ol>
+
+<h3>Buddy System</h3>
+<p>Each new hire is assigned a "buddy" - an existing team member who helps them learn the system and codebase.</p>
+
+<!-- === OFFBOARDING === -->
+<h2>6u. Offboarding</h2>
+<h3>What Is It?</h3>
+<p>When someone leaves the team, a checklist ensures nothing is lost. Knowledge is transferred, access is revoked, and work is handed over.</p>
+
+<h3>Default Offboarding Checklist</h3>
+<ol>
+    <li>Complete knowledge transfer sessions</li>
+    <li>Document all processes and procedures</li>
+    <li>Reassign active tasks and features</li>
+    <li>Revoke all system access</li>
+    <li>Conduct exit interview</li>
+    <li>Complete final handover review</li>
+</ol>
+
+<!-- === BUS FACTOR === -->
+<h2>6v. Bus Factor</h2>
+<h3>What Is It?</h3>
+<p>"Bus factor" is a concept: if one person gets hit by a bus (or simply goes on vacation or quits), how much knowledge is lost? This module analyzes which parts of the system are known by only one or two people, creating a risk.</p>
+
+<h3>Risk Levels</h3>
+<table>
+    <tr><th>Risk Level</th><th>Criteria</th><th>What To Do</th></tr>
+    <tr><td><span class="badge badge-red">Critical</span></td><td>Only 1 person knows this module</td><td>Immediately plan cross-training</td></tr>
+    <tr><td><span class="badge badge-yellow">High</span></td><td>One person owns more than 60% of features</td><td>Start pairing sessions</td></tr>
+    <tr><td><span class="badge badge-blue">Medium</span></td><td>2 people share knowledge</td><td>Continue documenting</td></tr>
+    <tr><td><span class="badge badge-green">Low</span></td><td>3+ people share ownership</td><td>Good shape - maintain this</td></tr>
+</table>
+
+<!-- === CAPACITY === -->
+<h2>6w. Capacity Planning</h2>
+<h3>What Is It?</h3>
+<p>Shows how much work each team member can handle in a given period. Takes into account their weekly working hours, leave days, and current assignments to determine if someone is overloaded or has room for more work.</p>
+
+<h3>Key Metrics</h3>
+<ul>
+    <li><b>Available Hours</b> - Total hours minus leave</li>
+    <li><b>Committed Hours</b> - Hours already assigned to sprint features</li>
+    <li><b>Utilization %</b> - Committed / Available * 100</li>
+    <li><b>Overload Warning</b> - When utilization exceeds 100%</li>
+    <li><b>Velocity</b> - Average hours completed per sprint (from historical data)</li>
+</ul>
+
+<!-- === LEAVE === -->
+<h2>6x. Leave Entries</h2>
+<h3>What Is It?</h3>
+<p>A calendar of team member absences - vacations, sick days, holidays. This data feeds directly into capacity planning to adjust available hours.</p>
+
+<h3>Leave Types</h3>
+<table>
+    <tr><th>Type</th><th>Description</th></tr>
+    <tr><td>Planned</td><td>Pre-approved vacation/PTO</td></tr>
+    <tr><td>Sick</td><td>Sick day</td></tr>
+    <tr><td>Holiday</td><td>Company or public holiday</td></tr>
+    <tr><td>Other</td><td>Any other type of leave</td></tr>
+</table>
+
+<p>Supports half-day leave. Can be synced from HRMS (HR Management System) or entered manually.</p>
+
+<!-- === REPORTS === -->
+<h2>6y. Reports</h2>
+<h3>Three Report Types</h3>
+
+<h4>1. Work Log Report</h4>
+<p><b>URL:</b> <code>/reports/work-logs</code></p>
+<p>Shows how many hours each team member worked, broken down by project and date range. Filters: user, project, task, date range.</p>
+
+<h4>2. Project Report</h4>
+<p><b>URL:</b> <code>/reports/projects</code></p>
+<p>Shows project-level metrics: total hours invested, number of tasks completed, team members involved, progress vs. plan.</p>
+
+<h4>3. Individual Report</h4>
+<p><b>URL:</b> <code>/reports/individual</code></p>
+<p>Per-person analysis: hours worked per day/week, projects contributed to, tasks completed, productivity trends.</p>
+
+<!-- === COST DASHBOARD === -->
+<h2>6z. Cost Rates & Cost Dashboard</h2>
+<h3>What Is It?</h3>
+<p>The cost system calculates how much each feature costs to build based on team members' hourly rates and the hours they spend. Only the CTO has access.</p>
+
+<h3>How Cost Calculation Works</h3>
+<ol>
+    <li><b>Cost Rates</b> are set for each team member: monthly CTC (salary), working hours per month, and an overhead multiplier (default 1.3x for benefits, office costs, etc.)</li>
+    <li><b>Loaded Hourly Rate</b> = (Monthly CTC * Overhead Multiplier) / Working Hours per Month</li>
+    <li>When someone logs activity on a feature, the system multiplies their hours by their hourly rate</li>
+    <li><b>Feature Cost</b> = Sum of (each person's hours * their hourly rate)</li>
+</ol>
+
+<h3>Cost Dashboard</h3>
+<p><b>URL:</b> <code>/dashboard/cost</code></p>
+<p>Shows: Feature costs, Initiative costs, Module costs, Meeting cost analysis, Technical debt scores</p>
+
+<!-- === COST VS IMPACT === -->
+<h2>6aa. Cost vs Impact Analysis</h2>
+<p><b>URL:</b> <code>/cost-vs-impact</code></p>
+<p>Compares the cost of building each feature against its business impact. Shows which features give the best ROI (Return on Investment) and which are expensive with low impact.</p>
+
+<!-- === CEO DASHBOARD === -->
+<h2>6ab. CEO Dashboard</h2>
+<p><b>URL:</b> <code>/dashboard/ceo</code></p>
+<p>A board-ready business view showing:</p>
+<ul>
+    <li><b>Weekly Narrative Summary</b> - Text summary of what happened this week</li>
+    <li><b>Roadmap Completion %</b> - How much of the planned work is done</li>
+    <li><b>Module Metrics</b> - Per-module cost, ROI, and adoption numbers</li>
+    <li><b>Team Health</b> - Aggregated metrics (no individual data shown)</li>
+    <li><b>Risk Indicators</b> - Things that need attention</li>
+</ul>
+
+<!-- === AI TOOLS === -->
+<h2>6ac. AI Tools</h2>
+<h3>What Is It?</h3>
+<p>A registry of all AI tools the team uses. Tracks licensing costs, number of seats purchased, and which team members have access.</p>
+
+<h3>Fields</h3>
+<table>
+    <tr><th>Field</th><th>Description</th></tr>
+    <tr><td>Name</td><td>Tool name (e.g., "GitHub Copilot")</td></tr>
+    <tr><td>Provider</td><td>Company providing the tool</td></tr>
+    <tr><td>Capabilities</td><td>What it can do (code, debug, research, etc.)</td></tr>
+    <tr><td>Cost per Seat/Month</td><td>How much each license costs</td></tr>
+    <tr><td>Seats Purchased</td><td>How many licenses the company has</td></tr>
+    <tr><td>Active</td><td>Is this tool currently in use?</td></tr>
+</table>
+
+<h3>Tool Assignments</h3>
+<p>The CTO can assign AI tools to specific team members and revoke access when needed.</p>
+
+<!-- === AI DASHBOARD === -->
+<h2>6ad. AI Dashboard</h2>
+<p><b>URL:</b> <code>/dashboard/ai</code></p>
+<p>Analytics on how the team uses AI tools:</p>
+<ul>
+    <li><b>Total Spend</b> - How much the company spends on AI tools</li>
+    <li><b>Team AI Profiles</b> - Which tools each person uses and how</li>
+    <li><b>Top Templates</b> - Most used prompt templates</li>
+    <li><b>ROI Metrics</b> - Time saved vs. money spent on AI</li>
+    <li><b>Effectiveness Matrix</b> - Which capabilities and outcomes are most common</li>
+</ul>
+
+<!-- === PROMPT TEMPLATES === -->
+<h2>6ae. Prompt Templates</h2>
+<h3>What Is It?</h3>
+<p>Reusable templates for AI prompts. When someone discovers an effective prompt (like "Review this code for security vulnerabilities: [paste code]"), they save it as a template for the whole team to use.</p>
+
+<h3>Fields</h3>
+<table>
+    <tr><th>Field</th><th>Description</th></tr>
+    <tr><td>AI Tool</td><td>Which tool this template is for</td></tr>
+    <tr><td>Capability</td><td>Code, Debug, Architecture, Content, Research</td></tr>
+    <tr><td>Title</td><td>Template name</td></tr>
+    <tr><td>Content</td><td>The actual prompt text</td></tr>
+    <tr><td>Tags</td><td>Categorization tags</td></tr>
+    <tr><td>Usage Count</td><td>How many times this template has been used</td></tr>
+</table>
+
+<!-- === AI KB === -->
+<h2>6af. AI Knowledge Base</h2>
+<p><b>URL:</b> <code>/ai-knowledge-base</code></p>
+<p>A collection of best practices, guidelines, and learnings about using AI tools effectively. Aggregated from team experience and usage data.</p>
+
+<!-- === GIT PROVIDERS === -->
+<h2>6ag. Git Providers</h2>
+<h3>What Is It?</h3>
+<p>Configure connections to Git hosting services. The team can connect GitHub, GitLab, or AWS CodeCommit accounts to track code activity within the PMS.</p>
+
+<h3>Supported Providers</h3>
+<table>
+    <tr><th>Provider</th><th>Description</th></tr>
+    <tr><td>GitHub</td><td>Most popular code hosting platform</td></tr>
+    <tr><td>GitLab</td><td>Self-hosted or cloud Git platform</td></tr>
+    <tr><td>CodeCommit</td><td>AWS-hosted Git service</td></tr>
+</table>
+
+<!-- === GIT REPOS === -->
+<h2>6ah. Git Repositories</h2>
+<h3>What Is It?</h3>
+<p>After configuring a Git Provider, you link specific repositories. Each repository gets a webhook URL which, when configured in GitHub/GitLab, sends real-time notifications about code pushes, pull requests, and other Git events.</p>
+
+<h3>Tracked Events</h3>
+<table>
+    <tr><th>Event</th><th>Description</th></tr>
+    <tr><td>Push</td><td>Code was pushed to a branch</td></tr>
+    <tr><td>Pull Request Opened</td><td>A new PR was created</td></tr>
+    <tr><td>Pull Request Approved</td><td>A PR was approved by a reviewer</td></tr>
+    <tr><td>Pull Request Merged</td><td>A PR was merged into the main branch</td></tr>
+    <tr><td>Tag Created</td><td>A new version tag was created</td></tr>
+    <tr><td>Branch Created</td><td>A new branch was created</td></tr>
+</table>
+
+<!-- === PERSONAL DASHBOARD === -->
+<h2>6ai. Personal Dashboard & Review Prep</h2>
+
+<h4>Personal Dashboard / History</h4>
+<p><b>URL:</b> <code>/personal/history</code></p>
+<p>Your personal work history. Shows features you've delivered, hours you've logged, projects you've worked on, and tasks you've completed.</p>
+
+<h4>Review Prep</h4>
+<p><b>URL:</b> <code>/personal/review-prep</code></p>
+<p>Auto-generated performance review summary. Pulls data from your journals, work logs, and activity logs to create a ready-made summary for performance reviews. Shows:</p>
+<ul>
+    <li>Tasks completed in the selected period</li>
+    <li>Total hours invested</li>
+    <li>Features delivered</li>
+    <li>Mood distribution from journal entries</li>
+    <li>Key accomplishments from journal highlights</li>
+</ul>
+<p>Selectable period: Last 30 days, 90 days, or 180 days.</p>
+
+<!-- === COMMENTS === -->
+<h2>6aj. Comments & Documents</h2>
+
+<h4>Comments</h4>
+<p>Comments can be added to almost anything: projects, tasks, features, requests, ideas, decisions. They support:</p>
+<ul>
+    <li><b>@mentions</b> - Tag team members to notify them</li>
+    <li><b>Threaded Replies</b> - Reply to a specific comment (parent_id)</li>
+    <li><b>Polymorphic</b> - Same comment system works across all entity types</li>
+</ul>
+
+<h4>Documents</h4>
+<p>Files and links can be attached to projects, features, and other entities. Two types:</p>
+<ul>
+    <li><b>File</b> - Uploaded file with name, path, size, MIME type</li>
+    <li><b>Link</b> - External URL with description</li>
+</ul>
+
+<!-- === NOTIFICATIONS === -->
+<h2>6ak. Notifications</h2>
+<p>The system has a built-in notification system. Notifications can be sent through three channels:</p>
+<table>
+    <tr><th>Channel</th><th>Description</th></tr>
+    <tr><td>In-App</td><td>Shown inside the PMS application</td></tr>
+    <tr><td>Email</td><td>Sent to the user's email address</td></tr>
+    <tr><td>Slack</td><td>Sent to a Slack channel</td></tr>
+</table>
+<p>Notifications can be marked as critical (always shown prominently) and can be scheduled for future delivery.</p>
+
+<!-- === AUDIT === -->
+<h2>6al. Audit Logs</h2>
+<p>Every important action in the system is automatically logged: creating, updating, or deleting any record. The audit log captures:</p>
+<ul>
+    <li>Who did it (user_id)</li>
+    <li>What action (created, updated, deleted)</li>
+    <li>What entity was affected (type and ID)</li>
+    <li>What changed (before/after values in JSON)</li>
+    <li>When (timestamp)</li>
+    <li>From where (IP address)</li>
+</ul>
+<p>This ensures complete traceability - you can always find out who changed what and when.</p>
+
+
+<!-- ======================= 7. DATABASE SCHEMA ======================= -->
+<h1 id="database">7. Complete Database Schema</h1>
+<p class="section-intro">This section lists every database table, every column, and what each column stores. There are 38 main application tables (plus 6 system tables).</p>
+
+<h2>Core Tables</h2>
+
+<h3>team_members</h3>
+<p><b>Purpose:</b> Stores all users/team members who can log into the system.</p>
+<table>
+    <tr><th>Column</th><th>Type</th><th>Description</th></tr>
+    <tr><td>id</td><td>BIGINT (PK)</td><td>Unique identifier</td></tr>
+    <tr><td>name</td><td>VARCHAR</td><td>Full name</td></tr>
+    <tr><td>email</td><td>VARCHAR (unique)</td><td>Login email address</td></tr>
+    <tr><td>password</td><td>VARCHAR</td><td>Hashed password</td></tr>
+    <tr><td>role</td><td>VARCHAR</td><td>cto / ceo / manager / mc_team / sales / developer / tester / analyst</td></tr>
+    <tr><td>is_active</td><td>BOOLEAN</td><td>Whether this user can still log in</td></tr>
+    <tr><td>department</td><td>VARCHAR</td><td>Department name (optional)</td></tr>
+    <tr><td>weekly_capacity</td><td>DECIMAL(5,2)</td><td>Max hours per week (default 40)</td></tr>
+    <tr><td>working_hours</td><td>DECIMAL(5,2)</td><td>Hours per day (default 8)</td></tr>
+    <tr><td>timezone</td><td>VARCHAR</td><td>User's timezone (default UTC)</td></tr>
+    <tr><td>contractor_flag</td><td>BOOLEAN</td><td>Is this person a contractor?</td></tr>
+    <tr><td>freelancer_flag</td><td>BOOLEAN</td><td>Is this person a freelancer?</td></tr>
+    <tr><td>git_username</td><td>VARCHAR</td><td>GitHub/GitLab username</td></tr>
+    <tr><td>cost_rate_id</td><td>BIGINT (FK)</td><td>Link to their cost rate</td></tr>
+    <tr><td>logging_streak_count</td><td>INTEGER</td><td>Consecutive days of journal entries</td></tr>
+    <tr><td>last_log_date</td><td>DATE</td><td>Last journal entry date</td></tr>
+    <tr><td>employee_id</td><td>VARCHAR</td><td>Company employee ID</td></tr>
+    <tr><td>join_date</td><td>DATE</td><td>When they joined the company</td></tr>
+    <tr><td>designation</td><td>VARCHAR</td><td>Job title</td></tr>
+    <tr><td>reporting_to</td><td>VARCHAR</td><td>Manager name</td></tr>
+    <tr><td>onboarding_status</td><td>VARCHAR</td><td>not_started / in_progress / completed</td></tr>
+    <tr><td>buddy_id</td><td>BIGINT (FK)</td><td>Assigned buddy for onboarding</td></tr>
+    <tr><td>onboarding_due_date</td><td>DATE</td><td>When onboarding should complete</td></tr>
+    <tr><td>onboarding_checklist</td><td>JSON</td><td>Array of checklist items with done status</td></tr>
+    <tr><td>exit_date</td><td>DATE</td><td>When they're leaving</td></tr>
+    <tr><td>offboarding_status</td><td>VARCHAR</td><td>not_started / in_progress / completed</td></tr>
+    <tr><td>offboarding_checklist</td><td>JSON</td><td>Array of exit checklist items</td></tr>
+    <tr><td>exit_notes</td><td>TEXT</td><td>Notes about the departure</td></tr>
+    <tr><td>skill_tags</td><td>JSON</td><td>Array of skills</td></tr>
+    <tr><td>module_expertise</td><td>JSON</td><td>Modules this person knows well</td></tr>
+    <tr><td>deleted_at</td><td>TIMESTAMP</td><td>Soft delete timestamp</td></tr>
+</table>
+
+<h3>projects</h3>
+<table>
+    <tr><th>Column</th><th>Type</th><th>Description</th></tr>
+    <tr><td>id</td><td>BIGINT (PK)</td><td>Unique identifier</td></tr>
+    <tr><td>name</td><td>VARCHAR</td><td>Project name</td></tr>
+    <tr><td>description</td><td>TEXT</td><td>Project description</td></tr>
+    <tr><td>status</td><td>VARCHAR</td><td>active / completed / on_hold</td></tr>
+    <tr><td>priority</td><td>VARCHAR</td><td>low / medium / high / critical</td></tr>
+    <tr><td>owner_id</td><td>BIGINT (FK)</td><td>Project owner (team_members)</td></tr>
+    <tr><td>start_date</td><td>DATE</td><td>Project start date</td></tr>
+    <tr><td>end_date</td><td>DATE</td><td>Target end date</td></tr>
+    <tr><td>deleted_at</td><td>TIMESTAMP</td><td>Soft delete</td></tr>
+</table>
+
+<h3>tasks</h3>
+<table>
+    <tr><th>Column</th><th>Type</th><th>Description</th></tr>
+    <tr><td>id</td><td>BIGINT (PK)</td><td>Unique identifier</td></tr>
+    <tr><td>title</td><td>VARCHAR</td><td>Task title</td></tr>
+    <tr><td>description</td><td>TEXT</td><td>Detailed description</td></tr>
+    <tr><td>project_id</td><td>BIGINT (FK)</td><td>Which project this belongs to</td></tr>
+    <tr><td>assigned_to</td><td>BIGINT (FK)</td><td>Who should do it (team_members)</td></tr>
+    <tr><td>status</td><td>VARCHAR</td><td>open / in_progress / blocked / done</td></tr>
+    <tr><td>priority</td><td>VARCHAR</td><td>p0 / p1 / p2 / p3</td></tr>
+    <tr><td>deadline</td><td>DATE</td><td>Due date</td></tr>
+    <tr><td>estimated_hours</td><td>DECIMAL(8,2)</td><td>Estimated effort</td></tr>
+    <tr><td>deleted_at</td><td>TIMESTAMP</td><td>Soft delete</td></tr>
+</table>
+
+<h3>features</h3>
+<table>
+    <tr><th>Column</th><th>Type</th><th>Description</th></tr>
+    <tr><td>id</td><td>BIGINT (PK)</td><td>Unique identifier</td></tr>
+    <tr><td>title</td><td>VARCHAR</td><td>Feature name</td></tr>
+    <tr><td>description</td><td>TEXT</td><td>Feature description</td></tr>
+    <tr><td>type</td><td>VARCHAR</td><td>new_feature / bug_fix / improvement / tech_debt / research</td></tr>
+    <tr><td>priority</td><td>VARCHAR</td><td>p0 / p1 / p2 / p3</td></tr>
+    <tr><td>module_id</td><td>BIGINT (FK)</td><td>Which product module</td></tr>
+    <tr><td>initiative_id</td><td>BIGINT (FK)</td><td>Parent initiative</td></tr>
+    <tr><td>origin_type</td><td>VARCHAR</td><td>request / initiative / tech_debt / bug / idea</td></tr>
+    <tr><td>business_impact</td><td>TEXT</td><td>Business justification</td></tr>
+    <tr><td>status</td><td>VARCHAR</td><td>backlog / in_progress / in_review / ready_for_qa / in_qa / ready_for_release / released / deferred / rejected</td></tr>
+    <tr><td>rollout_state</td><td>VARCHAR</td><td>internal / beta_pilot / gradual_ga / full_ga / sunset</td></tr>
+    <tr><td>cost_type</td><td>VARCHAR</td><td>one_time / recurring</td></tr>
+    <tr><td>maintenance_cost_monthly</td><td>DECIMAL</td><td>Monthly maintenance cost</td></tr>
+    <tr><td>attributed_revenue</td><td>DECIMAL</td><td>Revenue this feature generates</td></tr>
+    <tr><td>deadline</td><td>DATE</td><td>Target date</td></tr>
+    <tr><td>estimated_hours</td><td>DECIMAL</td><td>Estimated effort</td></tr>
+    <tr><td>assigned_to</td><td>BIGINT (FK)</td><td>Primary developer</td></tr>
+    <tr><td>qa_owner_id</td><td>BIGINT (FK)</td><td>Primary tester</td></tr>
+    <tr><td>deleted_at</td><td>TIMESTAMP</td><td>Soft delete</td></tr>
+</table>
+
+<h3>work_logs</h3>
+<table>
+    <tr><th>Column</th><th>Type</th><th>Description</th></tr>
+    <tr><td>id</td><td>BIGINT (PK)</td><td>Unique identifier</td></tr>
+    <tr><td>user_id</td><td>BIGINT (FK)</td><td>Who logged this</td></tr>
+    <tr><td>project_id</td><td>BIGINT (FK)</td><td>Which project</td></tr>
+    <tr><td>task_id</td><td>BIGINT (FK)</td><td>Which task (optional)</td></tr>
+    <tr><td>log_date</td><td>DATE</td><td>Which day</td></tr>
+    <tr><td>start_time</td><td>TIME</td><td>When work started</td></tr>
+    <tr><td>end_time</td><td>TIME</td><td>When work ended</td></tr>
+    <tr><td>hours_spent</td><td>DECIMAL(5,2)</td><td>Auto-calculated: end - start</td></tr>
+    <tr><td>status</td><td>VARCHAR</td><td>done / in_progress / blocked</td></tr>
+    <tr><td>note</td><td>TEXT</td><td>What was done</td></tr>
+    <tr><td>blocker</td><td>TEXT</td><td>Blocker description</td></tr>
+    <tr><td>deleted_at</td><td>TIMESTAMP</td><td>Soft delete</td></tr>
+</table>
+
+<h3>work_journals</h3>
+<table>
+    <tr><th>Column</th><th>Type</th><th>Description</th></tr>
+    <tr><td>id</td><td>BIGINT (PK)</td><td>Unique identifier</td></tr>
+    <tr><td>team_member_id</td><td>BIGINT (FK)</td><td>Who wrote this</td></tr>
+    <tr><td>entry_date</td><td>DATE</td><td>Which day (unique per person per day)</td></tr>
+    <tr><td>accomplishments</td><td>TEXT</td><td>What was accomplished</td></tr>
+    <tr><td>blockers</td><td>TEXT</td><td>What's blocking progress</td></tr>
+    <tr><td>plan_for_tomorrow</td><td>TEXT</td><td>Tomorrow's plan</td></tr>
+    <tr><td>reflections</td><td>TEXT</td><td>Personal reflections</td></tr>
+    <tr><td>mood</td><td>VARCHAR</td><td>great / good / neutral / struggling / blocked</td></tr>
+    <tr><td>tags</td><td>JSON</td><td>Categorization tags</td></tr>
+    <tr><td>is_private</td><td>BOOLEAN</td><td>Only visible to author if true</td></tr>
+</table>
+
+<h3>Other Tables (Summary)</h3>
+<table>
+    <tr><th>Table Name</th><th>Purpose</th><th>Key Fields</th></tr>
+    <tr><td>merchants</td><td>Customer companies</td><td>name, type, contact_email, is_active</td></tr>
+    <tr><td>modules</td><td>Product modules/areas</td><td>name, description, is_active</td></tr>
+    <tr><td>project_members</td><td>Links users to projects</td><td>project_id, user_id</td></tr>
+    <tr><td>requests</td><td>Merchant feature requests</td><td>title, type, urgency, status, merchant_id, revenue_impact</td></tr>
+    <tr><td>initiatives</td><td>Strategic goals</td><td>title, origin_type, expected_impact, status, owner_id</td></tr>
+    <tr><td>ideas</td><td>Team-submitted ideas</td><td>title, source, status, promoted_to_type</td></tr>
+    <tr><td>decisions</td><td>Recorded decisions</td><td>title, context, chosen_option, rationale, decision_maker_id</td></tr>
+    <tr><td>sprints</td><td>Sprint cycles</td><td>sprint_number, goal, start_date, end_date, status</td></tr>
+    <tr><td>sprint_features</td><td>Features in a sprint</td><td>sprint_id, feature_id, committed_hours, carried_over</td></tr>
+    <tr><td>activity_logs</td><td>Detailed activity tracking</td><td>team_member_id, activity_type, duration, ai_used, ai_tool_id</td></tr>
+    <tr><td>comments</td><td>Comments on any entity</td><td>commentable_type/id, user_id, body, mentions</td></tr>
+    <tr><td>documents</td><td>File attachments</td><td>documentable_type/id, file_name, file_path, type</td></tr>
+    <tr><td>feature_spec_versions</td><td>Feature specification versions</td><td>feature_id, version_number, content, state</td></tr>
+    <tr><td>feature_dependencies</td><td>Feature-to-feature dependencies</td><td>parent_feature_id, child_feature_id, type</td></tr>
+    <tr><td>feature_assignments</td><td>Who works on which feature</td><td>feature_id, team_member_id, role, state, estimated_hours</td></tr>
+    <tr><td>git_providers</td><td>Git hosting services</td><td>name, provider_type, credentials (encrypted)</td></tr>
+    <tr><td>repositories</td><td>Git repositories</td><td>git_provider_id, name, url, webhook_secret</td></tr>
+    <tr><td>git_events</td><td>Webhook events from Git</td><td>repository_id, event_type, payload</td></tr>
+    <tr><td>git_branches</td><td>Repository branches</td><td>repository_id, branch_name, is_active</td></tr>
+    <tr><td>deadlines</td><td>Due dates for entities</td><td>deadlineable_type/id, type, state, due_date</td></tr>
+    <tr><td>bug_sla_records</td><td>Bug severity and SLA tracking</td><td>feature_id, severity, sla_deadline, breached_at</td></tr>
+    <tr><td>blockers</td><td>Feature blockers</td><td>feature_id, description, status, resolved_at</td></tr>
+    <tr><td>merchant_communications</td><td>Merchant interaction log</td><td>merchant_id, channel, summary, commitment_made</td></tr>
+    <tr><td>releases</td><td>Software releases</td><td>version, release_date, environment, deployed_by</td></tr>
+    <tr><td>release_features</td><td>Features in a release</td><td>release_id, feature_id</td></tr>
+    <tr><td>changelogs</td><td>Release notes</td><td>title, body, status, drafted_by, approved_by</td></tr>
+    <tr><td>cost_rates</td><td>Team member cost rates</td><td>team_member_id, monthly_ctc, loaded_hourly_rate</td></tr>
+    <tr><td>feature_cost_snapshots</td><td>Feature cost calculations</td><td>feature_id, total_cost, cost_by_person</td></tr>
+    <tr><td>feature_usage_snapshots</td><td>Feature usage metrics</td><td>feature_id, merchants_using_count, revenue_attributed</td></tr>
+    <tr><td>module_debt_scores</td><td>Tech debt health scores</td><td>module_id, health_score, debt_backlog_size</td></tr>
+    <tr><td>ai_tools</td><td>AI tool registry</td><td>name, provider, cost_per_seat_monthly, seats_purchased</td></tr>
+    <tr><td>ai_tool_assignments</td><td>AI tool access</td><td>ai_tool_id, team_member_id, assigned_at, revoked_at</td></tr>
+    <tr><td>ai_usage_logs</td><td>AI usage tracking</td><td>ai_tool_id, team_member_id, capability, outcome, time_saved</td></tr>
+    <tr><td>prompt_templates</td><td>Reusable AI prompts</td><td>ai_tool_id, title, content, usage_count</td></tr>
+    <tr><td>leave_entries</td><td>Leave/vacation records</td><td>team_member_id, leave_date, leave_type, half_day</td></tr>
+    <tr><td>pms_notifications</td><td>In-app notifications</td><td>notifiable_type/id, type, data, channel, read_at</td></tr>
+    <tr><td>audit_logs</td><td>Action audit trail</td><td>user_id, action, entity_type, entity_id, changes</td></tr>
+</table>
+
+
+<!-- ======================= 8. API REFERENCE ======================= -->
+<h1 id="api">8. Complete API Reference</h1>
+<p class="section-intro">The application has 288 total HTTP routes: 182 web routes and 106 API routes. All API routes are prefixed with <code>/v1/</code> and require authentication.</p>
+
+<h2>Web Routes (Key Pages)</h2>
+<table>
+    <tr><th>Method</th><th>URL</th><th>Description</th></tr>
+    <tr><td>GET</td><td>/login</td><td>Login page</td></tr>
+    <tr><td>POST</td><td>/login</td><td>Submit login credentials</td></tr>
+    <tr><td>POST</td><td>/logout</td><td>Log out</td></tr>
+    <tr><td>GET</td><td>/</td><td>Dashboard (role-specific)</td></tr>
+    <tr><td>GET</td><td>/projects</td><td>Projects list</td></tr>
+    <tr><td>GET</td><td>/projects/create</td><td>Create project form</td></tr>
+    <tr><td>POST</td><td>/projects</td><td>Save new project</td></tr>
+    <tr><td>GET</td><td>/projects/{id}</td><td>Project detail</td></tr>
+    <tr><td>GET</td><td>/tasks</td><td>Tasks list</td></tr>
+    <tr><td>GET</td><td>/tasks/{id}</td><td>Task detail</td></tr>
+    <tr><td>GET</td><td>/features</td><td>Features list</td></tr>
+    <tr><td>GET</td><td>/features/kanban</td><td>Kanban board</td></tr>
+    <tr><td>GET</td><td>/features/create</td><td>Create feature form</td></tr>
+    <tr><td>POST</td><td>/features</td><td>Save new feature</td></tr>
+    <tr><td>GET</td><td>/features/{id}</td><td>Feature detail</td></tr>
+    <tr><td>PUT</td><td>/features/{id}</td><td>Update feature</td></tr>
+    <tr><td>GET</td><td>/requests</td><td>Requests list</td></tr>
+    <tr><td>GET</td><td>/requests/create</td><td>Create request form</td></tr>
+    <tr><td>POST</td><td>/requests</td><td>Save new request</td></tr>
+    <tr><td>GET</td><td>/requests/{id}</td><td>Request detail</td></tr>
+    <tr><td>PUT</td><td>/requests/{id}/triage</td><td>Triage a request</td></tr>
+    <tr><td>GET</td><td>/work-logs</td><td>Work logs list</td></tr>
+    <tr><td>GET</td><td>/work-logs/create</td><td>Log work form</td></tr>
+    <tr><td>POST</td><td>/work-logs</td><td>Save work log</td></tr>
+    <tr><td>GET</td><td>/journal</td><td>Journal entries</td></tr>
+    <tr><td>GET</td><td>/journal/team</td><td>Team journal (managers)</td></tr>
+    <tr><td>GET</td><td>/journal/create</td><td>Create journal entry</td></tr>
+    <tr><td>POST</td><td>/journal</td><td>Save journal entry</td></tr>
+    <tr><td>GET</td><td>/activity-logs</td><td>Activity logs</td></tr>
+    <tr><td>GET</td><td>/activity-logs/create</td><td>Create activity log</td></tr>
+    <tr><td>POST</td><td>/activity-logs</td><td>Save activity log</td></tr>
+    <tr><td>GET</td><td>/initiatives</td><td>Initiatives list</td></tr>
+    <tr><td>GET</td><td>/ideas</td><td>Ideas list</td></tr>
+    <tr><td>GET</td><td>/decisions</td><td>Decisions list</td></tr>
+    <tr><td>GET</td><td>/sprints</td><td>Sprints list</td></tr>
+    <tr><td>GET</td><td>/sprints/create</td><td>Create sprint</td></tr>
+    <tr><td>GET</td><td>/sprints/{id}</td><td>Sprint detail</td></tr>
+    <tr><td>GET</td><td>/releases</td><td>Releases list</td></tr>
+    <tr><td>GET</td><td>/changelogs</td><td>Changelogs list</td></tr>
+    <tr><td>GET</td><td>/deadlines</td><td>Deadlines list</td></tr>
+    <tr><td>GET</td><td>/bug-sla</td><td>Bug SLA records</td></tr>
+    <tr><td>GET</td><td>/merchant-communications</td><td>Merchant comms</td></tr>
+    <tr><td>GET</td><td>/team-members</td><td>Team directory</td></tr>
+    <tr><td>GET</td><td>/team-members/{id}</td><td>Member profile</td></tr>
+    <tr><td>GET</td><td>/onboarding</td><td>Onboarding list</td></tr>
+    <tr><td>GET</td><td>/offboarding</td><td>Offboarding list</td></tr>
+    <tr><td>GET</td><td>/bus-factor</td><td>Bus factor analysis</td></tr>
+    <tr><td>GET</td><td>/capacity</td><td>Capacity planning</td></tr>
+    <tr><td>GET</td><td>/leave-entries</td><td>Leave calendar</td></tr>
+    <tr><td>GET</td><td>/reports/work-logs</td><td>Work log report</td></tr>
+    <tr><td>GET</td><td>/reports/projects</td><td>Project report</td></tr>
+    <tr><td>GET</td><td>/reports/individual</td><td>Individual report</td></tr>
+    <tr><td>GET</td><td>/dashboard/ceo</td><td>CEO dashboard</td></tr>
+    <tr><td>GET</td><td>/dashboard/cost</td><td>Cost dashboard</td></tr>
+    <tr><td>GET</td><td>/dashboard/ai</td><td>AI dashboard</td></tr>
+    <tr><td>GET</td><td>/cost-vs-impact</td><td>Cost vs Impact</td></tr>
+    <tr><td>GET</td><td>/cost-rates</td><td>Cost rates</td></tr>
+    <tr><td>GET</td><td>/ai-tools</td><td>AI tools</td></tr>
+    <tr><td>GET</td><td>/prompt-templates</td><td>Prompt templates</td></tr>
+    <tr><td>GET</td><td>/ai-knowledge-base</td><td>AI knowledge base</td></tr>
+    <tr><td>GET</td><td>/git-providers</td><td>Git providers</td></tr>
+    <tr><td>GET</td><td>/git-repositories</td><td>Git repositories</td></tr>
+    <tr><td>GET</td><td>/personal/history</td><td>Personal dashboard</td></tr>
+    <tr><td>GET</td><td>/personal/review-prep</td><td>Review prep</td></tr>
+</table>
+
+<h2>API Routes (JSON Endpoints)</h2>
+<p>All API routes are prefixed with <code>/v1/</code> and return JSON. They require authentication via session cookie or API token.</p>
+
+<table>
+    <tr><th>Method</th><th>URL</th><th>Description</th></tr>
+    <tr><td colspan="3" style="background:#f3f0ff; font-weight:bold;">Projects & Tasks</td></tr>
+    <tr><td>GET</td><td>/v1/projects</td><td>List all projects</td></tr>
+    <tr><td>POST</td><td>/v1/projects</td><td>Create project</td></tr>
+    <tr><td>GET</td><td>/v1/projects/{id}</td><td>Get project details</td></tr>
+    <tr><td>PUT</td><td>/v1/projects/{id}</td><td>Update project</td></tr>
+    <tr><td>POST</td><td>/v1/projects/{id}/members</td><td>Add member to project</td></tr>
+    <tr><td>DELETE</td><td>/v1/projects/{id}/members/{userId}</td><td>Remove member from project</td></tr>
+    <tr><td>GET</td><td>/v1/projects/{projectId}/tasks</td><td>List tasks in project</td></tr>
+    <tr><td>POST</td><td>/v1/projects/{projectId}/tasks</td><td>Create task in project</td></tr>
+    <tr><td>GET</td><td>/v1/tasks/{id}</td><td>Get task details</td></tr>
+    <tr><td>PUT</td><td>/v1/tasks/{id}</td><td>Update task</td></tr>
+    <tr><td>PUT</td><td>/v1/tasks/{id}/status</td><td>Change task status</td></tr>
+    <tr><td colspan="3" style="background:#f3f0ff; font-weight:bold;">Features</td></tr>
+    <tr><td>GET</td><td>/v1/features</td><td>List features</td></tr>
+    <tr><td>POST</td><td>/v1/features</td><td>Create feature</td></tr>
+    <tr><td>GET</td><td>/v1/features/{id}</td><td>Get feature details</td></tr>
+    <tr><td>PUT</td><td>/v1/features/{id}</td><td>Update feature</td></tr>
+    <tr><td colspan="3" style="background:#f3f0ff; font-weight:bold;">Work Logs</td></tr>
+    <tr><td>GET</td><td>/v1/work-logs</td><td>List work logs</td></tr>
+    <tr><td>POST</td><td>/v1/work-logs</td><td>Create work log</td></tr>
+    <tr><td>PUT</td><td>/v1/work-logs/{id}</td><td>Update work log</td></tr>
+    <tr><td>DELETE</td><td>/v1/work-logs/{id}</td><td>Delete work log</td></tr>
+    <tr><td colspan="3" style="background:#f3f0ff; font-weight:bold;">Sprints</td></tr>
+    <tr><td>GET</td><td>/v1/sprints</td><td>List sprints</td></tr>
+    <tr><td>POST</td><td>/v1/sprints</td><td>Create sprint</td></tr>
+    <tr><td>GET</td><td>/v1/sprints/{id}</td><td>Get sprint details</td></tr>
+    <tr><td>PUT</td><td>/v1/sprints/{id}</td><td>Update sprint</td></tr>
+    <tr><td>POST</td><td>/v1/sprints/{id}/activate</td><td>Activate sprint</td></tr>
+    <tr><td>POST</td><td>/v1/sprints/{id}/complete</td><td>Complete sprint</td></tr>
+    <tr><td>POST</td><td>/v1/sprints/{id}/features</td><td>Add feature to sprint</td></tr>
+    <tr><td>DELETE</td><td>/v1/sprints/{id}/features/{featureId}</td><td>Remove feature from sprint</td></tr>
+    <tr><td colspan="3" style="background:#f3f0ff; font-weight:bold;">Requests</td></tr>
+    <tr><td>GET</td><td>/v1/requests</td><td>List requests</td></tr>
+    <tr><td>POST</td><td>/v1/requests</td><td>Create request</td></tr>
+    <tr><td>GET</td><td>/v1/requests/{id}</td><td>Get request details</td></tr>
+    <tr><td>PUT</td><td>/v1/requests/{id}</td><td>Update request</td></tr>
+    <tr><td>POST</td><td>/v1/requests/{id}/triage</td><td>Triage request</td></tr>
+    <tr><td>POST</td><td>/v1/requests/{id}/merge</td><td>Merge duplicate requests</td></tr>
+    <tr><td>GET</td><td>/v1/requests/check-duplicates</td><td>Check for duplicate requests</td></tr>
+    <tr><td colspan="3" style="background:#f3f0ff; font-weight:bold;">Ideas & Decisions</td></tr>
+    <tr><td>GET</td><td>/v1/ideas</td><td>List ideas</td></tr>
+    <tr><td>POST</td><td>/v1/ideas</td><td>Submit idea</td></tr>
+    <tr><td>POST</td><td>/v1/ideas/{id}/promote</td><td>Promote idea to feature/initiative</td></tr>
+    <tr><td>GET</td><td>/v1/decisions</td><td>List decisions</td></tr>
+    <tr><td>POST</td><td>/v1/decisions</td><td>Record decision</td></tr>
+    <tr><td>POST</td><td>/v1/decisions/{id}/supersede</td><td>Supersede a decision</td></tr>
+    <tr><td colspan="3" style="background:#f3f0ff; font-weight:bold;">Bug SLA & Blockers</td></tr>
+    <tr><td>GET</td><td>/v1/bug-sla</td><td>List bug SLA records</td></tr>
+    <tr><td>POST</td><td>/v1/bug-sla</td><td>Create bug SLA record</td></tr>
+    <tr><td>POST</td><td>/v1/bug-sla/{id}/reopen</td><td>Reopen a bug</td></tr>
+    <tr><td>GET</td><td>/v1/blockers</td><td>List all blockers</td></tr>
+    <tr><td>POST</td><td>/v1/blockers</td><td>Create blocker</td></tr>
+    <tr><td>POST</td><td>/v1/blockers/{id}/resolve</td><td>Resolve blocker</td></tr>
+    <tr><td colspan="3" style="background:#f3f0ff; font-weight:bold;">Changelogs & Releases</td></tr>
+    <tr><td>GET</td><td>/v1/changelogs</td><td>List changelogs</td></tr>
+    <tr><td>POST</td><td>/v1/changelogs</td><td>Create changelog</td></tr>
+    <tr><td>POST</td><td>/v1/changelogs/{id}/approve</td><td>Approve changelog</td></tr>
+    <tr><td>POST</td><td>/v1/changelogs/{id}/publish</td><td>Publish changelog</td></tr>
+    <tr><td>GET</td><td>/v1/releases</td><td>List releases</td></tr>
+    <tr><td>POST</td><td>/v1/releases</td><td>Create release</td></tr>
+    <tr><td colspan="3" style="background:#f3f0ff; font-weight:bold;">Dashboards</td></tr>
+    <tr><td>GET</td><td>/v1/dashboard/individual</td><td>Individual dashboard data</td></tr>
+    <tr><td>GET</td><td>/v1/dashboard/manager</td><td>Manager dashboard data</td></tr>
+    <tr><td>GET</td><td>/v1/dashboard/ceo</td><td>CEO dashboard data</td></tr>
+    <tr><td>GET</td><td>/v1/dashboard/cost</td><td>Cost dashboard data</td></tr>
+    <tr><td>GET</td><td>/v1/dashboard/ai</td><td>AI dashboard data</td></tr>
+    <tr><td colspan="3" style="background:#f3f0ff; font-weight:bold;">Git Integration</td></tr>
+    <tr><td>POST</td><td>/v1/webhooks/git/{repoName}</td><td>Receive Git webhook (no auth)</td></tr>
+    <tr><td>GET/POST/PUT/DELETE</td><td>/v1/git-providers</td><td>CRUD for Git providers</td></tr>
+    <tr><td>GET/POST/PUT/DELETE</td><td>/v1/git-repositories</td><td>CRUD for repositories</td></tr>
+    <tr><td colspan="3" style="background:#f3f0ff; font-weight:bold;">Capacity & Leave</td></tr>
+    <tr><td>GET</td><td>/v1/capacity</td><td>Team capacity data</td></tr>
+    <tr><td>GET</td><td>/v1/capacity/forecast/{initiativeId}</td><td>Forecast completion date</td></tr>
+    <tr><td>GET/POST/PUT/DELETE</td><td>/v1/leave-entries</td><td>CRUD for leave entries</td></tr>
+    <tr><td colspan="3" style="background:#f3f0ff; font-weight:bold;">AI Intelligence</td></tr>
+    <tr><td>GET/POST</td><td>/v1/ai-tools</td><td>AI tools CRUD</td></tr>
+    <tr><td>POST</td><td>/v1/ai-tools/{id}/assign</td><td>Assign tool to user</td></tr>
+    <tr><td>POST</td><td>/v1/ai-tools/{id}/revoke</td><td>Revoke tool access</td></tr>
+    <tr><td>GET/POST</td><td>/v1/ai-usage-logs</td><td>AI usage tracking</td></tr>
+    <tr><td>GET</td><td>/v1/ai-usage-logs/effectiveness</td><td>AI effectiveness matrix</td></tr>
+    <tr><td>GET/POST/PUT</td><td>/v1/prompt-templates</td><td>Prompt templates CRUD</td></tr>
+</table>
+
+
+<!-- ======================= 9. FLOWS ======================= -->
+<h1 id="flows">9. Application Flows</h1>
+
+<h2>Flow 1: Merchant Request to Feature Release</h2>
+<div class="flow-step"><b>Step 1:</b> Merchant contacts Sales team about a need</div>
+<div class="flow-arrow">&#8595;</div>
+<div class="flow-step"><b>Step 2:</b> Sales person logs into PMS, goes to Requests > Create, fills in details (title, type, urgency, merchant, revenue impact)</div>
+<div class="flow-arrow">&#8595;</div>
+<div class="flow-step"><b>Step 3:</b> Request appears on MC Team's dashboard as "Untriaged"</div>
+<div class="flow-arrow">&#8595;</div>
+<div class="flow-step"><b>Step 4:</b> MC Team reviews the request, checks for duplicates, and triages it: Accept (link to feature), Defer, or Reject</div>
+<div class="flow-arrow">&#8595;</div>
+<div class="flow-step"><b>Step 5:</b> If accepted, a Feature is created (or linked to existing feature). Feature starts in "Backlog" status</div>
+<div class="flow-arrow">&#8595;</div>
+<div class="flow-step"><b>Step 6:</b> During Sprint Planning, the feature is added to a Sprint with committed hours</div>
+<div class="flow-arrow">&#8595;</div>
+<div class="flow-step"><b>Step 7:</b> Developer works on the feature. Logs Work Logs and Activity Logs daily. Updates feature status: In Progress > In Review</div>
+<div class="flow-arrow">&#8595;</div>
+<div class="flow-step"><b>Step 8:</b> Tester tests the feature. Status moves: Ready for QA > In QA > Ready for Release</div>
+<div class="flow-arrow">&#8595;</div>
+<div class="flow-step"><b>Step 9:</b> Feature is included in a Release. Deployed to staging, then production.</div>
+<div class="flow-arrow">&#8595;</div>
+<div class="flow-step"><b>Step 10:</b> Changelog is written, approved, and published. Request status becomes "Fulfilled".</div>
+
+<h2>Flow 2: Daily Team Member Workflow</h2>
+<div class="flow-step"><b>Morning:</b> Log in > See Dashboard > Check assigned tasks and blocked items</div>
+<div class="flow-arrow">&#8595;</div>
+<div class="flow-step"><b>Start Work:</b> Go to Work Logs > Log Work. Start time auto-fills from last log's end time</div>
+<div class="flow-arrow">&#8595;</div>
+<div class="flow-step"><b>During Day:</b> Work on tasks. If blocked, create a Blocker. Update task status as needed.</div>
+<div class="flow-arrow">&#8595;</div>
+<div class="flow-step"><b>End of Each Work Block:</b> Complete the work log entry. Start a new one for the next block.</div>
+<div class="flow-arrow">&#8595;</div>
+<div class="flow-step"><b>End of Day:</b> Fill in Activity Log (more detailed). Write Journal entry (accomplishments, blockers, mood, plans).</div>
+
+<h2>Flow 3: Sprint Cycle</h2>
+<div class="flow-step"><b>Planning (Day 1):</b> Manager creates a new Sprint. Sets goal, dates, and total capacity hours.</div>
+<div class="flow-arrow">&#8595;</div>
+<div class="flow-step"><b>Feature Selection:</b> Add features to the sprint with committed hours per feature. Check capacity.</div>
+<div class="flow-arrow">&#8595;</div>
+<div class="flow-step"><b>Activation:</b> Manager activates the sprint. Status: Planning > Active.</div>
+<div class="flow-arrow">&#8595;</div>
+<div class="flow-step"><b>Execution (1-2 weeks):</b> Team works on committed features. Daily logging and updates.</div>
+<div class="flow-arrow">&#8595;</div>
+<div class="flow-step"><b>Completion:</b> Sprint ends. Manager marks it Complete. Unfinished features are carried over with reasons.</div>
+
+<h2>Flow 4: Bug SLA Tracking</h2>
+<div class="flow-step"><b>Bug Found:</b> Tester or user finds a bug. Create Bug SLA record with severity (P0-P3).</div>
+<div class="flow-arrow">&#8595;</div>
+<div class="flow-step"><b>SLA Clock Starts:</b> System auto-calculates deadline (P0=4h, P1=24h, P2=72h, P3=next sprint).</div>
+<div class="flow-arrow">&#8595;</div>
+<div class="flow-step"><b>Fix & Close:</b> If fixed before deadline, SLA is met. If not, "breached_at" is recorded.</div>
+<div class="flow-arrow">&#8595;</div>
+<div class="flow-step"><b>Reopen:</b> If the bug comes back, the reopen count increases and a new SLA cycle starts.</div>
+
+
+<!-- ======================= 10. ARCHITECTURE ======================= -->
+<h1 id="architecture">10. Architecture & Implementation Guide</h1>
+
+<h2>Deployment Architecture</h2>
+<table>
+    <tr><th>Component</th><th>Service</th><th>Details</th></tr>
+    <tr><td>Application Server</td><td>Render.com (Free Tier)</td><td>Docker container running PHP 8.3 + Apache</td></tr>
+    <tr><td>Database</td><td>Neon PostgreSQL (Free Tier)</td><td>Cloud-hosted PostgreSQL database</td></tr>
+    <tr><td>Code Repository</td><td>GitHub</td><td>Source code version control</td></tr>
+    <tr><td>Build Process</td><td>Docker Multi-stage</td><td>1) Composer install 2) Vite build 3) PHP Apache runtime</td></tr>
+</table>
+
+<h2>Key Technical Patterns</h2>
+<ul>
+    <li><b>Soft Deletes:</b> Records are never truly deleted. A <code>deleted_at</code> timestamp is set instead. This allows recovery.</li>
+    <li><b>Polymorphic Relationships:</b> Comments and Documents can be attached to any entity type (project, task, feature, etc.) using <code>commentable_type/commentable_id</code> columns.</li>
+    <li><b>Enums:</b> All status fields, types, and categories use PHP enums for type safety. There are 50 enum definitions.</li>
+    <li><b>Audit Trail:</b> The Auditable trait automatically logs all create/update/delete actions to the <code>audit_logs</code> table.</li>
+    <li><b>Role-based Access:</b> Controllers check the user's role to determine what data to show and what actions to allow.</li>
+    <li><b>Encrypted Fields:</b> Git provider credentials and webhook secrets are encrypted at rest using Laravel's encryption.</li>
+    <li><b>Pagination:</b> All list endpoints use Laravel's pagination (default 15 per page) for performance.</li>
+</ul>
+
+<h2>Statistics</h2>
+<table>
+    <tr><th>Metric</th><th>Count</th></tr>
+    <tr><td>Total HTTP Routes</td><td>288 (182 web + 106 API)</td></tr>
+    <tr><td>Vue Page Components</td><td>81</td></tr>
+    <tr><td>Database Tables</td><td>44 (38 application + 6 system)</td></tr>
+    <tr><td>Enum Definitions</td><td>50</td></tr>
+    <tr><td>User Roles</td><td>8</td></tr>
+    <tr><td>Controllers</td><td>30+</td></tr>
+    <tr><td>Total Modules</td><td>38</td></tr>
+</table>
+
+<br><br>
+<hr>
+<p style="text-align:center; color:#999; font-size:10pt;">
+    eWards PMS Documentation v1.0 | Generated April 2026 | Confidential
+</p>
+
+</body>
+</html>

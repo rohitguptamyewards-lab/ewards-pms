@@ -78,7 +78,7 @@ class FeatureCostSnapshotService
 
             $estimatedHours = (int) DB::table('feature_assignments')
                 ->where('feature_id', $featureId)
-                ->whereNull('deleted_at')
+                ->where('state', '!=', 'removed')
                 ->sum('estimated_hours');
 
             $this->snapshotRepository->upsert([

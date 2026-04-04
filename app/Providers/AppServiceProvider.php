@@ -2,7 +2,14 @@
 
 namespace App\Providers;
 
+use App\Events\RequestCreated;
+use App\Events\TaskStatusChanged;
+use App\Events\WorkLogCreated;
+use App\Listeners\SendRequestCreatedEmail;
+use App\Listeners\SendTaskStatusEmail;
+use App\Listeners\SendWorkLogEmail;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 
@@ -37,6 +44,11 @@ class AppServiceProvider extends ServiceProvider
         if ($this->app->environment('production')) {
             URL::forceScheme('https');
         }
+
+        // Register event listeners for email notifications
+        Event::listen(TaskStatusChanged::class, SendTaskStatusEmail::class);
+        Event::listen(WorkLogCreated::class, SendWorkLogEmail::class);
+        Event::listen(RequestCreated::class, SendRequestCreatedEmail::class);
 
         // Morph map — keeps short type strings in DB consistent with model lookups.
         // Deadline.deadlineable and PmsNotification.notifiable rely on these.

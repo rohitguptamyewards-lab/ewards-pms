@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreCommentRequest;
 use App\Repositories\CommentRepository;
+use App\Services\EmailNotificationService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -13,6 +14,7 @@ class CommentController extends Controller
 {
     public function __construct(
         private readonly CommentRepository $commentRepository,
+        private readonly EmailNotificationService $emailService,
     ) {}
 
     /**
@@ -64,6 +66,20 @@ class CommentController extends Controller
             ->select('comments.*', 'team_members.name as user_name')
             ->where('comments.id', $id)
             ->first();
+
+        // Send email notification for comment + mentions
+        $mentionedIds = !empty($data['mentions']) ? json_decode($data['mentions'], true) : [];
+        try {
+            $this->emailService->onCommentAdded(
+                $data['commentable_type'],
+                $data['commentable_id'],
+                auth()->id(),
+                $data['body'],
+                $mentionedIds,
+            );
+        } catch (\Throwable $e) {
+            // Never let email failure break comment creation
+        }
 
         return response()->json($comment, 201);
     }
