@@ -27,7 +27,7 @@ return new class extends Migration
             $table->string('ai_time_saved')->nullable();
             $table->text('ai_note')->nullable();
             $table->unsignedBigInteger('cost_rate_id')->nullable();
-            $table->date('log_date')->default(DB::raw('(CURDATE())'));
+            $table->date('log_date')->default(DB::raw('(CURRENT_DATE)'));
             $table->boolean('is_same_as_yesterday')->default(false);
             $table->timestamps();
             $table->softDeletes();

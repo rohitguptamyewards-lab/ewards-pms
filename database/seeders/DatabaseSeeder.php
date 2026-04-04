@@ -22,25 +22,31 @@ class DatabaseSeeder extends Seeder
 
         // Truncate tables in reverse dependency order
         $driver = DB::getDriverName();
-        if ($driver === 'sqlite') {
-            DB::statement('PRAGMA foreign_keys = OFF');
+
+        $tables = [
+            'comments', 'work_logs', 'requests', 'features',
+            'tasks', 'project_members', 'projects', 'modules',
+            'merchants', 'team_members',
+        ];
+
+        if ($driver === 'pgsql') {
+            // PostgreSQL: single TRUNCATE CASCADE handles all FK constraints
+            DB::statement('TRUNCATE TABLE ' . implode(', ', array_map(fn($t) => "\"{$t}\"", $tables)) . ' RESTART IDENTITY CASCADE');
         } else {
-            DB::statement('SET FOREIGN_KEY_CHECKS=0');
-        }
-        DB::table('comments')->truncate();
-        DB::table('work_logs')->truncate();
-        DB::table('requests')->truncate();
-        DB::table('features')->truncate();
-        DB::table('tasks')->truncate();
-        DB::table('project_members')->truncate();
-        DB::table('projects')->truncate();
-        DB::table('modules')->truncate();
-        DB::table('merchants')->truncate();
-        DB::table('team_members')->truncate();
-        if ($driver === 'sqlite') {
-            DB::statement('PRAGMA foreign_keys = ON');
-        } else {
-            DB::statement('SET FOREIGN_KEY_CHECKS=1');
+            // SQLite / MySQL: disable FK checks, truncate individually, re-enable
+            if ($driver === 'sqlite') {
+                DB::statement('PRAGMA foreign_keys = OFF');
+            } else {
+                DB::statement('SET FOREIGN_KEY_CHECKS=0');
+            }
+            foreach ($tables as $t) {
+                DB::table($t)->truncate();
+            }
+            if ($driver === 'sqlite') {
+                DB::statement('PRAGMA foreign_keys = ON');
+            } else {
+                DB::statement('SET FOREIGN_KEY_CHECKS=1');
+            }
         }
 
         // ---------------------------------------------------------------
@@ -539,5 +545,25 @@ class DatabaseSeeder extends Seeder
                 'updated_at'       => $now,
             ],
         ]);
+
+        // ---------------------------------------------------------------
+        // Fix PostgreSQL sequences after explicit-ID inserts
+        // ---------------------------------------------------------------
+        if ($driver === 'pgsql') {
+            $sequences = [
+                'team_members' => 8,
+                'merchants'    => 3,
+                'modules'      => 2,
+                'projects'     => 2,
+                'tasks'        => 6,
+                'features'     => 3,
+                'requests'     => 4,
+                'work_logs'    => 8,
+                'comments'     => 3,
+            ];
+            foreach ($sequences as $table => $maxId) {
+                DB::statement("SELECT setval(pg_get_serial_sequence('{$table}', 'id'), {$maxId})");
+            }
+        }
     }
 }
