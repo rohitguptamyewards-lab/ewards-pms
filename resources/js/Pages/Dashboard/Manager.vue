@@ -80,7 +80,7 @@ function formatDate(d) {
                     <div v-for="task in blockedTasks" :key="task.id" class="px-5 py-3.5 hover:bg-gray-50 transition-colors">
                         <div class="flex items-start justify-between gap-2">
                             <div class="min-w-0">
-                                <Link :href="`/tasks/${task.id}`" class="font-medium text-[#5e16bd] hover:underline truncate block">
+                                <Link :href="`/tasks/${task.id}`" class="font-medium text-[#4e1a77] hover:underline truncate block">
                                     {{ task.title }}
                                 </Link>
                                 <p class="mt-0.5 text-xs text-gray-500">{{ task.assignee_name || task.assignee?.name || '—' }}</p>
@@ -115,7 +115,7 @@ function formatDate(d) {
                     <div v-for="task in overdueTasks" :key="task.id" class="px-5 py-3.5 hover:bg-gray-50 transition-colors">
                         <div class="flex items-start justify-between gap-2">
                             <div class="min-w-0">
-                                <Link :href="`/tasks/${task.id}`" class="font-medium text-[#5e16bd] hover:underline truncate block">
+                                <Link :href="`/tasks/${task.id}`" class="font-medium text-[#4e1a77] hover:underline truncate block">
                                     {{ task.title }}
                                 </Link>
                                 <p class="mt-0.5 text-xs text-gray-500">
@@ -162,7 +162,7 @@ function formatDate(d) {
                         <tr v-for="(entry, idx) in teamWorkload" :key="idx" class="hover:bg-[#f5f0ff]/20 transition-colors">
                             <td class="px-5 py-3.5">
                                 <div class="flex items-center gap-2">
-                                    <span class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-[#ece1ff] text-xs font-bold text-[#5e16bd]">
+                                    <span class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-[#e8ddf0] text-xs font-bold text-[#4e1a77]">
                                         {{ (entry.user?.name || entry.user_name || '?').charAt(0).toUpperCase() }}
                                     </span>
                                     <span class="font-medium text-gray-900">{{ entry.user?.name || entry.user_name || '—' }}</span>

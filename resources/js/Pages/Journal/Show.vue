@@ -27,7 +27,7 @@ const moodConfig = {
 
     <div>
         <div class="mb-5 flex items-center gap-2 text-sm text-gray-500">
-            <Link href="/journal" class="hover:text-[#5e16bd]">Journal</Link>
+            <Link href="/journal" class="hover:text-[#4e1a77]">Journal</Link>
             <span>/</span>
             <span class="text-gray-800 font-medium">{{ formatDate(entry.entry_date) }}</span>
         </div>
@@ -72,7 +72,7 @@ const moodConfig = {
                     <div v-if="entry.tags" class="pt-2 border-t border-gray-100">
                         <div class="flex flex-wrap gap-1.5">
                             <span v-for="tag in (typeof entry.tags === 'string' ? JSON.parse(entry.tags) : entry.tags)" :key="tag"
-                                  class="rounded-full bg-[#ece1ff] px-2.5 py-0.5 text-xs font-medium text-[#5e16bd]">
+                                  class="rounded-full bg-[#e8ddf0] px-2.5 py-0.5 text-xs font-medium text-[#4e1a77]">
                                 {{ tag }}
                             </span>
                         </div>

@@ -34,7 +34,7 @@ function formatDate(dateStr) {
             <Link
                 v-if="canCreate"
                 href="/projects/create"
-                class="inline-flex items-center gap-2 rounded-lg bg-[#5e16bd] px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-[#4c12a1] transition-colors"
+                class="inline-flex items-center gap-2 rounded-lg bg-[#4e1a77] px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-[#3d1560] transition-colors"
             >
                 <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -65,7 +65,7 @@ function formatDate(dateStr) {
                             class="group hover:bg-[#f5f0ff]/30 transition-colors"
                         >
                             <td class="px-5 py-3.5">
-                                <Link :href="`/projects/${project.id}`" class="font-semibold text-[#5e16bd] group-hover:underline">
+                                <Link :href="`/projects/${project.id}`" class="font-semibold text-[#4e1a77] group-hover:underline">
                                     {{ project.name }}
                                 </Link>
                             </td>
@@ -93,7 +93,7 @@ function formatDate(dateStr) {
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
                                 </svg>
                                 <p class="text-sm font-medium text-gray-400">No projects found</p>
-                                <Link v-if="canCreate" href="/projects/create" class="mt-2 inline-block text-sm text-[#5e16bd] hover:underline">Create your first project →</Link>
+                                <Link v-if="canCreate" href="/projects/create" class="mt-2 inline-block text-sm text-[#4e1a77] hover:underline">Create your first project →</Link>
                             </td>
                         </tr>
                     </tbody>
@@ -106,7 +106,7 @@ function formatDate(dateStr) {
                     :key="link.label"
                     :href="link.url || '#'"
                     :class="[
-                        link.active ? 'bg-[#5e16bd] text-white shadow-sm' : 'text-gray-600 hover:bg-gray-200',
+                        link.active ? 'bg-[#4e1a77] text-white shadow-sm' : 'text-gray-600 hover:bg-gray-200',
                         !link.url ? 'pointer-events-none opacity-40' : '',
                     ]"
                     class="rounded-md px-3 py-1.5 text-sm font-medium transition-colors"

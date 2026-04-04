@@ -94,11 +94,11 @@ function submit() {
                 <h3 class="text-sm font-bold text-gray-900 mb-3">Commit Features</h3>
                 <div class="space-y-2 max-h-80 overflow-y-auto">
                     <div v-for="f in features" :key="f.id"
-                         :class="isSelected(f.id) ? 'border-[#5e16bd]/30 bg-purple-50' : 'border-gray-100'"
+                         :class="isSelected(f.id) ? 'border-[#4e1a77]/30 bg-purple-50' : 'border-gray-100'"
                          class="flex items-center gap-3 rounded-lg border p-3 cursor-pointer transition-colors"
                          @click="toggleFeature(f.id)">
                         <input type="checkbox" :checked="isSelected(f.id)"
-                               class="h-4 w-4 rounded border-gray-300 text-[#5e16bd] focus:ring-[#5e16bd]" />
+                               class="h-4 w-4 rounded border-gray-300 text-[#4e1a77] focus:ring-[#4e1a77]" />
                         <div class="flex-1 min-w-0">
                             <p class="text-sm font-medium text-gray-900 truncate">{{ f.title }}</p>
                             <p class="text-xs text-gray-400">{{ f.module_name || 'No module' }} · {{ f.assignee_name || 'Unassigned' }}</p>
@@ -117,7 +117,7 @@ function submit() {
             <div class="flex justify-end gap-3">
                 <a href="/sprints" class="rounded-lg border border-gray-200 px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50">Cancel</a>
                 <button type="submit" :disabled="form.processing"
-                        class="rounded-lg bg-[#5e16bd] px-6 py-2 text-sm font-semibold text-white hover:bg-[#4e12a0] disabled:opacity-50">
+                        class="rounded-lg bg-[#4e1a77] px-6 py-2 text-sm font-semibold text-white hover:bg-[#4e12a0] disabled:opacity-50">
                     {{ form.processing ? 'Creating...' : 'Create Sprint' }}
                 </button>
             </div>

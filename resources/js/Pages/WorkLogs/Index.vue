@@ -48,7 +48,7 @@ function formatDate(dateStr) {
             </div>
             <Link
                 href="/work-logs/create"
-                class="inline-flex items-center gap-2 rounded-lg bg-[#5e16bd] px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-[#4c12a1] transition-colors"
+                class="inline-flex items-center gap-2 rounded-lg bg-[#4e1a77] px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-[#3d1560] transition-colors"
             >
                 <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -65,7 +65,7 @@ function formatDate(dateStr) {
                     <label class="mb-1 block text-xs font-semibold uppercase tracking-wide text-gray-400">Project</label>
                     <select
                         v-model="localFilters.project_id"
-                        class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#5e16bd] focus:ring-1 focus:ring-[#5e16bd] outline-none"
+                        class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#4e1a77] focus:ring-1 focus:ring-[#4e1a77] outline-none"
                     >
                         <option value="">All Projects</option>
                         <option v-for="p in projects" :key="p.id" :value="p.id">{{ p.name }}</option>
@@ -77,7 +77,7 @@ function formatDate(dateStr) {
                     <label class="mb-1 block text-xs font-semibold uppercase tracking-wide text-gray-400">Team Member</label>
                     <select
                         v-model="localFilters.user_id"
-                        class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#5e16bd] focus:ring-1 focus:ring-[#5e16bd] outline-none"
+                        class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#4e1a77] focus:ring-1 focus:ring-[#4e1a77] outline-none"
                     >
                         <option value="">All Members</option>
                         <option v-for="m in teamMembers" :key="m.id" :value="m.id">{{ m.name }}</option>
@@ -89,7 +89,7 @@ function formatDate(dateStr) {
                     <input
                         v-model="localFilters.date_from"
                         type="date"
-                        class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#5e16bd] focus:ring-1 focus:ring-[#5e16bd] outline-none"
+                        class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#4e1a77] focus:ring-1 focus:ring-[#4e1a77] outline-none"
                     />
                 </div>
                 <div class="min-w-[140px]">
@@ -97,11 +97,11 @@ function formatDate(dateStr) {
                     <input
                         v-model="localFilters.date_to"
                         type="date"
-                        class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#5e16bd] focus:ring-1 focus:ring-[#5e16bd] outline-none"
+                        class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#4e1a77] focus:ring-1 focus:ring-[#4e1a77] outline-none"
                     />
                 </div>
                 <div class="flex gap-2">
-                    <button @click="applyFilters" class="rounded-lg bg-[#5e16bd] px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-[#4c12a1] transition-colors">
+                    <button @click="applyFilters" class="rounded-lg bg-[#4e1a77] px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-[#3d1560] transition-colors">
                         Apply
                     </button>
                     <button @click="clearFilters" class="rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors">
@@ -155,7 +155,7 @@ function formatDate(dateStr) {
                             <td class="px-5 py-3.5">
                                 <span :class="{
                                     'bg-emerald-100 text-emerald-700': log.status === 'done',
-                                    'bg-[#ece1ff] text-[#5e16bd]': log.status === 'in_progress',
+                                    'bg-[#e8ddf0] text-[#4e1a77]': log.status === 'in_progress',
                                     'bg-red-100 text-red-700': log.status === 'blocked',
                                 }" class="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium capitalize">
                                     {{ (log.status || '').replace('_', ' ') }}
@@ -179,7 +179,7 @@ function formatDate(dateStr) {
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
                                 <p class="text-sm font-medium text-gray-400">No work logs found.</p>
-                                <Link href="/work-logs/create" class="mt-2 inline-block text-sm text-[#5e16bd] hover:underline">Log your first entry →</Link>
+                                <Link href="/work-logs/create" class="mt-2 inline-block text-sm text-[#4e1a77] hover:underline">Log your first entry →</Link>
                             </td>
                         </tr>
                     </tbody>
@@ -193,7 +193,7 @@ function formatDate(dateStr) {
                     :key="link.label"
                     :href="link.url || '#'"
                     :class="[
-                        link.active ? 'bg-[#5e16bd] text-white shadow-sm' : 'text-gray-600 hover:bg-gray-200',
+                        link.active ? 'bg-[#4e1a77] text-white shadow-sm' : 'text-gray-600 hover:bg-gray-200',
                         !link.url ? 'pointer-events-none opacity-40' : '',
                     ]"
                     class="rounded-md px-3 py-1.5 text-sm font-medium transition-colors"

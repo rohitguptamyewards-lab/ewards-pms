@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Models\TeamMember;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rules\Password;
 use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
 
@@ -53,6 +56,40 @@ class TeamMemberController extends Controller
         return Inertia::render('TeamMembers/Index', [
             'members' => $members,
         ]);
+    }
+
+    /**
+     * Show the create team member form.
+     */
+    public function create(): InertiaResponse
+    {
+        return Inertia::render('TeamMembers/Create');
+    }
+
+    /**
+     * Store a new team member.
+     */
+    public function store(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'name'             => 'required|string|max:255',
+            'email'            => 'required|email|max:255|unique:team_members,email',
+            'password'         => ['required', 'confirmed', Password::min(8)],
+            'role'             => 'required|string|in:cto,ceo,manager,mc_team,sales,developer,tester,analyst',
+            'department'       => 'nullable|string|max:255',
+            'joining_date'     => 'nullable|date',
+            'weekly_capacity'  => 'nullable|numeric|min:0|max:168',
+            'working_hours'    => 'nullable|numeric|min:0|max:24',
+            'timezone'         => 'nullable|string|max:100',
+            'is_active'        => 'boolean',
+            'contractor_flag'  => 'boolean',
+            'freelancer_flag'  => 'boolean',
+            'git_username'     => 'nullable|string|max:255',
+        ]);
+
+        TeamMember::create($validated);
+
+        return redirect()->route('team-members.index')->with('success', 'Team member created successfully.');
     }
 
     /**

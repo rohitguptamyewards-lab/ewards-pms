@@ -51,7 +51,7 @@ const statusConfig = {
                 <p class="mt-0.5 text-sm text-gray-500">{{ ideas.total ?? ideas.data?.length ?? 0 }} idea(s)</p>
             </div>
             <Link href="/ideas/create"
-                  class="inline-flex items-center gap-2 rounded-lg bg-[#5e16bd] px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[#4c12a1] transition-colors">
+                  class="inline-flex items-center gap-2 rounded-lg bg-[#4e1a77] px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[#3d1560] transition-colors">
                 <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
                 </svg>
@@ -75,7 +75,7 @@ const statusConfig = {
         <!-- Cards grid -->
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             <Link v-for="idea in ideas.data" :key="idea.id" :href="`/ideas/${idea.id}`"
-                  class="rounded-xl border border-gray-200 bg-white p-5 shadow-sm hover:border-[#5e16bd]/30 hover:shadow-md transition-all">
+                  class="rounded-xl border border-gray-200 bg-white p-5 shadow-sm hover:border-[#4e1a77]/30 hover:shadow-md transition-all">
                 <div class="flex items-start justify-between gap-2">
                     <h3 class="font-semibold text-gray-900 line-clamp-2">{{ idea.title }}</h3>
                     <span :class="statusConfig[idea.status]?.bg || 'bg-gray-100 text-gray-600'"
@@ -103,7 +103,7 @@ const statusConfig = {
         <div v-if="ideas.links?.length > 3" class="mt-6 flex items-center justify-center gap-1">
             <Link v-for="link in ideas.links" :key="link.label"
                   :href="link.url || '#'"
-                  :class="[link.active ? 'bg-[#5e16bd] text-white shadow-sm' : 'text-gray-600 hover:bg-gray-100', !link.url ? 'pointer-events-none opacity-40' : '']"
+                  :class="[link.active ? 'bg-[#4e1a77] text-white shadow-sm' : 'text-gray-600 hover:bg-gray-100', !link.url ? 'pointer-events-none opacity-40' : '']"
                   class="rounded-md px-3 py-1.5 text-sm font-medium transition-colors"
                   v-html="link.label" preserve-scroll />
         </div>

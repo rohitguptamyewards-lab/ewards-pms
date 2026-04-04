@@ -112,7 +112,7 @@ function docHref(doc) {
             <h3 class="text-lg font-semibold text-gray-900">Documents & Links</h3>
             <button
                 @click="showLinkForm = !showLinkForm"
-                class="text-sm text-[#5e16bd] hover:text-[#361963] font-medium"
+                class="text-sm text-[#4e1a77] hover:text-[#361963] font-medium"
             >
                 {{ showLinkForm ? 'Cancel' : '+ Add Link' }}
             </button>
@@ -126,7 +126,7 @@ function docHref(doc) {
                     v-model="linkName"
                     type="text"
                     placeholder="e.g. Design Spec, Figma File..."
-                    class="block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-[#5e16bd] focus:ring-1 focus:ring-[#5e16bd]"
+                    class="block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-[#4e1a77] focus:ring-1 focus:ring-[#4e1a77]"
                 />
             </div>
             <div>
@@ -135,7 +135,7 @@ function docHref(doc) {
                     v-model="linkUrl"
                     type="url"
                     placeholder="https://..."
-                    class="block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-[#5e16bd] focus:ring-1 focus:ring-[#5e16bd]"
+                    class="block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-[#4e1a77] focus:ring-1 focus:ring-[#4e1a77]"
                 />
             </div>
             <div>
@@ -144,13 +144,13 @@ function docHref(doc) {
                     v-model="linkDescription"
                     type="text"
                     placeholder="Brief description..."
-                    class="block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-[#5e16bd] focus:ring-1 focus:ring-[#5e16bd]"
+                    class="block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-[#4e1a77] focus:ring-1 focus:ring-[#4e1a77]"
                 />
             </div>
             <button
                 @click="saveLink"
                 :disabled="savingLink"
-                class="rounded-lg bg-[#5e16bd] px-4 py-2 text-sm font-medium text-white hover:bg-[#4c12a1] disabled:opacity-50"
+                class="rounded-lg bg-[#4e1a77] px-4 py-2 text-sm font-medium text-white hover:bg-[#3d1560] disabled:opacity-50"
             >
                 {{ savingLink ? 'Saving...' : 'Save Link' }}
             </button>
@@ -171,7 +171,7 @@ function docHref(doc) {
                     <a
                         :href="docHref(doc)"
                         target="_blank"
-                        class="text-sm font-medium text-[#5e16bd] hover:underline truncate"
+                        class="text-sm font-medium text-[#4e1a77] hover:underline truncate"
                     >
                         {{ doc.file_name || doc.original_name || doc.name }}
                     </a>
@@ -192,7 +192,7 @@ function docHref(doc) {
             @dragover.prevent="dragOver = true"
             @dragleave="dragOver = false"
             @drop.prevent="handleDrop"
-            :class="dragOver ? 'border-[#5e16bd] bg-[#f5f0ff]' : 'border-gray-300'"
+            :class="dragOver ? 'border-[#4e1a77] bg-[#f5f0ff]' : 'border-gray-300'"
             class="relative mt-3 flex cursor-pointer items-center justify-center rounded-lg border-2 border-dashed p-8 transition-colors"
         >
             <input

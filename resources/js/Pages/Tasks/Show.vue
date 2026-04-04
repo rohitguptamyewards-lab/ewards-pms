@@ -35,7 +35,7 @@ const transitions = {
 };
 
 const transitionConfig = {
-    in_progress: { label: 'Start Progress', classes: 'bg-[#5e16bd] hover:bg-[#4c12a1] text-white' },
+    in_progress: { label: 'Start Progress', classes: 'bg-[#4e1a77] hover:bg-[#3d1560] text-white' },
     blocked:     { label: 'Mark Blocked',   classes: 'bg-red-600 hover:bg-red-700 text-white' },
     done:        { label: 'Mark Done',      classes: 'bg-emerald-600 hover:bg-emerald-700 text-white' },
 };
@@ -131,7 +131,7 @@ function isOverdue(deadline) {
                         <button
                             v-if="teamMembers.length"
                             @click="showReassign = !showReassign"
-                            class="rounded p-0.5 text-gray-400 hover:text-[#5e16bd] hover:bg-[#f5f0ff] transition-colors"
+                            class="rounded p-0.5 text-gray-400 hover:text-[#4e1a77] hover:bg-[#f5f0ff] transition-colors"
                             title="Change assignee"
                         >
                             <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -143,7 +143,7 @@ function isOverdue(deadline) {
                     <div v-if="showReassign" class="mt-2 flex items-center gap-2">
                         <select
                             v-model="newAssigneeId"
-                            class="rounded-md border border-gray-200 bg-gray-50 px-2 py-1 text-sm focus:border-[#5e16bd] focus:ring-1 focus:ring-[#5e16bd] outline-none"
+                            class="rounded-md border border-gray-200 bg-gray-50 px-2 py-1 text-sm focus:border-[#4e1a77] focus:ring-1 focus:ring-[#4e1a77] outline-none"
                         >
                             <option value="">Unassigned</option>
                             <option v-for="m in teamMembers" :key="m.id" :value="m.id">{{ m.name }}</option>
@@ -151,7 +151,7 @@ function isOverdue(deadline) {
                         <button
                             @click="saveReassign"
                             :disabled="reassigning"
-                            class="rounded-md bg-[#5e16bd] px-2.5 py-1 text-xs font-medium text-white hover:bg-[#4c12a1] disabled:opacity-50 transition-colors"
+                            class="rounded-md bg-[#4e1a77] px-2.5 py-1 text-xs font-medium text-white hover:bg-[#3d1560] disabled:opacity-50 transition-colors"
                         >{{ reassigning ? '...' : 'Save' }}</button>
                         <button @click="showReassign = false" class="rounded-md border border-gray-200 px-2 py-1 text-xs font-medium text-gray-600 hover:bg-gray-50 transition-colors">
                             ✕
@@ -164,7 +164,7 @@ function isOverdue(deadline) {
                     <Link
                         v-if="task.project_id"
                         :href="`/projects/${task.project_id}`"
-                        class="mt-1 block text-sm font-medium text-[#5e16bd] hover:underline"
+                        class="mt-1 block text-sm font-medium text-[#4e1a77] hover:underline"
                     >{{ task.project_name || '—' }}</Link>
                     <p v-else class="mt-1 text-sm text-gray-500">—</p>
                 </div>

@@ -87,7 +87,7 @@ function submit() {
                         id="project_id"
                         v-model="form.project_id"
                         required
-                        class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#5e16bd] focus:bg-white focus:ring-1 focus:ring-[#5e16bd] outline-none transition"
+                        class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#4e1a77] focus:bg-white focus:ring-1 focus:ring-[#4e1a77] outline-none transition"
                         :class="{ 'border-red-400 bg-red-50': form.errors.project_id }"
                     >
                         <option value="">Select a project</option>
@@ -108,7 +108,7 @@ function submit() {
                         id="task_id"
                         v-model="form.task_id"
                         :disabled="!form.project_id"
-                        class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#5e16bd] focus:bg-white focus:ring-1 focus:ring-[#5e16bd] outline-none transition disabled:opacity-50 disabled:cursor-not-allowed"
+                        class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#4e1a77] focus:bg-white focus:ring-1 focus:ring-[#4e1a77] outline-none transition disabled:opacity-50 disabled:cursor-not-allowed"
                         :class="{ 'border-red-400': form.errors.task_id }"
                     >
                         <option value="">{{ form.project_id ? 'No specific task' : 'Select a project first' }}</option>
@@ -129,7 +129,7 @@ function submit() {
                         v-model="form.log_date"
                         type="date"
                         required
-                        class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#5e16bd] focus:bg-white focus:ring-1 focus:ring-[#5e16bd] outline-none transition"
+                        class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#4e1a77] focus:bg-white focus:ring-1 focus:ring-[#4e1a77] outline-none transition"
                         :class="{ 'border-red-400': form.errors.log_date }"
                     />
                     <p v-if="form.errors.log_date" class="mt-1 text-xs text-red-600">{{ form.errors.log_date }}</p>
@@ -146,7 +146,7 @@ function submit() {
                             v-model="form.start_time"
                             type="time"
                             required
-                            class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#5e16bd] focus:bg-white focus:ring-1 focus:ring-[#5e16bd] outline-none transition"
+                            class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#4e1a77] focus:bg-white focus:ring-1 focus:ring-[#4e1a77] outline-none transition"
                             :class="{ 'border-red-400': form.errors.start_time }"
                         />
                         <p v-if="lastEndTime && form.start_time === lastEndTime?.slice(0, 5)" class="mt-1 text-xs text-gray-400">
@@ -163,7 +163,7 @@ function submit() {
                             v-model="form.end_time"
                             type="time"
                             required
-                            class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#5e16bd] focus:bg-white focus:ring-1 focus:ring-[#5e16bd] outline-none transition"
+                            class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#4e1a77] focus:bg-white focus:ring-1 focus:ring-[#4e1a77] outline-none transition"
                             :class="{ 'border-red-400': form.errors.end_time }"
                         />
                         <p v-if="form.errors.end_time" class="mt-1 text-xs text-red-600">{{ form.errors.end_time }}</p>
@@ -172,7 +172,7 @@ function submit() {
                         <label class="mb-1.5 block text-sm font-semibold text-gray-700">Hours</label>
                         <div
                             class="flex h-[42px] items-center rounded-lg border border-gray-200 bg-gray-100 px-3 text-sm font-medium"
-                            :class="calculatedHours ? 'text-[#5e16bd]' : 'text-gray-400'"
+                            :class="calculatedHours ? 'text-[#4e1a77]' : 'text-gray-400'"
                         >
                             {{ calculatedHours ? `${calculatedHours} hrs` : '--' }}
                         </div>
@@ -188,7 +188,7 @@ function submit() {
                         id="status"
                         v-model="form.status"
                         required
-                        class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#5e16bd] focus:bg-white focus:ring-1 focus:ring-[#5e16bd] outline-none transition"
+                        class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#4e1a77] focus:bg-white focus:ring-1 focus:ring-[#4e1a77] outline-none transition"
                         :class="{ 'border-red-400': form.errors.status }"
                     >
                         <option value="done">Done</option>
@@ -209,7 +209,7 @@ function submit() {
                         v-model="form.note"
                         rows="3"
                         placeholder="What did you work on?"
-                        class="block w-full resize-none rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#5e16bd] focus:bg-white focus:ring-1 focus:ring-[#5e16bd] outline-none transition"
+                        class="block w-full resize-none rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#4e1a77] focus:bg-white focus:ring-1 focus:ring-[#4e1a77] outline-none transition"
                         :class="{ 'border-red-400': form.errors.note }"
                     />
                     <p v-if="form.errors.note" class="mt-1 text-xs text-red-600">{{ form.errors.note }}</p>
@@ -241,7 +241,7 @@ function submit() {
                         v-model="form.blocker"
                         rows="2"
                         placeholder="Any blockers or issues encountered?"
-                        class="block w-full resize-none rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#5e16bd] focus:bg-white focus:ring-1 focus:ring-[#5e16bd] outline-none transition"
+                        class="block w-full resize-none rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#4e1a77] focus:bg-white focus:ring-1 focus:ring-[#4e1a77] outline-none transition"
                     />
                 </div>
 
@@ -256,7 +256,7 @@ function submit() {
                     <button
                         type="submit"
                         :disabled="form.processing || !calculatedHours"
-                        class="inline-flex items-center gap-2 rounded-lg bg-[#5e16bd] px-6 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[#4c12a1] disabled:opacity-50 transition-colors"
+                        class="inline-flex items-center gap-2 rounded-lg bg-[#4e1a77] px-6 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[#3d1560] disabled:opacity-50 transition-colors"
                     >
                         <svg v-if="form.processing" class="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>

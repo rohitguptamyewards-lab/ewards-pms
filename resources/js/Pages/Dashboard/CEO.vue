@@ -15,7 +15,7 @@ const props = defineProps({
 
 const FEATURE_STAGES = [
     { key: 'backlog',            label: 'Backlog',             color: '#94a3b8' },
-    { key: 'in_progress',        label: 'In Progress',         color: '#5e16bd' },
+    { key: 'in_progress',        label: 'In Progress',         color: '#4e1a77' },
     { key: 'in_review',          label: 'In Review',           color: '#8b5cf6' },
     { key: 'in_qa',              label: 'In QA',               color: '#f59e0b' },
     { key: 'ready_for_release',  label: 'Ready for Release',   color: '#10b981' },
@@ -24,7 +24,7 @@ const FEATURE_STAGES = [
 
 const REQUEST_STAGES = [
     { key: 'received',     label: 'Received',     color: '#64748b' },
-    { key: 'under_review', label: 'Under Review', color: '#5e16bd' },
+    { key: 'under_review', label: 'Under Review', color: '#4e1a77' },
     { key: 'accepted',     label: 'Accepted',     color: '#10b981' },
     { key: 'deferred',     label: 'Deferred',     color: '#f59e0b' },
     { key: 'rejected',     label: 'Rejected',     color: '#ef4444' },
@@ -51,7 +51,7 @@ const featuresReleased = () => props.featurePipeline.released ?? 0;
                 <Link href="/features" class="inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-600 shadow-sm hover:bg-gray-50 transition-colors">
                     Feature Pipeline
                 </Link>
-                <Link href="/requests" class="inline-flex items-center gap-2 rounded-lg bg-[#5e16bd] px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-[#4c12a1] transition-colors">
+                <Link href="/requests" class="inline-flex items-center gap-2 rounded-lg bg-[#4e1a77] px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-[#3d1560] transition-colors">
                     All Requests
                 </Link>
             </div>
@@ -71,12 +71,12 @@ const featuresReleased = () => props.featurePipeline.released ?? 0;
             <div class="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden">
                 <div class="flex items-center justify-between border-b border-gray-100 bg-gray-50 px-5 py-4">
                     <div class="flex items-center gap-2">
-                        <svg class="h-5 w-5 text-[#5e16bd]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <svg class="h-5 w-5 text-[#4e1a77]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                         </svg>
                         <h2 class="font-semibold text-gray-900">Feature Pipeline</h2>
                     </div>
-                    <span class="rounded-full bg-[#ece1ff] px-2.5 py-0.5 text-xs font-semibold text-[#5e16bd]">{{ totalFeatures() }} total</span>
+                    <span class="rounded-full bg-[#e8ddf0] px-2.5 py-0.5 text-xs font-semibold text-[#4e1a77]">{{ totalFeatures() }} total</span>
                 </div>
                 <div class="divide-y divide-gray-50 p-2">
                     <div v-for="stage in FEATURE_STAGES" :key="stage.key" class="flex items-center justify-between rounded-lg px-4 py-3 hover:bg-gray-50 transition-colors">
@@ -99,7 +99,7 @@ const featuresReleased = () => props.featurePipeline.released ?? 0;
                     </div>
                 </div>
                 <div class="border-t border-gray-100 px-5 py-3 bg-gray-50">
-                    <Link href="/features" class="text-xs font-medium text-[#5e16bd] hover:underline">View full pipeline →</Link>
+                    <Link href="/features" class="text-xs font-medium text-[#4e1a77] hover:underline">View full pipeline →</Link>
                 </div>
             </div>
 
@@ -107,12 +107,12 @@ const featuresReleased = () => props.featurePipeline.released ?? 0;
             <div class="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden">
                 <div class="flex items-center justify-between border-b border-gray-100 bg-gray-50 px-5 py-4">
                     <div class="flex items-center gap-2">
-                        <svg class="h-5 w-5 text-[#5e16bd]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <svg class="h-5 w-5 text-[#4e1a77]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
                         </svg>
                         <h2 class="font-semibold text-gray-900">Request Pipeline</h2>
                     </div>
-                    <span class="rounded-full bg-[#ece1ff] px-2.5 py-0.5 text-xs font-semibold text-[#5e16bd]">{{ totalRequests() }} total</span>
+                    <span class="rounded-full bg-[#e8ddf0] px-2.5 py-0.5 text-xs font-semibold text-[#4e1a77]">{{ totalRequests() }} total</span>
                 </div>
                 <div class="divide-y divide-gray-50 p-2">
                     <div v-for="stage in REQUEST_STAGES" :key="stage.key" class="flex items-center justify-between rounded-lg px-4 py-3 hover:bg-gray-50 transition-colors">
@@ -135,20 +135,20 @@ const featuresReleased = () => props.featurePipeline.released ?? 0;
                     </div>
                 </div>
                 <div class="border-t border-gray-100 px-5 py-3 bg-gray-50">
-                    <Link href="/requests" class="text-xs font-medium text-[#5e16bd] hover:underline">View all requests →</Link>
+                    <Link href="/requests" class="text-xs font-medium text-[#4e1a77] hover:underline">View all requests →</Link>
                 </div>
             </div>
         </div>
 
         <!-- Hours this month summary -->
-        <div class="mt-6 rounded-xl border border-[#ddd0f7] bg-gradient-to-br from-[#f5f0ff] to-[#ece1ff] p-6 shadow-sm">
+        <div class="mt-6 rounded-xl border border-[#ddd0f7] bg-gradient-to-br from-[#f5f0ff] to-[#e8ddf0] p-6 shadow-sm">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-xs font-semibold uppercase tracking-wide text-[#5e16bd]">Team Hours This Month</p>
+                    <p class="text-xs font-semibold uppercase tracking-wide text-[#4e1a77]">Team Hours This Month</p>
                     <p class="mt-1 text-4xl font-extrabold text-[#361963]">{{ hoursThisMonth }}h</p>
-                    <p class="mt-1 text-sm text-[#5e16bd]/70">Logged across all {{ teamSize }} team members</p>
+                    <p class="mt-1 text-sm text-[#4e1a77]/70">Logged across all {{ teamSize }} team members</p>
                 </div>
-                <Link href="/reports/work-logs" class="rounded-lg bg-[#5e16bd] px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-[#4c12a1] transition-colors">
+                <Link href="/reports/work-logs" class="rounded-lg bg-[#4e1a77] px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-[#3d1560] transition-colors">
                     View Full Report
                 </Link>
             </div>

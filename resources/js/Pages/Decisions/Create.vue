@@ -50,7 +50,7 @@ function submit() {
 
     <div>
         <div class="mb-5 flex items-center gap-2 text-sm text-gray-500">
-            <Link href="/decisions" class="hover:text-[#5e16bd]">Decision Log</Link>
+            <Link href="/decisions" class="hover:text-[#4e1a77]">Decision Log</Link>
             <span>/</span>
             <span class="text-gray-800 font-medium">New</span>
         </div>
@@ -67,7 +67,7 @@ function submit() {
                         <label class="mb-1.5 block text-sm font-semibold text-gray-700">Title <span class="text-red-500">*</span></label>
                         <input v-model="form.title" type="text" required
                                :class="{ 'border-red-400': form.errors.title }"
-                               class="block w-full rounded-lg border border-gray-200 px-3.5 py-2.5 text-sm shadow-sm focus:border-[#5e16bd] focus:ring-[#5e16bd]" />
+                               class="block w-full rounded-lg border border-gray-200 px-3.5 py-2.5 text-sm shadow-sm focus:border-[#4e1a77] focus:ring-[#4e1a77]" />
                         <p v-if="form.errors.title" class="mt-1 text-xs text-red-600">{{ form.errors.title }}</p>
                     </div>
 
@@ -75,7 +75,7 @@ function submit() {
                         <label class="mb-1.5 block text-sm font-semibold text-gray-700">Context <span class="text-red-500">*</span></label>
                         <textarea v-model="form.context" rows="3" required placeholder="The problem being solved"
                                   :class="{ 'border-red-400': form.errors.context }"
-                                  class="block w-full rounded-lg border border-gray-200 px-3.5 py-2.5 text-sm shadow-sm focus:border-[#5e16bd] focus:ring-[#5e16bd]" />
+                                  class="block w-full rounded-lg border border-gray-200 px-3.5 py-2.5 text-sm shadow-sm focus:border-[#4e1a77] focus:ring-[#4e1a77]" />
                         <p v-if="form.errors.context" class="mt-1 text-xs text-red-600">{{ form.errors.context }}</p>
                     </div>
 
@@ -83,28 +83,28 @@ function submit() {
                         <label class="mb-1.5 block text-sm font-semibold text-gray-700">Options Considered <span class="text-red-500">*</span></label>
                         <textarea v-model="form.options_considered" rows="3" required placeholder="All alternatives evaluated"
                                   :class="{ 'border-red-400': form.errors.options_considered }"
-                                  class="block w-full rounded-lg border border-gray-200 px-3.5 py-2.5 text-sm shadow-sm focus:border-[#5e16bd] focus:ring-[#5e16bd]" />
+                                  class="block w-full rounded-lg border border-gray-200 px-3.5 py-2.5 text-sm shadow-sm focus:border-[#4e1a77] focus:ring-[#4e1a77]" />
                     </div>
 
                     <div>
                         <label class="mb-1.5 block text-sm font-semibold text-gray-700">Chosen Option <span class="text-red-500">*</span></label>
                         <textarea v-model="form.chosen_option" rows="2" required
                                   :class="{ 'border-red-400': form.errors.chosen_option }"
-                                  class="block w-full rounded-lg border border-gray-200 px-3.5 py-2.5 text-sm shadow-sm focus:border-[#5e16bd] focus:ring-[#5e16bd]" />
+                                  class="block w-full rounded-lg border border-gray-200 px-3.5 py-2.5 text-sm shadow-sm focus:border-[#4e1a77] focus:ring-[#4e1a77]" />
                     </div>
 
                     <div>
                         <label class="mb-1.5 block text-sm font-semibold text-gray-700">Rationale <span class="text-red-500">*</span></label>
                         <textarea v-model="form.rationale" rows="3" required placeholder="Why this option was chosen"
                                   :class="{ 'border-red-400': form.errors.rationale }"
-                                  class="block w-full rounded-lg border border-gray-200 px-3.5 py-2.5 text-sm shadow-sm focus:border-[#5e16bd] focus:ring-[#5e16bd]" />
+                                  class="block w-full rounded-lg border border-gray-200 px-3.5 py-2.5 text-sm shadow-sm focus:border-[#4e1a77] focus:ring-[#4e1a77]" />
                     </div>
 
                     <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
                         <div>
                             <label class="mb-1.5 block text-sm font-semibold text-gray-700">Decision Maker <span class="text-red-500">*</span></label>
                             <select v-model="form.decision_maker_id" required
-                                    class="block w-full rounded-lg border border-gray-200 px-3.5 py-2.5 text-sm shadow-sm focus:border-[#5e16bd] focus:ring-[#5e16bd]">
+                                    class="block w-full rounded-lg border border-gray-200 px-3.5 py-2.5 text-sm shadow-sm focus:border-[#4e1a77] focus:ring-[#4e1a77]">
                                 <option value="" disabled>Select person</option>
                                 <option v-for="m in teamMembers" :key="m.id" :value="m.id">{{ m.name }}</option>
                             </select>
@@ -112,12 +112,12 @@ function submit() {
                         <div>
                             <label class="mb-1.5 block text-sm font-semibold text-gray-700">Decision Date <span class="text-red-500">*</span></label>
                             <input v-model="form.decision_date" type="date" required
-                                   class="block w-full rounded-lg border border-gray-200 px-3.5 py-2.5 text-sm shadow-sm focus:border-[#5e16bd] focus:ring-[#5e16bd]" />
+                                   class="block w-full rounded-lg border border-gray-200 px-3.5 py-2.5 text-sm shadow-sm focus:border-[#4e1a77] focus:ring-[#4e1a77]" />
                         </div>
                         <div>
                             <label class="mb-1.5 block text-sm font-semibold text-gray-700">Link To</label>
                             <select v-model="form.linked_to_type" @change="onLinkedTypeChange"
-                                    class="block w-full rounded-lg border border-gray-200 px-3.5 py-2.5 text-sm shadow-sm focus:border-[#5e16bd] focus:ring-[#5e16bd]">
+                                    class="block w-full rounded-lg border border-gray-200 px-3.5 py-2.5 text-sm shadow-sm focus:border-[#4e1a77] focus:ring-[#4e1a77]">
                                 <option value="">None</option>
                                 <option value="feature">Feature</option>
                                 <option value="initiative">Initiative</option>
@@ -127,7 +127,7 @@ function submit() {
                         <div v-if="form.linked_to_type">
                             <label class="mb-1.5 block text-sm font-semibold text-gray-700">Select {{ form.linked_to_type }}</label>
                             <select v-model="form.linked_to_id"
-                                    class="block w-full rounded-lg border border-gray-200 px-3.5 py-2.5 text-sm shadow-sm focus:border-[#5e16bd] focus:ring-[#5e16bd]">
+                                    class="block w-full rounded-lg border border-gray-200 px-3.5 py-2.5 text-sm shadow-sm focus:border-[#4e1a77] focus:ring-[#4e1a77]">
                                 <option value="">Select...</option>
                                 <option v-for="o in linkedOptions" :key="o.id" :value="o.id">{{ o.title || o.name }}</option>
                             </select>
@@ -137,7 +137,7 @@ function submit() {
                     <div class="flex items-center justify-between gap-3 border-t border-gray-100 pt-4">
                         <Link href="/decisions" class="rounded-lg border border-gray-200 px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50">Cancel</Link>
                         <button type="submit" :disabled="form.processing"
-                                class="inline-flex items-center gap-2 rounded-lg bg-[#5e16bd] px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[#4c12a1] disabled:opacity-50">
+                                class="inline-flex items-center gap-2 rounded-lg bg-[#4e1a77] px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[#3d1560] disabled:opacity-50">
                             {{ form.processing ? 'Saving...' : 'Record Decision' }}
                         </button>
                     </div>

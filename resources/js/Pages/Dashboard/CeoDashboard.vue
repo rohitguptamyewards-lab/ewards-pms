@@ -29,8 +29,8 @@ function currency(val) {
         </div>
 
         <!-- Narrative Summary -->
-        <div class="rounded-xl border border-[#5e16bd]/20 bg-[#5e16bd]/5 p-5 mb-6">
-            <h2 class="text-sm font-semibold text-[#5e16bd] mb-2">Weekly Summary</h2>
+        <div class="rounded-xl border border-[#4e1a77]/20 bg-[#4e1a77]/5 p-5 mb-6">
+            <h2 class="text-sm font-semibold text-[#4e1a77] mb-2">Weekly Summary</h2>
             <p class="text-sm text-gray-700">{{ narrative }}</p>
         </div>
 
@@ -40,7 +40,7 @@ function currency(val) {
                 <p class="text-xs font-medium text-gray-400 uppercase">Roadmap Completion</p>
                 <p class="text-2xl font-bold text-gray-900 mt-1">{{ roadmapCompletion }}%</p>
                 <div class="mt-2 h-2 rounded-full bg-gray-100">
-                    <div class="h-2 rounded-full bg-[#5e16bd]" :style="{ width: roadmapCompletion + '%' }"></div>
+                    <div class="h-2 rounded-full bg-[#4e1a77]" :style="{ width: roadmapCompletion + '%' }"></div>
                 </div>
             </div>
             <div class="rounded-xl border border-gray-200 bg-white p-5">

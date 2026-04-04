@@ -123,6 +123,8 @@ Route::middleware(['auth'])->group(function () {
 
     // Team Members
     Route::get('/team-members', [TeamMemberController::class, 'index'])->name('team-members.index');
+    Route::get('/team-members/create', [TeamMemberController::class, 'create'])->name('team-members.create');
+    Route::post('/team-members', [TeamMemberController::class, 'store'])->name('team-members.store');
     Route::get('/team-members/{id}', [TeamMemberController::class, 'show'])->name('team-members.show');
 
     // -------------------------------------------------------------------------
@@ -229,3 +231,7 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::get('/health', [HealthController::class, 'index']);
+
+Route::get('/documentation', function () {
+    return response()->file(public_path('documentation.html'));
+});

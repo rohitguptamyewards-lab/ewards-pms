@@ -75,7 +75,7 @@ function ownershipPct(count, total) {
                         <div class="flex-1 h-4 rounded-full bg-white/50 overflow-hidden">
                             <div class="h-full rounded-full bg-current opacity-60 transition-all"
                                  :style="{ width: ownershipPct(c.feature_count, mod.total_features) + '%' }"
-                                 :class="ownershipPct(c.feature_count, mod.total_features) > 60 ? 'text-red-500' : 'text-[#5e16bd]'"></div>
+                                 :class="ownershipPct(c.feature_count, mod.total_features) > 60 ? 'text-red-500' : 'text-[#4e1a77]'"></div>
                         </div>
                         <span class="text-xs font-bold text-gray-600 w-8 text-right">{{ c.feature_count }}</span>
                         <span class="text-xs text-gray-400 w-10 text-right">{{ ownershipPct(c.feature_count, mod.total_features) }}%</span>

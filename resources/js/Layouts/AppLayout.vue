@@ -19,24 +19,55 @@ const REPORTS  = MC_UP;
 const ALL      = [...MC_UP, 'developer', 'tester', 'analyst', 'sales'];
 const DEV_TEST = [...MANAGER, 'developer', 'tester'];
 const CTO_ONLY = ['cto'];
+/* MC & Sales can only see Requests + their linked project status */
+const MC_SALES = ['mc_team', 'sales'];
+const NOT_MC_SALES = ['cto', 'ceo', 'manager', 'developer', 'tester', 'analyst'];
 
 const navItems = computed(() => {
     const chevIcon = `<path stroke-linecap="round" stroke-linejoin="round" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />`;
+
+    /* If MC or Sales, show a very limited sidebar */
+    if (MC_SALES.includes(role.value)) {
+        return [
+            {
+                label: 'Dashboard', href: '/', roles: null,
+                icon: `<path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />`,
+            },
+            {
+                label: 'Requests', href: '/requests', roles: null,
+                icon: `<path stroke-linecap="round" stroke-linejoin="round" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />`,
+            },
+            {
+                label: 'My Projects', href: '/projects', roles: null,
+                icon: `<path stroke-linecap="round" stroke-linejoin="round" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />`,
+            },
+            { label: 'PERSONAL', href: null, roles: null, header: true },
+            {
+                label: 'My Dashboard', href: '/personal/history', roles: null, indent: true,
+                icon: `<path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5" />`,
+            },
+            {
+                label: 'Team', href: '/team-members', roles: null,
+                icon: `<path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />`,
+            },
+        ];
+    }
+
     const items = [
         {
             label: 'Dashboard', href: '/', roles: null,
             icon: `<path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />`,
         },
         {
-            label: 'Work Logs', href: '/work-logs', roles: null,
+            label: 'Work Logs', href: '/work-logs', roles: NOT_MC_SALES,
             icon: `<path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />`,
         },
         {
-            label: 'Journal', href: '/journal', roles: null,
+            label: 'Journal', href: '/journal', roles: NOT_MC_SALES,
             icon: `<path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />`,
         },
         {
-            label: 'Activity Logs', href: '/activity-logs', roles: null,
+            label: 'Activity Logs', href: '/activity-logs', roles: NOT_MC_SALES,
             icon: `<path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />`,
         },
         {
@@ -70,7 +101,7 @@ const navItems = computed(() => {
             icon: `<path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />`,
         },
         {
-            label: 'Ideas', href: '/ideas', roles: null, indent: true,
+            label: 'Ideas', href: '/ideas', roles: NOT_MC_SALES, indent: true,
             icon: `<path stroke-linecap="round" stroke-linejoin="round" d="M12 18v-5.25m0 0a6.01 6.01 0 001.5-.189m-1.5.189a6.01 6.01 0 01-1.5-.189m3.75 7.478a12.06 12.06 0 01-4.5 0m3.75 2.383a14.406 14.406 0 01-3 0M14.25 18v-.192c0-.983.658-1.823 1.508-2.316a7.5 7.5 0 10-7.517 0c.85.493 1.509 1.333 1.509 2.316V18" />`,
         },
         {
@@ -100,11 +131,11 @@ const navItems = computed(() => {
 
         { label: 'PERSONAL', href: null, roles: null, header: true },
         {
-            label: 'My Dashboard', href: '/personal/history', roles: null, indent: true,
+            label: 'My Dashboard', href: '/personal/history', roles: NOT_MC_SALES, indent: true,
             icon: `<path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5" />`,
         },
         {
-            label: 'Review Prep', href: '/personal/review-prep', roles: null, indent: true,
+            label: 'Review Prep', href: '/personal/review-prep', roles: NOT_MC_SALES, indent: true,
             icon: `<path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />`,
         },
 
@@ -211,12 +242,12 @@ function logout() {
 </script>
 
 <template>
-    <div class="flex h-screen overflow-hidden bg-gray-50">
+    <div class="flex h-screen overflow-hidden bg-[#f8f4fa]">
         <!-- Sidebar -->
-        <aside class="flex w-64 flex-shrink-0 flex-col bg-[#1e0a45]">
+        <aside class="flex w-64 flex-shrink-0 flex-col bg-[#2c0f47]">
             <!-- Logo -->
             <div class="flex h-16 items-center gap-3 border-b border-white/10 px-5">
-                <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-[#5e16bd]">
+                <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-[#4e1a77]">
                     <svg class="h-5 w-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
                     </svg>
@@ -237,8 +268,8 @@ function logout() {
                         :href="item.href"
                         :class="[
                             isActive(item.href)
-                                ? 'bg-[#5e16bd] text-white shadow-sm'
-                                : 'text-white/60 hover:bg-[#2d1569] hover:text-white',
+                                ? 'bg-[#4e1a77] text-white shadow-sm border-l-3 border-[#f97316]'
+                                : 'text-white/60 hover:bg-[#3d1560] hover:text-white',
                             item.indent ? 'pl-7 text-xs py-2' : 'text-sm py-2.5',
                         ]"
                         class="flex items-center gap-3 rounded-lg px-3 font-medium transition-all duration-150"
@@ -261,7 +292,7 @@ function logout() {
             <!-- User footer -->
             <div class="border-t border-white/10 p-4">
                 <div class="flex items-center gap-3">
-                    <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#5e16bd] text-sm font-bold text-white">
+                    <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#4e1a77] text-sm font-bold text-white">
                         {{ avatarInitial }}
                     </div>
                     <div class="min-w-0 flex-1">
@@ -280,12 +311,12 @@ function logout() {
         <!-- Main -->
         <div class="flex flex-1 flex-col overflow-hidden">
             <!-- Topbar -->
-            <header class="flex h-16 shrink-0 items-center justify-between border-b border-gray-200 bg-white px-6 shadow-sm">
+            <header class="flex h-16 shrink-0 items-center justify-between border-b border-[#d9cce6] bg-white px-6 shadow-sm">
                 <div class="flex items-center gap-2 text-sm text-gray-500">
-                    <span class="font-semibold text-gray-800">eWards PMS</span>
+                    <span class="font-semibold text-[#4e1a77]">eWards PMS</span>
                 </div>
                 <div class="flex items-center gap-3">
-                    <div class="flex h-8 w-8 items-center justify-center rounded-full bg-[#ece1ff] text-sm font-bold text-[#5e16bd]">
+                    <div class="flex h-8 w-8 items-center justify-center rounded-full bg-[#e8ddf0] text-sm font-bold text-[#4e1a77]">
                         {{ avatarInitial }}
                     </div>
                     <div class="hidden sm:block">

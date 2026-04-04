@@ -14,7 +14,7 @@ const props = defineProps({
 
 const columns = [
     { key: 'backlog',            label: 'Backlog',            color: 'border-gray-300',    bg: 'bg-gray-50' },
-    { key: 'in_progress',        label: 'In Progress',        color: 'border-[#5e16bd]',   bg: 'bg-[#f5f0ff]' },
+    { key: 'in_progress',        label: 'In Progress',        color: 'border-[#4e1a77]',   bg: 'bg-[#f5f0ff]' },
     { key: 'in_review',          label: 'In Review',          color: 'border-purple-400',  bg: 'bg-purple-50' },
     { key: 'in_qa',              label: 'In QA',              color: 'border-orange-400',  bg: 'bg-orange-50' },
     { key: 'ready_for_release',  label: 'Ready for Release',  color: 'border-teal-400',    bg: 'bg-teal-50' },
@@ -55,15 +55,15 @@ function onDragOver(e) {
 
 function onDragEnter(e) {
     if (!dragging.value) return;
-    e.currentTarget.classList.add('ring-2', 'ring-[#5e16bd]', 'ring-opacity-50');
+    e.currentTarget.classList.add('ring-2', 'ring-[#4e1a77]', 'ring-opacity-50');
 }
 
 function onDragLeave(e) {
-    e.currentTarget.classList.remove('ring-2', 'ring-[#5e16bd]', 'ring-opacity-50');
+    e.currentTarget.classList.remove('ring-2', 'ring-[#4e1a77]', 'ring-opacity-50');
 }
 
 async function onDrop(e, newStatus) {
-    e.currentTarget.classList.remove('ring-2', 'ring-[#5e16bd]', 'ring-opacity-50');
+    e.currentTarget.classList.remove('ring-2', 'ring-[#4e1a77]', 'ring-opacity-50');
     if (!dragging.value || dragging.value.status === newStatus) return;
 
     const feature   = dragging.value;
@@ -104,7 +104,7 @@ function formatDate(d) {
                     List View
                 </Link>
                 <Link v-if="isManager" href="/features/create"
-                      class="inline-flex items-center gap-2 rounded-lg bg-[#5e16bd] px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-[#4c12a1] transition-colors">
+                      class="inline-flex items-center gap-2 rounded-lg bg-[#4e1a77] px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-[#3d1560] transition-colors">
                     <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                     </svg>
@@ -149,7 +149,7 @@ function formatDate(d) {
                         :class="{ 'cursor-grab active:cursor-grabbing': isManager }"
                     >
                         <Link :href="`/features/${feature.id}`" class="block">
-                            <p class="text-sm font-semibold text-gray-900 leading-snug hover:text-[#5e16bd]">
+                            <p class="text-sm font-semibold text-gray-900 leading-snug hover:text-[#4e1a77]">
                                 {{ feature.title }}
                             </p>
                         </Link>
@@ -159,7 +159,7 @@ function formatDate(d) {
                         </div>
                         <div class="mt-2 flex items-center justify-between">
                             <div v-if="feature.assignee_name" class="flex items-center gap-1.5">
-                                <span class="flex h-5 w-5 items-center justify-center rounded-full bg-[#ece1ff] text-[10px] font-bold text-[#5e16bd]">
+                                <span class="flex h-5 w-5 items-center justify-center rounded-full bg-[#e8ddf0] text-[10px] font-bold text-[#4e1a77]">
                                     {{ feature.assignee_name.charAt(0).toUpperCase() }}
                                 </span>
                                 <span class="text-xs text-gray-500">{{ feature.assignee_name }}</span>

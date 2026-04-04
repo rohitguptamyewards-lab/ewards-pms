@@ -52,7 +52,7 @@ function formatDate(dateStr) {
                     <label class="mb-1 block text-xs font-semibold uppercase tracking-wide text-gray-400">Team Member</label>
                     <select
                         v-model="localFilters.user_id"
-                        class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#5e16bd] focus:ring-1 focus:ring-[#5e16bd] outline-none"
+                        class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#4e1a77] focus:ring-1 focus:ring-[#4e1a77] outline-none"
                     >
                         <option value="">Select member</option>
                         <option v-for="m in teamMembers" :key="m.id" :value="m.id">{{ m.name }}</option>
@@ -63,7 +63,7 @@ function formatDate(dateStr) {
                     <input
                         v-model="localFilters.date_from"
                         type="date"
-                        class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#5e16bd] focus:ring-1 focus:ring-[#5e16bd] outline-none"
+                        class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#4e1a77] focus:ring-1 focus:ring-[#4e1a77] outline-none"
                     />
                 </div>
                 <div class="min-w-[160px]">
@@ -71,11 +71,11 @@ function formatDate(dateStr) {
                     <input
                         v-model="localFilters.date_to"
                         type="date"
-                        class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#5e16bd] focus:ring-1 focus:ring-[#5e16bd] outline-none"
+                        class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#4e1a77] focus:ring-1 focus:ring-[#4e1a77] outline-none"
                     />
                 </div>
                 <div class="flex gap-2">
-                    <button @click="applyFilters" class="rounded-lg bg-[#5e16bd] px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-[#4c12a1] transition-colors">
+                    <button @click="applyFilters" class="rounded-lg bg-[#4e1a77] px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-[#3d1560] transition-colors">
                         Apply
                     </button>
                     <button @click="clearFilters" class="rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors">
@@ -88,10 +88,10 @@ function formatDate(dateStr) {
         <!-- Summary + Project Breakdown row -->
         <div class="mb-5 grid grid-cols-1 gap-5 lg:grid-cols-3">
             <!-- Total hours card -->
-            <div class="rounded-xl border border-[#ddd0f7] bg-gradient-to-br from-[#f5f0ff] to-[#ece1ff] p-6 shadow-sm">
-                <p class="text-xs font-semibold uppercase tracking-wide text-[#5e16bd]">Total Hours</p>
+            <div class="rounded-xl border border-[#ddd0f7] bg-gradient-to-br from-[#f5f0ff] to-[#e8ddf0] p-6 shadow-sm">
+                <p class="text-xs font-semibold uppercase tracking-wide text-[#4e1a77]">Total Hours</p>
                 <p class="mt-1 text-4xl font-extrabold text-[#361963]">{{ report.totalHours ?? 0 }}h</p>
-                <p v-if="report.logs?.length" class="mt-1 text-sm text-[#5e16bd]">{{ report.logs.length }} entries</p>
+                <p v-if="report.logs?.length" class="mt-1 text-sm text-[#4e1a77]">{{ report.logs.length }} entries</p>
             </div>
 
             <!-- Project Breakdown -->
@@ -102,7 +102,7 @@ function formatDate(dateStr) {
                 <div class="divide-y divide-gray-50">
                     <div v-for="(project, idx) in report.projects" :key="idx" class="flex items-center justify-between px-5 py-3 hover:bg-gray-50 transition-colors">
                         <div class="flex items-center gap-2 min-w-0">
-                            <div class="h-2 w-2 rounded-full bg-[#5e16bd] shrink-0"></div>
+                            <div class="h-2 w-2 rounded-full bg-[#4e1a77] shrink-0"></div>
                             <span class="text-sm font-medium text-gray-800 truncate">{{ project.name }}</span>
                         </div>
                         <span class="shrink-0 ml-3 text-sm font-semibold text-gray-900">{{ project.hours }}h</span>

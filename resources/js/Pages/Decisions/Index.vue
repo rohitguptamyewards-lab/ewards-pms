@@ -45,7 +45,7 @@ const statusConfig = {
                 <p class="mt-0.5 text-sm text-gray-500">Architectural and product decisions — append-only record</p>
             </div>
             <Link v-if="canCreate" href="/decisions/create"
-                  class="inline-flex items-center gap-2 rounded-lg bg-[#5e16bd] px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[#4c12a1] transition-colors">
+                  class="inline-flex items-center gap-2 rounded-lg bg-[#4e1a77] px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[#3d1560] transition-colors">
                 <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
                 </svg>
@@ -76,7 +76,7 @@ const statusConfig = {
                 <tbody class="divide-y divide-gray-50">
                     <tr v-for="d in decisions.data" :key="d.id" class="group hover:bg-[#f5f0ff]/30 transition-colors">
                         <td class="px-5 py-3.5">
-                            <Link :href="`/decisions/${d.id}`" class="font-medium text-gray-900 hover:text-[#5e16bd]">
+                            <Link :href="`/decisions/${d.id}`" class="font-medium text-gray-900 hover:text-[#4e1a77]">
                                 {{ d.title }}
                             </Link>
                             <p v-if="d.superseded_by_title" class="mt-0.5 text-xs text-orange-500">Superseded by: {{ d.superseded_by_title }}</p>
@@ -101,7 +101,7 @@ const statusConfig = {
             <div v-if="decisions.links?.length > 3" class="flex items-center justify-center gap-1 border-t border-gray-100 px-5 py-3">
                 <Link v-for="link in decisions.links" :key="link.label"
                       :href="link.url || '#'"
-                      :class="[link.active ? 'bg-[#5e16bd] text-white shadow-sm' : 'text-gray-600 hover:bg-gray-100', !link.url ? 'pointer-events-none opacity-40' : '']"
+                      :class="[link.active ? 'bg-[#4e1a77] text-white shadow-sm' : 'text-gray-600 hover:bg-gray-100', !link.url ? 'pointer-events-none opacity-40' : '']"
                       class="rounded-md px-3 py-1.5 text-sm font-medium transition-colors"
                       v-html="link.label" preserve-scroll />
             </div>

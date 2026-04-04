@@ -63,7 +63,7 @@ function submit() {
                         type="text"
                         required
                         placeholder="Feature title"
-                        class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#5e16bd] focus:bg-white focus:ring-1 focus:ring-[#5e16bd] outline-none transition"
+                        class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#4e1a77] focus:bg-white focus:ring-1 focus:ring-[#4e1a77] outline-none transition"
                         :class="{ 'border-red-400 bg-red-50': form.errors.title }"
                     />
                     <p v-if="form.errors.title" class="mt-1 text-xs text-red-600">{{ form.errors.title }}</p>
@@ -76,7 +76,7 @@ function submit() {
                         <select
                             id="type"
                             v-model="form.type"
-                            class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#5e16bd] focus:bg-white focus:ring-1 focus:ring-[#5e16bd] outline-none transition"
+                            class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#4e1a77] focus:bg-white focus:ring-1 focus:ring-[#4e1a77] outline-none transition"
                             :class="{ 'border-red-400': form.errors.type }"
                         >
                             <option value="">Select type</option>
@@ -91,7 +91,7 @@ function submit() {
                         <select
                             id="priority"
                             v-model="form.priority"
-                            class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#5e16bd] focus:bg-white focus:ring-1 focus:ring-[#5e16bd] outline-none transition"
+                            class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#4e1a77] focus:bg-white focus:ring-1 focus:ring-[#4e1a77] outline-none transition"
                         >
                             <option value="p0">P0 · Critical</option>
                             <option value="p1">P1 · High</option>
@@ -108,7 +108,7 @@ function submit() {
                         <select
                             id="module_id"
                             v-model="form.module_id"
-                            class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#5e16bd] focus:bg-white focus:ring-1 focus:ring-[#5e16bd] outline-none transition"
+                            class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#4e1a77] focus:bg-white focus:ring-1 focus:ring-[#4e1a77] outline-none transition"
                         >
                             <option value="">No module</option>
                             <option v-for="m in modules" :key="m.id" :value="m.id">{{ m.name }}</option>
@@ -119,7 +119,7 @@ function submit() {
                         <select
                             id="initiative_id"
                             v-model="form.initiative_id"
-                            class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#5e16bd] focus:bg-white focus:ring-1 focus:ring-[#5e16bd] outline-none transition"
+                            class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#4e1a77] focus:bg-white focus:ring-1 focus:ring-[#4e1a77] outline-none transition"
                         >
                             <option value="">No initiative</option>
                             <option v-for="i in initiatives" :key="i.id" :value="i.id">{{ i.title }}</option>
@@ -134,7 +134,7 @@ function submit() {
                         <select
                             id="origin_type"
                             v-model="form.origin_type"
-                            class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#5e16bd] focus:bg-white focus:ring-1 focus:ring-[#5e16bd] outline-none transition"
+                            class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#4e1a77] focus:bg-white focus:ring-1 focus:ring-[#4e1a77] outline-none transition"
                         >
                             <option value="">Not specified</option>
                             <option value="request">Request</option>
@@ -149,7 +149,7 @@ function submit() {
                         <select
                             id="rollout_state"
                             v-model="form.rollout_state"
-                            class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#5e16bd] focus:bg-white focus:ring-1 focus:ring-[#5e16bd] outline-none transition"
+                            class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#4e1a77] focus:bg-white focus:ring-1 focus:ring-[#4e1a77] outline-none transition"
                         >
                             <option value="">Not set</option>
                             <option value="internal">Internal</option>
@@ -168,7 +168,7 @@ function submit() {
                         <select
                             id="status"
                             v-model="form.status"
-                            class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#5e16bd] focus:bg-white focus:ring-1 focus:ring-[#5e16bd] outline-none transition"
+                            class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#4e1a77] focus:bg-white focus:ring-1 focus:ring-[#4e1a77] outline-none transition"
                         >
                             <option value="backlog">Backlog</option>
                             <option value="in_progress">In Progress</option>
@@ -183,7 +183,7 @@ function submit() {
                         <select
                             id="assigned_to"
                             v-model="form.assigned_to"
-                            class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#5e16bd] focus:bg-white focus:ring-1 focus:ring-[#5e16bd] outline-none transition"
+                            class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#4e1a77] focus:bg-white focus:ring-1 focus:ring-[#4e1a77] outline-none transition"
                         >
                             <option value="">Unassigned</option>
                             <option v-for="m in teamMembers" :key="m.id" :value="m.id">{{ m.name }}</option>
@@ -194,7 +194,7 @@ function submit() {
                         <select
                             id="qa_owner_id"
                             v-model="form.qa_owner_id"
-                            class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#5e16bd] focus:bg-white focus:ring-1 focus:ring-[#5e16bd] outline-none transition"
+                            class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#4e1a77] focus:bg-white focus:ring-1 focus:ring-[#4e1a77] outline-none transition"
                         >
                             <option value="">Unassigned</option>
                             <option v-for="m in teamMembers" :key="m.id" :value="m.id">{{ m.name }}</option>
@@ -210,7 +210,7 @@ function submit() {
                             id="deadline"
                             v-model="form.deadline"
                             type="date"
-                            class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#5e16bd] focus:bg-white focus:ring-1 focus:ring-[#5e16bd] outline-none transition"
+                            class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#4e1a77] focus:bg-white focus:ring-1 focus:ring-[#4e1a77] outline-none transition"
                             :class="{ 'border-red-400': form.errors.deadline }"
                         />
                         <p v-if="form.errors.deadline" class="mt-1 text-xs text-red-600">{{ form.errors.deadline }}</p>
@@ -227,7 +227,7 @@ function submit() {
                             step="0.5"
                             min="0"
                             placeholder="e.g. 8"
-                            class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#5e16bd] focus:bg-white focus:ring-1 focus:ring-[#5e16bd] outline-none transition"
+                            class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#4e1a77] focus:bg-white focus:ring-1 focus:ring-[#4e1a77] outline-none transition"
                             :class="{ 'border-red-400': form.errors.estimated_hours }"
                         />
                         <p v-if="form.errors.estimated_hours" class="mt-1 text-xs text-red-600">{{ form.errors.estimated_hours }}</p>
@@ -245,7 +245,7 @@ function submit() {
                         v-model="form.business_impact"
                         rows="2"
                         placeholder="Revenue impact, user value, strategic importance..."
-                        class="block w-full resize-none rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#5e16bd] focus:bg-white focus:ring-1 focus:ring-[#5e16bd] outline-none transition"
+                        class="block w-full resize-none rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#4e1a77] focus:bg-white focus:ring-1 focus:ring-[#4e1a77] outline-none transition"
                     />
                 </div>
 
@@ -260,7 +260,7 @@ function submit() {
                         v-model="form.description"
                         rows="4"
                         placeholder="What does this feature do? Why is it needed?"
-                        class="block w-full resize-none rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#5e16bd] focus:bg-white focus:ring-1 focus:ring-[#5e16bd] outline-none transition"
+                        class="block w-full resize-none rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#4e1a77] focus:bg-white focus:ring-1 focus:ring-[#4e1a77] outline-none transition"
                         :class="{ 'border-red-400': form.errors.description }"
                     />
                     <p v-if="form.errors.description" class="mt-1 text-xs text-red-600">{{ form.errors.description }}</p>
@@ -277,7 +277,7 @@ function submit() {
                     <button
                         type="submit"
                         :disabled="form.processing"
-                        class="inline-flex items-center gap-2 rounded-lg bg-[#5e16bd] px-6 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[#4c12a1] disabled:opacity-50 transition-colors"
+                        class="inline-flex items-center gap-2 rounded-lg bg-[#4e1a77] px-6 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[#3d1560] disabled:opacity-50 transition-colors"
                     >
                         <svg v-if="form.processing" class="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>

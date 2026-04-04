@@ -38,7 +38,7 @@ function formatDate(d) {
                 <p class="mt-0.5 text-sm text-gray-500">Auto-generated summary for your performance review</p>
             </div>
             <select v-model="selectedPeriod" @change="changePeriod"
-                    class="rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-[#5e16bd] focus:ring-[#5e16bd]">
+                    class="rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-[#4e1a77] focus:ring-[#4e1a77]">
                 <option value="30">Last 30 days</option>
                 <option value="90">Last 90 days</option>
                 <option value="180">Last 6 months</option>
@@ -53,7 +53,7 @@ function formatDate(d) {
             </div>
             <div class="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
                 <p class="text-xs font-semibold uppercase text-gray-400">Hours Invested</p>
-                <p class="mt-1 text-3xl font-bold text-[#5e16bd]">{{ Number(totalHours).toFixed(1) }}h</p>
+                <p class="mt-1 text-3xl font-bold text-[#4e1a77]">{{ Number(totalHours).toFixed(1) }}h</p>
             </div>
             <div class="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
                 <p class="text-xs font-semibold uppercase text-gray-400">Features Delivered</p>
@@ -68,7 +68,7 @@ function formatDate(d) {
             </div>
             <div class="divide-y divide-gray-50">
                 <div v-for="f in featuresDelivered" :key="f.id" class="flex items-center justify-between px-5 py-3">
-                    <Link :href="`/features/${f.id}`" class="text-sm font-medium text-[#5e16bd] hover:underline">{{ f.title }}</Link>
+                    <Link :href="`/features/${f.id}`" class="text-sm font-medium text-[#4e1a77] hover:underline">{{ f.title }}</Link>
                     <span class="rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-medium text-emerald-700 capitalize">{{ (f.status || '').replace('_', ' ') }}</span>
                 </div>
             </div>

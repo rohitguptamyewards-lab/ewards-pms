@@ -44,7 +44,7 @@ function clearFilters() {
             <div class="flex flex-wrap items-end gap-3">
                 <div class="min-w-[150px]">
                     <label class="mb-1 block text-xs font-semibold uppercase tracking-wide text-gray-400">Status</label>
-                    <select v-model="localFilters.status" class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#5e16bd] focus:ring-1 focus:ring-[#5e16bd] outline-none">
+                    <select v-model="localFilters.status" class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#4e1a77] focus:ring-1 focus:ring-[#4e1a77] outline-none">
                         <option value="">All Statuses</option>
                         <option value="planning">Planning</option>
                         <option value="active">Active</option>
@@ -55,13 +55,13 @@ function clearFilters() {
                 </div>
                 <div v-if="teamMembers.length" class="min-w-[180px]">
                     <label class="mb-1 block text-xs font-semibold uppercase tracking-wide text-gray-400">Owner</label>
-                    <select v-model="localFilters.owner_id" class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#5e16bd] focus:ring-1 focus:ring-[#5e16bd] outline-none">
+                    <select v-model="localFilters.owner_id" class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#4e1a77] focus:ring-1 focus:ring-[#4e1a77] outline-none">
                         <option value="">All Owners</option>
                         <option v-for="m in teamMembers" :key="m.id" :value="m.id">{{ m.name }}</option>
                     </select>
                 </div>
                 <div class="flex gap-2">
-                    <button @click="applyFilters" class="rounded-lg bg-[#5e16bd] px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-[#4c12a1] transition-colors">
+                    <button @click="applyFilters" class="rounded-lg bg-[#4e1a77] px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-[#3d1560] transition-colors">
                         Apply
                     </button>
                     <button @click="clearFilters" class="rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors">
@@ -78,7 +78,7 @@ function clearFilters() {
                 <p class="mt-1 text-2xl font-bold text-gray-900">{{ report.projects.length }}</p>
             </div>
             <div class="rounded-xl border border-[#ddd0f7] bg-[#f5f0ff] px-5 py-3 shadow-sm">
-                <p class="text-xs font-semibold uppercase tracking-wide text-[#5e16bd]">Active</p>
+                <p class="text-xs font-semibold uppercase tracking-wide text-[#4e1a77]">Active</p>
                 <p class="mt-1 text-2xl font-bold text-[#361963]">{{ report.projects.filter(p => p.status === 'active').length }}</p>
             </div>
             <div class="rounded-xl border border-emerald-100 bg-emerald-50 px-5 py-3 shadow-sm">
@@ -112,7 +112,7 @@ function clearFilters() {
                             class="group hover:bg-[#f5f0ff]/20 transition-colors"
                         >
                             <td class="px-5 py-3.5">
-                                <Link :href="`/projects/${project.id}`" class="font-semibold text-[#5e16bd] group-hover:underline">
+                                <Link :href="`/projects/${project.id}`" class="font-semibold text-[#4e1a77] group-hover:underline">
                                     {{ project.name }}
                                 </Link>
                             </td>

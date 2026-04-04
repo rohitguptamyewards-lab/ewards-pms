@@ -109,7 +109,7 @@ const outcomeColors = {
                     <span class="text-sm font-medium text-gray-900">{{ t.title }}</span>
                     <span class="text-xs text-gray-400 ml-2">{{ t.tool_name }}</span>
                 </div>
-                <span class="text-xs font-semibold text-[#5e16bd]">{{ t.usage_count }} uses</span>
+                <span class="text-xs font-semibold text-[#4e1a77]">{{ t.usage_count }} uses</span>
             </div>
         </div>
     </div>

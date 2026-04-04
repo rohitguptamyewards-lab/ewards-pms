@@ -70,7 +70,7 @@ const capabilities = JSON.parse(props.tool.capabilities || '[]');
             <h3 class="text-sm font-semibold text-gray-700 mb-2">Capabilities</h3>
             <div class="flex flex-wrap gap-1.5">
                 <span v-for="cap in capabilities" :key="cap"
-                      class="rounded-full bg-[#5e16bd]/10 px-2.5 py-1 text-xs font-medium text-[#5e16bd]">
+                      class="rounded-full bg-[#4e1a77]/10 px-2.5 py-1 text-xs font-medium text-[#4e1a77]">
                     {{ cap }}
                 </span>
             </div>
@@ -85,7 +85,7 @@ const capabilities = JSON.parse(props.tool.capabilities || '[]');
                 <option v-for="m in teamMembers" :key="m.id" :value="m.id">{{ m.name }}</option>
             </select>
             <button @click="assignMember"
-                    class="rounded-lg bg-[#5e16bd] px-4 py-2 text-sm font-semibold text-white hover:bg-[#4e12a0]">
+                    class="rounded-lg bg-[#4e1a77] px-4 py-2 text-sm font-semibold text-white hover:bg-[#4e12a0]">
                 Assign
             </button>
         </div>

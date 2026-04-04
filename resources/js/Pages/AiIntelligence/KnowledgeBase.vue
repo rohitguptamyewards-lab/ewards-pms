@@ -55,7 +55,7 @@ const capLabels = { code: 'Code', debug: 'Debug', architecture: 'Architecture', 
                  class="rounded-xl border border-gray-200 bg-white p-5">
                 <div class="flex items-start justify-between mb-2">
                     <div class="flex items-center gap-2">
-                        <span class="rounded-full bg-[#5e16bd]/10 px-2.5 py-0.5 text-xs font-medium text-[#5e16bd]">
+                        <span class="rounded-full bg-[#4e1a77]/10 px-2.5 py-0.5 text-xs font-medium text-[#4e1a77]">
                             {{ capLabels[item.capability] || item.capability }}
                         </span>
                         <span :class="outcomeConfig[item.outcome]?.bg || 'bg-gray-100'"

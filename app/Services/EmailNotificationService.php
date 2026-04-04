@@ -229,6 +229,62 @@ class EmailNotificationService
         $this->notifyUsers([$userId], $subject, $heading, $body, $url, 'View Project');
     }
 
+    /**
+     * Notify the requester when their request needs clarification.
+     */
+    public function onRequestClarificationNeeded(int $requestId, ?string $reason = null): void
+    {
+        $request = DB::table('requests')
+            ->leftJoin('team_members', 'requests.requested_by', '=', 'team_members.id')
+            ->select('requests.title', 'requests.requested_by', 'team_members.email', 'team_members.name')
+            ->where('requests.id', $requestId)
+            ->first();
+
+        if (!$request || !$request->email) return;
+
+        $subject = "Clarification Needed: {$request->title}";
+        $heading = "Clarification Required on Your Request";
+        $body = "Your request \"{$request->title}\" needs clarification from the team.";
+        if ($reason) {
+            $body .= "\n\nDetails: {$reason}";
+        }
+        $body .= "\n\nPlease add a comment on the request to provide the required information.";
+
+        $url = $this->baseUrl() . "/requests/{$requestId}";
+        $this->sendToEmails([$request->email], $subject, $heading, $body, $url, 'View Request');
+    }
+
+    /**
+     * Notify the requester when their request is triaged (accepted/rejected/deferred).
+     */
+    public function onRequestTriaged(int $requestId, string $action, ?string $reason = null): void
+    {
+        $request = DB::table('requests')
+            ->leftJoin('team_members', 'requests.requested_by', '=', 'team_members.id')
+            ->select('requests.title', 'requests.requested_by', 'team_members.email', 'team_members.name')
+            ->where('requests.id', $requestId)
+            ->first();
+
+        if (!$request || !$request->email) return;
+
+        $actionLabel = match ($action) {
+            'accept' => 'Accepted',
+            'reject' => 'Rejected',
+            'defer'  => 'Deferred',
+            default  => ucfirst($action),
+        };
+
+        $subject = "Request {$actionLabel}: {$request->title}";
+        $heading = "Your Request Has Been {$actionLabel}";
+        $body = "Your request \"{$request->title}\" has been {$actionLabel}.";
+        if ($reason) {
+            $body .= "\n\nReason: {$reason}";
+        }
+
+        $url = $this->baseUrl() . "/requests/{$requestId}";
+        $this->sendToEmails([$request->email], $subject, $heading, $body, $url, 'View Request');
+    }
+
     public function onBugSlaCreated(int $featureId, string $severity): void
     {
         $feature = DB::table('features')

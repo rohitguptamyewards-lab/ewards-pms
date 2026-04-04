@@ -66,7 +66,7 @@ function submit() {
                 </div>
                 <div class="flex flex-wrap gap-1.5">
                     <span v-for="cap in form.capabilities" :key="cap"
-                          class="inline-flex items-center gap-1 rounded-full bg-[#5e16bd]/10 px-2.5 py-1 text-xs font-medium text-[#5e16bd]">
+                          class="inline-flex items-center gap-1 rounded-full bg-[#4e1a77]/10 px-2.5 py-1 text-xs font-medium text-[#4e1a77]">
                         {{ cap }}
                         <button type="button" @click="removeCapability(cap)" class="hover:text-red-500">&times;</button>
                     </span>
@@ -87,14 +87,14 @@ function submit() {
             </div>
 
             <div class="flex items-center gap-2">
-                <input v-model="form.is_active" type="checkbox" id="is_active" class="rounded border-gray-300 text-[#5e16bd]" />
+                <input v-model="form.is_active" type="checkbox" id="is_active" class="rounded border-gray-300 text-[#4e1a77]" />
                 <label for="is_active" class="text-sm text-gray-700">Active</label>
             </div>
 
             <div class="flex justify-end gap-3 pt-3">
                 <a href="/ai-tools" class="rounded-lg border border-gray-200 px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50">Cancel</a>
                 <button type="submit" :disabled="form.processing"
-                        class="rounded-lg bg-[#5e16bd] px-5 py-2 text-sm font-semibold text-white hover:bg-[#4e12a0] disabled:opacity-50">
+                        class="rounded-lg bg-[#4e1a77] px-5 py-2 text-sm font-semibold text-white hover:bg-[#4e12a0] disabled:opacity-50">
                     Add Tool
                 </button>
             </div>

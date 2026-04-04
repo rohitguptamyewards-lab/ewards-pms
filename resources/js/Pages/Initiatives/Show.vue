@@ -54,7 +54,7 @@ const ini = computed(() => props.initiative);
     <div>
         <!-- Breadcrumb -->
         <div class="mb-5 flex items-center gap-2 text-sm text-gray-500">
-            <Link href="/initiatives" class="hover:text-[#5e16bd]">Initiatives</Link>
+            <Link href="/initiatives" class="hover:text-[#4e1a77]">Initiatives</Link>
             <span>/</span>
             <span class="text-gray-800 font-medium">{{ ini.title }}</span>
         </div>
@@ -89,7 +89,7 @@ const ini = computed(() => props.initiative);
                 <p class="text-xs font-medium text-gray-500 uppercase">Progress</p>
                 <p class="mt-1 text-xl font-bold text-gray-900">{{ ini.progress ?? 0 }}%</p>
                 <div class="mt-1 h-1.5 w-full rounded-full bg-gray-100">
-                    <div class="h-1.5 rounded-full bg-[#5e16bd]" :style="{ width: (ini.progress ?? 0) + '%' }" />
+                    <div class="h-1.5 rounded-full bg-[#4e1a77]" :style="{ width: (ini.progress ?? 0) + '%' }" />
                 </div>
             </div>
             <div class="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
@@ -141,7 +141,7 @@ const ini = computed(() => props.initiative);
                 <tbody class="divide-y divide-gray-50">
                     <tr v-for="f in ini.features" :key="f.id" class="hover:bg-[#f5f0ff]/30 transition-colors">
                         <td class="px-5 py-3">
-                            <Link :href="`/features/${f.id}`" class="font-medium text-gray-900 hover:text-[#5e16bd]">{{ f.title }}</Link>
+                            <Link :href="`/features/${f.id}`" class="font-medium text-gray-900 hover:text-[#4e1a77]">{{ f.title }}</Link>
                         </td>
                         <td class="px-5 py-3 text-gray-600">{{ f.assignee_name || '—' }}</td>
                         <td class="px-5 py-3">

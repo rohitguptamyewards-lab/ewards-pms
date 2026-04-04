@@ -50,7 +50,7 @@ function formatDate(d) {
                 <div v-for="f in (release.features || [])" :key="f.id"
                      class="flex items-center justify-between px-4 py-3 hover:bg-gray-50">
                     <div>
-                        <a :href="`/features/${f.id}`" class="text-sm font-medium text-gray-900 hover:text-[#5e16bd]">{{ f.title }}</a>
+                        <a :href="`/features/${f.id}`" class="text-sm font-medium text-gray-900 hover:text-[#4e1a77]">{{ f.title }}</a>
                         <p class="text-xs text-gray-400">{{ f.module_name || 'No module' }}</p>
                     </div>
                     <span class="rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-semibold text-emerald-700">

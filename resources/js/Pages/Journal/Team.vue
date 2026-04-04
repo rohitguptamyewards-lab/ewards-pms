@@ -42,7 +42,7 @@ function initials(name) {
             </div>
             <div class="flex items-center gap-3">
                 <input v-model="selectedDate" @change="changeDate" type="date"
-                       class="rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-[#5e16bd] focus:ring-[#5e16bd]" />
+                       class="rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-[#4e1a77] focus:ring-[#4e1a77]" />
             </div>
         </div>
 
@@ -51,7 +51,7 @@ function initials(name) {
             <div v-for="entry in entries" :key="entry.id"
                  class="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
                 <div class="flex items-start gap-3">
-                    <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#ece1ff] text-xs font-bold text-[#5e16bd]">
+                    <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#e8ddf0] text-xs font-bold text-[#4e1a77]">
                         {{ initials(entry.member_name) }}
                     </div>
                     <div class="flex-1 min-w-0">
@@ -65,7 +65,7 @@ function initials(name) {
                             <p class="text-xs text-red-700">{{ entry.blockers }}</p>
                         </div>
                     </div>
-                    <Link :href="`/journal/${entry.id}`" class="shrink-0 text-xs text-[#5e16bd] hover:underline">View</Link>
+                    <Link :href="`/journal/${entry.id}`" class="shrink-0 text-xs text-[#4e1a77] hover:underline">View</Link>
                 </div>
             </div>
         </div>

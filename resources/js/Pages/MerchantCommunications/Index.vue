@@ -43,7 +43,7 @@ function formatDate(d) {
                 <p class="mt-0.5 text-sm text-gray-500">Track calls, emails, and meetings with merchants</p>
             </div>
             <a href="/merchant-communications/create"
-               class="rounded-lg bg-[#5e16bd] px-4 py-2 text-sm font-semibold text-white hover:bg-[#4e12a0]">
+               class="rounded-lg bg-[#4e1a77] px-4 py-2 text-sm font-semibold text-white hover:bg-[#4e12a0]">
                 + Log Communication
             </a>
         </div>
@@ -114,7 +114,7 @@ function formatDate(d) {
         <div v-if="communications.links" class="mt-4 flex gap-1">
             <template v-for="link in communications.links" :key="link.label">
                 <a v-if="link.url" :href="link.url"
-                   :class="link.active ? 'bg-[#5e16bd] text-white' : 'bg-white text-gray-600'"
+                   :class="link.active ? 'bg-[#4e1a77] text-white' : 'bg-white text-gray-600'"
                    class="rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-medium"
                    v-html="link.label" />
             </template>

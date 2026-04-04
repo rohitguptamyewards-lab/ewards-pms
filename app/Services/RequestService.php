@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Repositories\FeatureRepository;
 use App\Repositories\RequestRepository;
+use App\Services\EmailNotificationService;
 use InvalidArgumentException;
 
 class RequestService
@@ -11,6 +12,7 @@ class RequestService
     public function __construct(
         private readonly RequestRepository $requestRepository,
         private readonly FeatureRepository $featureRepository,
+        private readonly EmailNotificationService $emailService,
     ) {}
 
     /**
@@ -111,9 +113,24 @@ class RequestService
                 ]);
                 break;
 
+            case 'clarify':
+                $this->requestRepository->update($requestId, [
+                    'status' => 'clarification_needed',
+                ]);
+                // Send email to the requester asking for clarification
+                try {
+                    $this->emailService->onRequestClarificationNeeded($requestId, $reason);
+                } catch (\Throwable $e) {}
+                return; // Skip the general triage email below — clarification has its own
+
             default:
-                throw new InvalidArgumentException("Invalid triage action: {$action}. Must be accept, defer, or reject.");
+                throw new InvalidArgumentException("Invalid triage action: {$action}. Must be accept, defer, reject, or clarify.");
         }
+
+        // Send triage result email to the requester
+        try {
+            $this->emailService->onRequestTriaged($requestId, $action, $reason);
+        } catch (\Throwable $e) {}
     }
 
     /**

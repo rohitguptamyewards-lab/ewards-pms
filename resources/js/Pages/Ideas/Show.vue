@@ -45,7 +45,7 @@ const statusConfig = {
 
     <div>
         <div class="mb-5 flex items-center gap-2 text-sm text-gray-500">
-            <Link href="/ideas" class="hover:text-[#5e16bd]">Ideas</Link>
+            <Link href="/ideas" class="hover:text-[#4e1a77]">Ideas</Link>
             <span>/</span>
             <span class="text-gray-800 font-medium">{{ idea.title }}</span>
         </div>

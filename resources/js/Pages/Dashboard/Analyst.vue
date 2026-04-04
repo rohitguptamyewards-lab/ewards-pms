@@ -45,7 +45,7 @@ const REPORTS = [
                 <h1 class="text-2xl font-bold text-gray-900">Analyst Dashboard</h1>
                 <p class="mt-0.5 text-sm text-gray-500">Your work summary & report access</p>
             </div>
-            <Link href="/work-logs/create" class="inline-flex items-center gap-2 rounded-lg bg-[#5e16bd] px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-[#4c12a1] transition-colors">
+            <Link href="/work-logs/create" class="inline-flex items-center gap-2 rounded-lg bg-[#4e1a77] px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-[#3d1560] transition-colors">
                 <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                 </svg>
@@ -67,18 +67,18 @@ const REPORTS = [
                 v-for="report in REPORTS"
                 :key="report.href"
                 :href="report.href"
-                class="group flex items-center gap-4 rounded-xl border border-[#ddd0f7] bg-[#f5f0ff] p-4 shadow-sm hover:bg-[#ece1ff] transition-colors"
+                class="group flex items-center gap-4 rounded-xl border border-[#ddd0f7] bg-[#f5f0ff] p-4 shadow-sm hover:bg-[#e8ddf0] transition-colors"
             >
-                <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#5e16bd] text-white">
+                <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#4e1a77] text-white">
                     <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" :d="report.icon" />
                     </svg>
                 </div>
                 <div>
                     <p class="text-sm font-semibold text-[#361963]">{{ report.label }}</p>
-                    <p class="text-xs text-[#5e16bd]/70">{{ report.desc }}</p>
+                    <p class="text-xs text-[#4e1a77]/70">{{ report.desc }}</p>
                 </div>
-                <svg class="ml-auto h-4 w-4 text-[#5e16bd]/40 group-hover:text-[#5e16bd] transition-colors" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <svg class="ml-auto h-4 w-4 text-[#4e1a77]/40 group-hover:text-[#4e1a77] transition-colors" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
                 </svg>
             </Link>
@@ -107,7 +107,7 @@ const REPORTS = [
                 </div>
                 <div v-else class="px-5 py-10 text-center">
                     <p class="text-sm text-gray-400">No logs for today.</p>
-                    <Link href="/work-logs/create" class="mt-2 inline-block text-sm text-[#5e16bd] hover:underline">Log your first entry →</Link>
+                    <Link href="/work-logs/create" class="mt-2 inline-block text-sm text-[#4e1a77] hover:underline">Log your first entry →</Link>
                 </div>
             </div>
 
@@ -122,7 +122,7 @@ const REPORTS = [
                 <div v-if="openTasks.length" class="divide-y divide-gray-50">
                     <div v-for="task in openTasks" :key="task.id" class="flex items-center gap-3 px-5 py-3.5 hover:bg-gray-50">
                         <div class="min-w-0 flex-1">
-                            <Link :href="`/tasks/${task.id}`" class="font-medium text-[#5e16bd] hover:underline truncate block">{{ task.title }}</Link>
+                            <Link :href="`/tasks/${task.id}`" class="font-medium text-[#4e1a77] hover:underline truncate block">{{ task.title }}</Link>
                             <p class="text-xs text-gray-400">{{ task.project_name || '—' }}</p>
                         </div>
                         <div class="flex shrink-0 flex-col items-end gap-1">
@@ -147,7 +147,7 @@ const REPORTS = [
             </div>
             <div v-if="myProjects.length" class="divide-y divide-gray-50">
                 <div v-for="project in myProjects" :key="project.id" class="flex items-center gap-4 px-5 py-4 hover:bg-gray-50">
-                    <Link :href="`/projects/${project.id}`" class="w-40 shrink-0 font-medium text-[#5e16bd] hover:underline truncate">{{ project.name }}</Link>
+                    <Link :href="`/projects/${project.id}`" class="w-40 shrink-0 font-medium text-[#4e1a77] hover:underline truncate">{{ project.name }}</Link>
                     <div class="min-w-0 flex-1"><ProgressBar :percentage="project.progress || 0" /></div>
                     <span class="shrink-0 text-xs font-semibold text-gray-600">{{ project.progress ?? 0 }}%</span>
                 </div>

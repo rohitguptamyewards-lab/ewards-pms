@@ -57,21 +57,21 @@ function formatDate(dateStr) {
             <div class="flex flex-wrap items-end gap-3">
                 <div class="min-w-[160px]">
                     <label class="mb-1 block text-xs font-semibold uppercase tracking-wide text-gray-400">User</label>
-                    <select v-model="localFilters.user_id" class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#5e16bd] focus:ring-1 focus:ring-[#5e16bd] outline-none">
+                    <select v-model="localFilters.user_id" class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#4e1a77] focus:ring-1 focus:ring-[#4e1a77] outline-none">
                         <option value="">All Users</option>
                         <option v-for="m in teamMembers" :key="m.id" :value="m.id">{{ m.name }}</option>
                     </select>
                 </div>
                 <div class="min-w-[160px]">
                     <label class="mb-1 block text-xs font-semibold uppercase tracking-wide text-gray-400">Project</label>
-                    <select v-model="localFilters.project_id" class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#5e16bd] focus:ring-1 focus:ring-[#5e16bd] outline-none" @change="localFilters.task_id = ''">
+                    <select v-model="localFilters.project_id" class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#4e1a77] focus:ring-1 focus:ring-[#4e1a77] outline-none" @change="localFilters.task_id = ''">
                         <option value="">All Projects</option>
                         <option v-for="p in projects" :key="p.id" :value="p.id">{{ p.name }}</option>
                     </select>
                 </div>
                 <div class="min-w-[200px]">
                     <label class="mb-1 block text-xs font-semibold uppercase tracking-wide text-gray-400">Task</label>
-                    <select v-model="localFilters.task_id" class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#5e16bd] focus:ring-1 focus:ring-[#5e16bd] outline-none">
+                    <select v-model="localFilters.task_id" class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#4e1a77] focus:ring-1 focus:ring-[#4e1a77] outline-none">
                         <option value="">All Tasks</option>
                         <option v-for="t in filteredTasks" :key="t.id" :value="t.id">
                             {{ t.title }}{{ t.project_name ? ' — ' + t.project_name : '' }}
@@ -80,14 +80,14 @@ function formatDate(dateStr) {
                 </div>
                 <div class="min-w-[140px]">
                     <label class="mb-1 block text-xs font-semibold uppercase tracking-wide text-gray-400">Date From</label>
-                    <input v-model="localFilters.date_from" type="date" class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#5e16bd] focus:ring-1 focus:ring-[#5e16bd] outline-none" />
+                    <input v-model="localFilters.date_from" type="date" class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#4e1a77] focus:ring-1 focus:ring-[#4e1a77] outline-none" />
                 </div>
                 <div class="min-w-[140px]">
                     <label class="mb-1 block text-xs font-semibold uppercase tracking-wide text-gray-400">Date To</label>
-                    <input v-model="localFilters.date_to" type="date" class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#5e16bd] focus:ring-1 focus:ring-[#5e16bd] outline-none" />
+                    <input v-model="localFilters.date_to" type="date" class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#4e1a77] focus:ring-1 focus:ring-[#4e1a77] outline-none" />
                 </div>
                 <div class="flex gap-2">
-                    <button @click="applyFilters" class="rounded-lg bg-[#5e16bd] px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-[#4c12a1] transition-colors">
+                    <button @click="applyFilters" class="rounded-lg bg-[#4e1a77] px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-[#3d1560] transition-colors">
                         Apply
                     </button>
                     <button @click="clearFilters" class="rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors">
@@ -98,13 +98,13 @@ function formatDate(dateStr) {
         </div>
 
         <!-- Summary Card -->
-        <div class="mb-5 rounded-xl border border-[#ddd0f7] bg-gradient-to-br from-[#f5f0ff] to-[#ece1ff] p-6 shadow-sm">
+        <div class="mb-5 rounded-xl border border-[#ddd0f7] bg-gradient-to-br from-[#f5f0ff] to-[#e8ddf0] p-6 shadow-sm">
             <div class="flex items-end gap-3">
                 <div>
-                    <p class="text-xs font-semibold uppercase tracking-wide text-[#5e16bd]">Total Hours</p>
+                    <p class="text-xs font-semibold uppercase tracking-wide text-[#4e1a77]">Total Hours</p>
                     <p class="mt-1 text-4xl font-extrabold text-[#361963]">{{ report.totalHours ?? 0 }}h</p>
                 </div>
-                <p v-if="report.logs?.length" class="mb-1.5 text-sm text-[#5e16bd]">
+                <p v-if="report.logs?.length" class="mb-1.5 text-sm text-[#4e1a77]">
                     across {{ report.logs.length }} entries
                 </p>
             </div>
@@ -129,7 +129,7 @@ function formatDate(dateStr) {
                             <td class="px-5 py-3.5 text-gray-400 whitespace-nowrap tabular-nums">{{ formatDate(log.log_date) }}</td>
                             <td class="px-5 py-3.5">
                                 <span class="inline-flex items-center gap-1.5 font-medium text-gray-900">
-                                    <span class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-[#ece1ff] text-xs font-bold text-[#5e16bd]">
+                                    <span class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-[#e8ddf0] text-xs font-bold text-[#4e1a77]">
                                         {{ (log.user_name || '?').charAt(0).toUpperCase() }}
                                     </span>
                                     {{ log.user_name || '—' }}

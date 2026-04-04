@@ -64,7 +64,7 @@ function submit() {
                         type="text"
                         required
                         placeholder="Project name"
-                        class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#5e16bd] focus:bg-white focus:ring-1 focus:ring-[#5e16bd] outline-none transition"
+                        class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#4e1a77] focus:bg-white focus:ring-1 focus:ring-[#4e1a77] outline-none transition"
                         :class="{ 'border-red-400 bg-red-50': form.errors.name }"
                     />
                     <p v-if="form.errors.name" class="mt-1 text-xs text-red-600">{{ form.errors.name }}</p>
@@ -78,7 +78,7 @@ function submit() {
                         v-model="form.description"
                         rows="4"
                         placeholder="What is this project about?"
-                        class="block w-full resize-none rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#5e16bd] focus:bg-white focus:ring-1 focus:ring-[#5e16bd] outline-none transition"
+                        class="block w-full resize-none rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#4e1a77] focus:bg-white focus:ring-1 focus:ring-[#4e1a77] outline-none transition"
                         :class="{ 'border-red-400': form.errors.description }"
                     />
                     <p v-if="form.errors.description" class="mt-1 text-xs text-red-600">{{ form.errors.description }}</p>
@@ -91,7 +91,7 @@ function submit() {
                         <select
                             id="status"
                             v-model="form.status"
-                            class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#5e16bd] focus:bg-white focus:ring-1 focus:ring-[#5e16bd] outline-none transition"
+                            class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#4e1a77] focus:bg-white focus:ring-1 focus:ring-[#4e1a77] outline-none transition"
                             :class="{ 'border-red-400': form.errors.status }"
                         >
                             <option value="active">Active</option>
@@ -105,7 +105,7 @@ function submit() {
                         <select
                             id="priority"
                             v-model="form.priority"
-                            class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#5e16bd] focus:bg-white focus:ring-1 focus:ring-[#5e16bd] outline-none transition"
+                            class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#4e1a77] focus:bg-white focus:ring-1 focus:ring-[#4e1a77] outline-none transition"
                             :class="{ 'border-red-400': form.errors.priority }"
                         >
                             <option value="critical">P0 · Critical</option>
@@ -123,7 +123,7 @@ function submit() {
                     <select
                         id="owner_id"
                         v-model="form.owner_id"
-                        class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#5e16bd] focus:bg-white focus:ring-1 focus:ring-[#5e16bd] outline-none transition"
+                        class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#4e1a77] focus:bg-white focus:ring-1 focus:ring-[#4e1a77] outline-none transition"
                         :class="{ 'border-red-400': form.errors.owner_id }"
                     >
                         <option value="">Select an owner</option>
@@ -153,7 +153,7 @@ function submit() {
                                 type="checkbox"
                                 :checked="form.member_ids.includes(member.id)"
                                 @change="toggleMember(member.id)"
-                                class="h-4 w-4 rounded border-gray-300 text-[#5e16bd] focus:ring-[#5e16bd]"
+                                class="h-4 w-4 rounded border-gray-300 text-[#4e1a77] focus:ring-[#4e1a77]"
                             />
                             <span class="text-sm text-gray-800">{{ member.name }}</span>
                             <span class="ml-auto text-xs text-gray-400 capitalize">{{ member.role }}</span>
@@ -171,7 +171,7 @@ function submit() {
                             id="start_date"
                             v-model="form.start_date"
                             type="date"
-                            class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#5e16bd] focus:ring-1 focus:ring-[#5e16bd] outline-none transition"
+                            class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#4e1a77] focus:ring-1 focus:ring-[#4e1a77] outline-none transition"
                             :class="{ 'border-red-400': form.errors.start_date }"
                         />
                         <p v-if="form.errors.start_date" class="mt-1 text-xs text-red-600">{{ form.errors.start_date }}</p>
@@ -182,7 +182,7 @@ function submit() {
                             id="end_date"
                             v-model="form.end_date"
                             type="date"
-                            class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#5e16bd] focus:ring-1 focus:ring-[#5e16bd] outline-none transition"
+                            class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#4e1a77] focus:ring-1 focus:ring-[#4e1a77] outline-none transition"
                             :class="{ 'border-red-400': form.errors.end_date }"
                         />
                         <p v-if="form.errors.end_date" class="mt-1 text-xs text-red-600">{{ form.errors.end_date }}</p>
@@ -200,7 +200,7 @@ function submit() {
                     <button
                         type="submit"
                         :disabled="form.processing"
-                        class="inline-flex items-center gap-2 rounded-lg bg-[#5e16bd] px-6 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[#4c12a1] disabled:opacity-50 transition-colors"
+                        class="inline-flex items-center gap-2 rounded-lg bg-[#4e1a77] px-6 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[#3d1560] disabled:opacity-50 transition-colors"
                     >
                         <svg v-if="form.processing" class="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>

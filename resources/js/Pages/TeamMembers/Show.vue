@@ -32,8 +32,8 @@ function formatDate(d) {
 // BUG FIX: added manager and mc_team
 const roleConfig = {
     cto:       { classes: 'bg-purple-100 text-purple-700', label: 'CTO' },
-    ceo:       { classes: 'bg-[#ece1ff] text-[#5e16bd]',     label: 'CEO' },
-    manager:   { classes: 'bg-[#ece1ff] text-[#5e16bd]',   label: 'Manager' },
+    ceo:       { classes: 'bg-[#e8ddf0] text-[#4e1a77]',     label: 'CEO' },
+    manager:   { classes: 'bg-[#e8ddf0] text-[#4e1a77]',   label: 'Manager' },
     mc_team:   { classes: 'bg-violet-100 text-violet-700', label: 'MC Team' },
     developer: { classes: 'bg-green-100 text-green-700',   label: 'Developer' },
     tester:    { classes: 'bg-yellow-100 text-yellow-700', label: 'Tester' },
@@ -46,12 +46,12 @@ function getRoleConfig(role) {
 }
 
 function avatarColor(name) {
-    const colors = ['bg-[#5e16bd]','bg-purple-500','bg-green-500','bg-indigo-500','bg-pink-500','bg-orange-500','bg-teal-500'];
+    const colors = ['bg-[#4e1a77]','bg-purple-500','bg-green-500','bg-indigo-500','bg-pink-500','bg-orange-500','bg-teal-500'];
     return colors[(name || '').charCodeAt(0) % colors.length];
 }
 
 function statusColor(status) {
-    return { done: 'text-emerald-600', in_progress: 'text-[#5e16bd]', blocked: 'text-red-600' }[status] || 'text-gray-500';
+    return { done: 'text-emerald-600', in_progress: 'text-[#4e1a77]', blocked: 'text-red-600' }[status] || 'text-gray-500';
 }
 </script>
 
@@ -121,7 +121,7 @@ function statusColor(status) {
                     :key="tab.key"
                     @click="activeTab = tab.key"
                     :class="activeTab === tab.key
-                        ? 'border-[#5e16bd] text-[#5e16bd] bg-[#f5f0ff]/50'
+                        ? 'border-[#4e1a77] text-[#4e1a77] bg-[#f5f0ff]/50'
                         : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
                     class="whitespace-nowrap border-b-2 px-4 pb-3 pt-2 text-sm font-medium transition-colors rounded-t-lg"
                 >
@@ -141,7 +141,7 @@ function statusColor(status) {
                         :key="p.id"
                         class="flex items-center justify-between rounded-lg bg-gray-50 px-4 py-3 hover:bg-[#f5f0ff]/40 transition-colors"
                     >
-                        <Link :href="`/projects/${p.id}`" class="text-sm font-medium text-[#5e16bd] hover:underline">{{ p.name }}</Link>
+                        <Link :href="`/projects/${p.id}`" class="text-sm font-medium text-[#4e1a77] hover:underline">{{ p.name }}</Link>
                         <div class="flex items-center gap-4 text-xs text-gray-500">
                             <span class="font-medium text-gray-700">{{ p.my_hours ?? 0 }}h logged</span>
                             <span class="rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-medium text-emerald-700">{{ p.progress ?? 0 }}%</span>
@@ -164,7 +164,7 @@ function statusColor(status) {
                     >
                         <div class="flex items-center gap-2 min-w-0">
                             <PriorityBadge :priority="task.priority" />
-                            <Link :href="`/tasks/${task.id}`" class="text-sm text-[#5e16bd] hover:underline truncate">{{ task.title }}</Link>
+                            <Link :href="`/tasks/${task.id}`" class="text-sm text-[#4e1a77] hover:underline truncate">{{ task.title }}</Link>
                             <span class="hidden sm:inline text-xs text-gray-400 truncate">— {{ task.project_name }}</span>
                         </div>
                         <StatusBadge :status="task.status" type="task" />
@@ -220,7 +220,7 @@ function statusColor(status) {
                     <tbody class="divide-y divide-gray-50">
                         <tr v-for="task in tasks" :key="task.id" class="hover:bg-[#f5f0ff]/20 transition-colors">
                             <td class="px-5 py-3.5">
-                                <Link :href="`/tasks/${task.id}`" class="font-semibold text-[#5e16bd] hover:underline">{{ task.title }}</Link>
+                                <Link :href="`/tasks/${task.id}`" class="font-semibold text-[#4e1a77] hover:underline">{{ task.title }}</Link>
                             </td>
                             <td class="px-5 py-3.5 text-gray-600">
                                 <Link :href="`/projects/${task.project_id}`" class="hover:underline">{{ task.project_name }}</Link>
@@ -293,7 +293,7 @@ function statusColor(status) {
                     <tbody class="divide-y divide-gray-50">
                         <tr v-for="project in projects" :key="project.id" class="hover:bg-[#f5f0ff]/20 transition-colors">
                             <td class="px-5 py-3.5">
-                                <Link :href="`/projects/${project.id}`" class="font-semibold text-[#5e16bd] hover:underline">{{ project.name }}</Link>
+                                <Link :href="`/projects/${project.id}`" class="font-semibold text-[#4e1a77] hover:underline">{{ project.name }}</Link>
                             </td>
                             <td class="px-5 py-3.5"><StatusBadge :status="project.status" type="project" /></td>
                             <td class="px-5 py-3.5 text-gray-600">{{ project.owner_name }}</td>

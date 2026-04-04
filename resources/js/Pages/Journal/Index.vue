@@ -52,7 +52,7 @@ const moodConfig = {
                     <span>{{ streak }}-day streak</span>
                 </div>
                 <Link href="/journal/create"
-                      class="inline-flex items-center gap-2 rounded-lg bg-[#5e16bd] px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[#4c12a1] transition-colors">
+                      class="inline-flex items-center gap-2 rounded-lg bg-[#4e1a77] px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[#3d1560] transition-colors">
                     <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
                     </svg>
@@ -83,7 +83,7 @@ const moodConfig = {
         <!-- Entries -->
         <div class="space-y-3">
             <Link v-for="entry in entries.data" :key="entry.id" :href="`/journal/${entry.id}`"
-                  class="block rounded-xl border border-gray-200 bg-white p-5 shadow-sm hover:border-[#5e16bd]/30 hover:shadow-md transition-all">
+                  class="block rounded-xl border border-gray-200 bg-white p-5 shadow-sm hover:border-[#4e1a77]/30 hover:shadow-md transition-all">
                 <div class="flex items-start justify-between gap-3">
                     <div class="flex-1 min-w-0">
                         <div class="flex items-center gap-2 mb-1.5">
@@ -94,7 +94,7 @@ const moodConfig = {
                         <p class="text-sm text-gray-600 line-clamp-2">{{ entry.accomplishments }}</p>
                         <div v-if="entry.tags" class="mt-2 flex flex-wrap gap-1">
                             <span v-for="tag in (typeof entry.tags === 'string' ? JSON.parse(entry.tags) : entry.tags)" :key="tag"
-                                  class="rounded-full bg-[#ece1ff] px-2 py-0.5 text-xs font-medium text-[#5e16bd]">
+                                  class="rounded-full bg-[#e8ddf0] px-2 py-0.5 text-xs font-medium text-[#4e1a77]">
                                 {{ tag }}
                             </span>
                         </div>
@@ -114,7 +114,7 @@ const moodConfig = {
         <div v-if="entries.links?.length > 3" class="mt-5 flex items-center justify-center gap-1">
             <Link v-for="link in entries.links" :key="link.label"
                   :href="link.url || '#'"
-                  :class="[link.active ? 'bg-[#5e16bd] text-white shadow-sm' : 'text-gray-600 hover:bg-gray-100', !link.url ? 'pointer-events-none opacity-40' : '']"
+                  :class="[link.active ? 'bg-[#4e1a77] text-white shadow-sm' : 'text-gray-600 hover:bg-gray-100', !link.url ? 'pointer-events-none opacity-40' : '']"
                   class="rounded-md px-3 py-1.5 text-sm font-medium transition-colors"
                   v-html="link.label" preserve-scroll />
         </div>

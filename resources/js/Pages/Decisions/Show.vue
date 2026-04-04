@@ -33,7 +33,7 @@ const d = computed(() => props.decision);
 
     <div>
         <div class="mb-5 flex items-center gap-2 text-sm text-gray-500">
-            <Link href="/decisions" class="hover:text-[#5e16bd]">Decision Log</Link>
+            <Link href="/decisions" class="hover:text-[#4e1a77]">Decision Log</Link>
             <span>/</span>
             <span class="text-gray-800 font-medium">{{ d.title }}</span>
         </div>
@@ -84,7 +84,7 @@ const d = computed(() => props.decision);
                         </div>
                         <div v-if="d.superseded_by_title">
                             <h3 class="text-xs font-bold uppercase text-orange-500 mb-1">Superseded By</h3>
-                            <Link :href="`/decisions/${d.superseded_by}`" class="text-sm text-[#5e16bd] hover:underline">
+                            <Link :href="`/decisions/${d.superseded_by}`" class="text-sm text-[#4e1a77] hover:underline">
                                 {{ d.superseded_by_title }}
                             </Link>
                         </div>

@@ -20,7 +20,7 @@ function submit() {
 
     <div>
         <div class="mb-5 flex items-center gap-2 text-sm text-gray-500">
-            <Link href="/ideas" class="hover:text-[#5e16bd]">Ideas</Link>
+            <Link href="/ideas" class="hover:text-[#4e1a77]">Ideas</Link>
             <span>/</span>
             <span class="text-gray-800 font-medium">Capture</span>
         </div>
@@ -37,28 +37,28 @@ function submit() {
                         <label class="mb-1.5 block text-sm font-semibold text-gray-700">Title <span class="text-red-500">*</span></label>
                         <input v-model="form.title" type="text" required
                                :class="{ 'border-red-400': form.errors.title }"
-                               class="block w-full rounded-lg border border-gray-200 px-3.5 py-2.5 text-sm shadow-sm focus:border-[#5e16bd] focus:ring-[#5e16bd]" />
+                               class="block w-full rounded-lg border border-gray-200 px-3.5 py-2.5 text-sm shadow-sm focus:border-[#4e1a77] focus:ring-[#4e1a77]" />
                         <p v-if="form.errors.title" class="mt-1 text-xs text-red-600">{{ form.errors.title }}</p>
                     </div>
 
                     <div>
                         <label class="mb-1.5 block text-sm font-semibold text-gray-700">Description</label>
                         <textarea v-model="form.description" rows="3"
-                                  class="block w-full rounded-lg border border-gray-200 px-3.5 py-2.5 text-sm shadow-sm focus:border-[#5e16bd] focus:ring-[#5e16bd]"
+                                  class="block w-full rounded-lg border border-gray-200 px-3.5 py-2.5 text-sm shadow-sm focus:border-[#4e1a77] focus:ring-[#4e1a77]"
                                   placeholder="One-line description or context" />
                     </div>
 
                     <div>
                         <label class="mb-1.5 block text-sm font-semibold text-gray-700">Source</label>
                         <input v-model="form.source" type="text"
-                               class="block w-full rounded-lg border border-gray-200 px-3.5 py-2.5 text-sm shadow-sm focus:border-[#5e16bd] focus:ring-[#5e16bd]"
+                               class="block w-full rounded-lg border border-gray-200 px-3.5 py-2.5 text-sm shadow-sm focus:border-[#4e1a77] focus:ring-[#4e1a77]"
                                placeholder="Where did this idea come from?" />
                     </div>
 
                     <div class="flex items-center justify-between gap-3 border-t border-gray-100 pt-4">
                         <Link href="/ideas" class="rounded-lg border border-gray-200 px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50">Cancel</Link>
                         <button type="submit" :disabled="form.processing"
-                                class="inline-flex items-center gap-2 rounded-lg bg-[#5e16bd] px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[#4c12a1] disabled:opacity-50">
+                                class="inline-flex items-center gap-2 rounded-lg bg-[#4e1a77] px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[#3d1560] disabled:opacity-50">
                             {{ form.processing ? 'Saving...' : 'Capture Idea' }}
                         </button>
                     </div>

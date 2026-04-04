@@ -31,7 +31,7 @@ const capLabels = { code: 'Code', debug: 'Debug', architecture: 'Architecture', 
                 <p class="mt-0.5 text-sm text-gray-500">Shared AI prompts organized by capability and tool</p>
             </div>
             <a href="/prompt-templates/create"
-               class="rounded-lg bg-[#5e16bd] px-4 py-2 text-sm font-semibold text-white hover:bg-[#4e12a0]">
+               class="rounded-lg bg-[#4e1a77] px-4 py-2 text-sm font-semibold text-white hover:bg-[#4e12a0]">
                 + New Template
             </a>
         </div>
@@ -51,13 +51,13 @@ const capLabels = { code: 'Code', debug: 'Debug', architecture: 'Architecture', 
 
         <div class="space-y-3">
             <div v-for="t in (templates.data || [])" :key="t.id"
-                 class="rounded-xl border border-gray-200 bg-white p-5 hover:border-[#5e16bd]/30 transition-colors">
+                 class="rounded-xl border border-gray-200 bg-white p-5 hover:border-[#4e1a77]/30 transition-colors">
                 <div class="flex items-start justify-between mb-2">
                     <div>
                         <h3 class="text-sm font-bold text-gray-900">{{ t.title }}</h3>
                         <p class="text-xs text-gray-400">{{ t.tool_name }} · {{ capLabels[t.capability] || t.capability }} · Used {{ t.usage_count }}x</p>
                     </div>
-                    <span class="rounded-full bg-[#5e16bd]/10 px-2.5 py-0.5 text-xs font-medium text-[#5e16bd]">
+                    <span class="rounded-full bg-[#4e1a77]/10 px-2.5 py-0.5 text-xs font-medium text-[#4e1a77]">
                         {{ capLabels[t.capability] || t.capability }}
                     </span>
                 </div>

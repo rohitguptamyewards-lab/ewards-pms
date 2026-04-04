@@ -78,7 +78,7 @@ function submit() {
             <div class="flex justify-end gap-3 pt-3">
                 <a href="/cost-rates" class="rounded-lg border border-gray-200 px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50">Cancel</a>
                 <button type="submit" :disabled="form.processing"
-                        class="rounded-lg bg-[#5e16bd] px-5 py-2 text-sm font-semibold text-white hover:bg-[#4e12a0] disabled:opacity-50">
+                        class="rounded-lg bg-[#4e1a77] px-5 py-2 text-sm font-semibold text-white hover:bg-[#4e12a0] disabled:opacity-50">
                     Create Rate
                 </button>
             </div>

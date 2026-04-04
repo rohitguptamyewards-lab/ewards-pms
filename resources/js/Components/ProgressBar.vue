@@ -17,7 +17,7 @@ const barColor = computed(() => {
 
 const textColor = computed(() => {
     if (clamped.value >= 70) return 'text-emerald-600';
-    if (clamped.value >= 40) return 'text-[#5e16bd]';
+    if (clamped.value >= 40) return 'text-[#4e1a77]';
     if (clamped.value >= 20) return 'text-yellow-600';
     return 'text-red-500';
 });

@@ -32,7 +32,7 @@ function currency(val) {
                 <p class="mt-0.5 text-sm text-gray-500">Track AI tools, licenses, and spend</p>
             </div>
             <a v-if="isManager" href="/ai-tools/create"
-               class="rounded-lg bg-[#5e16bd] px-4 py-2 text-sm font-semibold text-white hover:bg-[#4e12a0]">
+               class="rounded-lg bg-[#4e1a77] px-4 py-2 text-sm font-semibold text-white hover:bg-[#4e12a0]">
                 + Add Tool
             </a>
         </div>
@@ -48,7 +48,7 @@ function currency(val) {
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <a v-for="t in (tools.data || [])" :key="t.id" :href="`/ai-tools/${t.id}`"
-               class="rounded-xl border border-gray-200 bg-white p-5 hover:border-[#5e16bd]/30 transition-colors">
+               class="rounded-xl border border-gray-200 bg-white p-5 hover:border-[#4e1a77]/30 transition-colors">
                 <div class="flex items-center justify-between mb-3">
                     <h3 class="text-sm font-bold text-gray-900">{{ t.name }}</h3>
                     <span :class="t.is_active ? 'bg-emerald-100 text-emerald-700' : 'bg-gray-100 text-gray-500'"

@@ -70,7 +70,7 @@ function submit() {
             <div class="border-t border-gray-100 pt-4">
                 <label class="flex items-center gap-2 cursor-pointer">
                     <input type="checkbox" v-model="form.commitment_made"
-                           class="h-4 w-4 rounded border-gray-300 text-[#5e16bd] focus:ring-[#5e16bd]" />
+                           class="h-4 w-4 rounded border-gray-300 text-[#4e1a77] focus:ring-[#4e1a77]" />
                     <span class="text-sm font-medium text-gray-700">Commitment was made</span>
                 </label>
 
@@ -85,7 +85,7 @@ function submit() {
             <div class="flex justify-end gap-3 pt-2">
                 <a href="/merchant-communications" class="rounded-lg border border-gray-200 px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50">Cancel</a>
                 <button type="submit" :disabled="form.processing"
-                        class="rounded-lg bg-[#5e16bd] px-6 py-2 text-sm font-semibold text-white hover:bg-[#4e12a0] disabled:opacity-50">
+                        class="rounded-lg bg-[#4e1a77] px-6 py-2 text-sm font-semibold text-white hover:bg-[#4e12a0] disabled:opacity-50">
                     {{ form.processing ? 'Saving...' : 'Log Communication' }}
                 </button>
             </div>

@@ -35,7 +35,7 @@ const statusConfig = {
                 <p class="mt-0.5 text-sm text-gray-500">Sprint cycle planning and tracking</p>
             </div>
             <a v-if="isManager" href="/sprints/create"
-               class="rounded-lg bg-[#5e16bd] px-4 py-2 text-sm font-semibold text-white hover:bg-[#4e12a0]">
+               class="rounded-lg bg-[#4e1a77] px-4 py-2 text-sm font-semibold text-white hover:bg-[#4e12a0]">
                 + New Sprint
             </a>
         </div>
@@ -54,7 +54,7 @@ const statusConfig = {
         <div class="space-y-3">
             <a v-for="sprint in (sprints.data || [])" :key="sprint.id"
                :href="`/sprints/${sprint.id}`"
-               class="block rounded-xl border border-gray-200 bg-white p-5 hover:border-[#5e16bd]/30 transition-colors">
+               class="block rounded-xl border border-gray-200 bg-white p-5 hover:border-[#4e1a77]/30 transition-colors">
                 <div class="flex items-start justify-between mb-2">
                     <div>
                         <h3 class="text-sm font-bold text-gray-900">Sprint #{{ sprint.sprint_number }}</h3>
@@ -80,7 +80,7 @@ const statusConfig = {
         <div v-if="sprints.links" class="mt-4 flex gap-1">
             <template v-for="link in sprints.links" :key="link.label">
                 <a v-if="link.url" :href="link.url"
-                   :class="link.active ? 'bg-[#5e16bd] text-white' : 'bg-white text-gray-600 hover:bg-gray-50'"
+                   :class="link.active ? 'bg-[#4e1a77] text-white' : 'bg-white text-gray-600 hover:bg-gray-50'"
                    class="rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-medium"
                    v-html="link.label" />
             </template>

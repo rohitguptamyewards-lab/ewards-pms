@@ -57,7 +57,7 @@ function formatDate(d) {
                 <p class="mt-0.5 text-sm text-gray-500">Your activity over the last {{ period }} days</p>
             </div>
             <select v-model="selectedPeriod" @change="changePeriod"
-                    class="rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-[#5e16bd] focus:ring-[#5e16bd]">
+                    class="rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-[#4e1a77] focus:ring-[#4e1a77]">
                 <option value="7">Last 7 days</option>
                 <option value="30">Last 30 days</option>
                 <option value="90">Last 90 days</option>
@@ -73,7 +73,7 @@ function formatDate(d) {
                 </div>
                 <div class="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
                     <p class="text-xs font-semibold uppercase text-gray-400">Hours Logged</p>
-                    <p class="mt-1 text-3xl font-bold text-[#5e16bd]">{{ Number(hoursLogged).toFixed(1) }}h</p>
+                    <p class="mt-1 text-3xl font-bold text-[#4e1a77]">{{ Number(hoursLogged).toFixed(1) }}h</p>
                 </div>
                 <div class="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
                     <p class="text-xs font-semibold uppercase text-gray-400">Features Worked</p>
@@ -110,7 +110,7 @@ function formatDate(d) {
                 </div>
                 <div class="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
                     <p class="text-xs font-semibold uppercase text-gray-400">Hours Logged</p>
-                    <p class="mt-1 text-3xl font-bold text-[#5e16bd]">{{ Number(hoursLogged).toFixed(1) }}h</p>
+                    <p class="mt-1 text-3xl font-bold text-[#4e1a77]">{{ Number(hoursLogged).toFixed(1) }}h</p>
                 </div>
             </div>
 
@@ -140,7 +140,7 @@ function formatDate(d) {
                 </div>
                 <div class="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
                     <p class="text-xs font-semibold uppercase text-gray-400">Hours Logged</p>
-                    <p class="mt-1 text-3xl font-bold text-[#5e16bd]">{{ Number(hoursLogged).toFixed(1) }}h</p>
+                    <p class="mt-1 text-3xl font-bold text-[#4e1a77]">{{ Number(hoursLogged).toFixed(1) }}h</p>
                 </div>
             </div>
 
@@ -173,7 +173,7 @@ function formatDate(d) {
                 </div>
                 <div class="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
                     <p class="text-xs font-semibold uppercase text-gray-400">Total Hours</p>
-                    <p class="mt-1 text-3xl font-bold text-[#5e16bd]">{{ Number(totalHours).toFixed(1) }}h</p>
+                    <p class="mt-1 text-3xl font-bold text-[#4e1a77]">{{ Number(totalHours).toFixed(1) }}h</p>
                 </div>
             </div>
 
@@ -184,7 +184,7 @@ function formatDate(d) {
                 <div class="divide-y divide-gray-50">
                     <div v-for="(c, i) in topContributors" :key="i" class="flex items-center justify-between px-5 py-3">
                         <div class="flex items-center gap-2">
-                            <span class="flex h-6 w-6 items-center justify-center rounded-full bg-[#ece1ff] text-xs font-bold text-[#5e16bd]">{{ i + 1 }}</span>
+                            <span class="flex h-6 w-6 items-center justify-center rounded-full bg-[#e8ddf0] text-xs font-bold text-[#4e1a77]">{{ i + 1 }}</span>
                             <span class="text-sm font-medium text-gray-800">{{ c.name }}</span>
                         </div>
                         <span class="text-sm font-bold text-gray-600">{{ Number(c.total_hours).toFixed(1) }}h</span>

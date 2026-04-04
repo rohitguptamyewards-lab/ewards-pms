@@ -60,31 +60,31 @@ function isOverdue(dateStr, status) {
             <div class="flex flex-wrap items-end gap-3">
                 <div class="min-w-[160px]">
                     <label class="mb-1 block text-xs font-semibold uppercase tracking-wide text-gray-400">Project</label>
-                    <select v-model="localFilters.project_id" class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#5e16bd] focus:ring-1 focus:ring-[#5e16bd] outline-none">
+                    <select v-model="localFilters.project_id" class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#4e1a77] focus:ring-1 focus:ring-[#4e1a77] outline-none">
                         <option value="">All Projects</option>
                         <option v-for="p in projects" :key="p.id" :value="p.id">{{ p.name }}</option>
                     </select>
                 </div>
                 <div class="min-w-[160px]">
                     <label class="mb-1 block text-xs font-semibold uppercase tracking-wide text-gray-400">Assignee</label>
-                    <select v-model="localFilters.user_id" class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#5e16bd] focus:ring-1 focus:ring-[#5e16bd] outline-none">
+                    <select v-model="localFilters.user_id" class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#4e1a77] focus:ring-1 focus:ring-[#4e1a77] outline-none">
                         <option value="">All Users</option>
                         <option v-for="m in teamMembers" :key="m.id" :value="m.id">{{ m.name }}</option>
                     </select>
                 </div>
                 <div class="min-w-[140px]">
                     <label class="mb-1 block text-xs font-semibold uppercase tracking-wide text-gray-400">Status</label>
-                    <select v-model="localFilters.status" class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#5e16bd] focus:ring-1 focus:ring-[#5e16bd] outline-none">
+                    <select v-model="localFilters.status" class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#4e1a77] focus:ring-1 focus:ring-[#4e1a77] outline-none">
                         <option value="">All Statuses</option>
                         <option v-for="s in statuses" :key="s" :value="s">{{ s.replace('_', ' ').replace(/\b\w/g, c => c.toUpperCase()) }}</option>
                     </select>
                 </div>
                 <div class="min-w-[140px]">
                     <label class="mb-1 block text-xs font-semibold uppercase tracking-wide text-gray-400">Deadline Before</label>
-                    <input v-model="localFilters.deadline_to" type="date" class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#5e16bd] focus:ring-1 focus:ring-[#5e16bd] outline-none" />
+                    <input v-model="localFilters.deadline_to" type="date" class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#4e1a77] focus:ring-1 focus:ring-[#4e1a77] outline-none" />
                 </div>
                 <div class="flex gap-2">
-                    <button @click="applyFilters" class="rounded-lg bg-[#5e16bd] px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-[#4c12a1] transition-colors">
+                    <button @click="applyFilters" class="rounded-lg bg-[#4e1a77] px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-[#3d1560] transition-colors">
                         Apply
                     </button>
                     <button @click="clearFilters" class="rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors">
@@ -111,12 +111,12 @@ function isOverdue(dateStr, status) {
                     <tbody class="divide-y divide-gray-50">
                         <tr v-for="task in tasks" :key="task.id" class="group hover:bg-[#f5f0ff]/30 transition-colors">
                             <td class="px-5 py-3.5">
-                                <Link :href="`/tasks/${task.id}`" class="font-semibold text-[#5e16bd] group-hover:underline">
+                                <Link :href="`/tasks/${task.id}`" class="font-semibold text-[#4e1a77] group-hover:underline">
                                     {{ task.title }}
                                 </Link>
                             </td>
                             <td class="px-5 py-3.5">
-                                <Link v-if="task.project_id" :href="`/projects/${task.project_id}`" class="text-gray-600 hover:text-[#5e16bd] hover:underline">
+                                <Link v-if="task.project_id" :href="`/projects/${task.project_id}`" class="text-gray-600 hover:text-[#4e1a77] hover:underline">
                                     {{ task.project_name || '—' }}
                                 </Link>
                                 <span v-else class="text-gray-300">—</span>

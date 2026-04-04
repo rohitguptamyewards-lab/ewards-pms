@@ -29,7 +29,7 @@ const STATUS_FLOW = {
 
 const STATUS_CONFIG = {
     backlog:           { label: 'Backlog',            classes: 'bg-gray-100 text-gray-600' },
-    in_progress:       { label: 'In Progress',        classes: 'bg-[#ece1ff] text-[#5e16bd]' },
+    in_progress:       { label: 'In Progress',        classes: 'bg-[#e8ddf0] text-[#4e1a77]' },
     in_review:         { label: 'In Review',          classes: 'bg-purple-100 text-purple-700' },
     in_qa:             { label: 'In QA',              classes: 'bg-orange-100 text-orange-700' },
     ready_for_release: { label: 'Ready for Release',  classes: 'bg-teal-100 text-teal-700' },
@@ -37,7 +37,7 @@ const STATUS_CONFIG = {
 };
 
 const TRANSITION_BTN = {
-    in_progress:       'bg-[#5e16bd] hover:bg-[#4c12a1] text-white',
+    in_progress:       'bg-[#4e1a77] hover:bg-[#3d1560] text-white',
     in_review:         'bg-purple-600 hover:bg-purple-700 text-white',
     in_qa:             'bg-orange-500 hover:bg-orange-600 text-white',
     ready_for_release: 'bg-teal-600 hover:bg-teal-700 text-white',
@@ -208,14 +208,14 @@ function formatDate(d) {
                     <div>
                         <label class="mb-1 block text-sm font-medium text-gray-700">Title <span class="text-red-500">*</span></label>
                         <input v-model="form.title" type="text" required
-                            class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#5e16bd] focus:ring-1 focus:ring-[#5e16bd] outline-none"
+                            class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#4e1a77] focus:ring-1 focus:ring-[#4e1a77] outline-none"
                             :class="{ 'border-red-400': form.errors.title }" />
                         <p v-if="form.errors.title" class="mt-1 text-xs text-red-600">{{ form.errors.title }}</p>
                     </div>
                     <div class="grid grid-cols-2 gap-3">
                         <div>
                             <label class="mb-1 block text-sm font-medium text-gray-700">Type</label>
-                            <select v-model="form.type" class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#5e16bd] focus:ring-1 focus:ring-[#5e16bd] outline-none">
+                            <select v-model="form.type" class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#4e1a77] focus:ring-1 focus:ring-[#4e1a77] outline-none">
                                 <option value="">None</option>
                                 <option value="new_feature">New Feature</option>
                                 <option value="improvement">Improvement</option>
@@ -224,7 +224,7 @@ function formatDate(d) {
                         </div>
                         <div>
                             <label class="mb-1 block text-sm font-medium text-gray-700">Priority</label>
-                            <select v-model="form.priority" class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#5e16bd] focus:ring-1 focus:ring-[#5e16bd] outline-none">
+                            <select v-model="form.priority" class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#4e1a77] focus:ring-1 focus:ring-[#4e1a77] outline-none">
                                 <option value="p0">P0 · Critical</option>
                                 <option value="p1">P1 · High</option>
                                 <option value="p2">P2 · Medium</option>
@@ -235,14 +235,14 @@ function formatDate(d) {
                     <div class="grid grid-cols-2 gap-3">
                         <div>
                             <label class="mb-1 block text-sm font-medium text-gray-700">Module</label>
-                            <select v-model="form.module_id" class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#5e16bd] focus:ring-1 focus:ring-[#5e16bd] outline-none">
+                            <select v-model="form.module_id" class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#4e1a77] focus:ring-1 focus:ring-[#4e1a77] outline-none">
                                 <option value="">No module</option>
                                 <option v-for="m in modules" :key="m.id" :value="m.id">{{ m.name }}</option>
                             </select>
                         </div>
                         <div>
                             <label class="mb-1 block text-sm font-medium text-gray-700">Initiative</label>
-                            <select v-model="form.initiative_id" class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#5e16bd] focus:ring-1 focus:ring-[#5e16bd] outline-none">
+                            <select v-model="form.initiative_id" class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#4e1a77] focus:ring-1 focus:ring-[#4e1a77] outline-none">
                                 <option value="">No initiative</option>
                                 <option v-for="i in initiatives" :key="i.id" :value="i.id">{{ i.title }}</option>
                             </select>
@@ -251,7 +251,7 @@ function formatDate(d) {
                     <div class="grid grid-cols-2 gap-3">
                         <div>
                             <label class="mb-1 block text-sm font-medium text-gray-700">Origin</label>
-                            <select v-model="form.origin_type" class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#5e16bd] focus:ring-1 focus:ring-[#5e16bd] outline-none">
+                            <select v-model="form.origin_type" class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#4e1a77] focus:ring-1 focus:ring-[#4e1a77] outline-none">
                                 <option value="">Not specified</option>
                                 <option value="request">Request</option>
                                 <option value="initiative">Initiative</option>
@@ -262,7 +262,7 @@ function formatDate(d) {
                         </div>
                         <div>
                             <label class="mb-1 block text-sm font-medium text-gray-700">Rollout State</label>
-                            <select v-model="form.rollout_state" class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#5e16bd] focus:ring-1 focus:ring-[#5e16bd] outline-none">
+                            <select v-model="form.rollout_state" class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#4e1a77] focus:ring-1 focus:ring-[#4e1a77] outline-none">
                                 <option value="">Not set</option>
                                 <option value="internal">Internal</option>
                                 <option value="beta_pilot">Beta / Pilot</option>
@@ -275,14 +275,14 @@ function formatDate(d) {
                     <div class="grid grid-cols-2 gap-3">
                         <div>
                             <label class="mb-1 block text-sm font-medium text-gray-700">Assign To</label>
-                            <select v-model="form.assigned_to" class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#5e16bd] focus:ring-1 focus:ring-[#5e16bd] outline-none">
+                            <select v-model="form.assigned_to" class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#4e1a77] focus:ring-1 focus:ring-[#4e1a77] outline-none">
                                 <option value="">Unassigned</option>
                                 <option v-for="m in teamMembers" :key="m.id" :value="m.id">{{ m.name }}</option>
                             </select>
                         </div>
                         <div>
                             <label class="mb-1 block text-sm font-medium text-gray-700">QA Owner</label>
-                            <select v-model="form.qa_owner_id" class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#5e16bd] focus:ring-1 focus:ring-[#5e16bd] outline-none">
+                            <select v-model="form.qa_owner_id" class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#4e1a77] focus:ring-1 focus:ring-[#4e1a77] outline-none">
                                 <option value="">Unassigned</option>
                                 <option v-for="m in teamMembers" :key="m.id" :value="m.id">{{ m.name }}</option>
                             </select>
@@ -291,21 +291,21 @@ function formatDate(d) {
                     <div class="grid grid-cols-2 gap-3">
                         <div>
                             <label class="mb-1 block text-sm font-medium text-gray-700">Deadline</label>
-                            <input v-model="form.deadline" type="date" class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#5e16bd] focus:ring-1 focus:ring-[#5e16bd] outline-none" />
+                            <input v-model="form.deadline" type="date" class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#4e1a77] focus:ring-1 focus:ring-[#4e1a77] outline-none" />
                         </div>
                         <div>
                             <label class="mb-1 block text-sm font-medium text-gray-700">Est. Hours</label>
-                            <input v-model.number="form.estimated_hours" type="number" step="0.5" min="0" class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#5e16bd] focus:ring-1 focus:ring-[#5e16bd] outline-none" />
+                            <input v-model.number="form.estimated_hours" type="number" step="0.5" min="0" class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#4e1a77] focus:ring-1 focus:ring-[#4e1a77] outline-none" />
                         </div>
                     </div>
                     <div>
                         <label class="mb-1 block text-sm font-medium text-gray-700">Business Impact</label>
                         <textarea v-model="form.business_impact" rows="2" placeholder="Revenue impact, user value, strategic importance..."
-                            class="block w-full resize-none rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#5e16bd] focus:ring-1 focus:ring-[#5e16bd] outline-none" />
+                            class="block w-full resize-none rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#4e1a77] focus:ring-1 focus:ring-[#4e1a77] outline-none" />
                     </div>
                     <div>
                         <label class="mb-1 block text-sm font-medium text-gray-700">Description</label>
-                        <textarea v-model="form.description" rows="3" class="block w-full resize-none rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#5e16bd] focus:ring-1 focus:ring-[#5e16bd] outline-none" />
+                        <textarea v-model="form.description" rows="3" class="block w-full resize-none rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#4e1a77] focus:ring-1 focus:ring-[#4e1a77] outline-none" />
                     </div>
                     <div class="flex justify-end gap-3 pt-1">
                         <button type="button" @click="editMode = false"
@@ -313,7 +313,7 @@ function formatDate(d) {
                             Cancel
                         </button>
                         <button type="submit" :disabled="form.processing"
-                            class="inline-flex items-center gap-2 rounded-lg bg-[#5e16bd] px-4 py-2 text-sm font-medium text-white hover:bg-[#4c12a1] disabled:opacity-50 transition-colors">
+                            class="inline-flex items-center gap-2 rounded-lg bg-[#4e1a77] px-4 py-2 text-sm font-medium text-white hover:bg-[#3d1560] disabled:opacity-50 transition-colors">
                             {{ form.processing ? 'Saving...' : 'Save Changes' }}
                         </button>
                     </div>

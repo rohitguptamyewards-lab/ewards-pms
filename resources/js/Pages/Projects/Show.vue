@@ -135,7 +135,7 @@ const taskCounts = computed(() => ({
                     :key="tab.key"
                     @click="activeTab = tab.key"
                     :class="activeTab === tab.key
-                        ? 'border-[#5e16bd] text-[#5e16bd] bg-[#f5f0ff]/50'
+                        ? 'border-[#4e1a77] text-[#4e1a77] bg-[#f5f0ff]/50'
                         : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
                     class="whitespace-nowrap border-b-2 px-4 pb-3 pt-2 text-sm font-medium transition-colors rounded-t-lg"
                 >
@@ -171,10 +171,10 @@ const taskCounts = computed(() => ({
                 <div class="mt-2 flex flex-wrap gap-2">
                     <span
                         v-if="project.owner_name"
-                        class="inline-flex items-center gap-1.5 rounded-full bg-[#f5f0ff] border border-[#ddd0f7] px-3 py-1 text-sm font-medium text-[#5e16bd]"
+                        class="inline-flex items-center gap-1.5 rounded-full bg-[#f5f0ff] border border-[#ddd0f7] px-3 py-1 text-sm font-medium text-[#4e1a77]"
                     >
                         {{ project.owner_name }}
-                        <span class="text-xs text-[#5e16bd]/60">(Owner)</span>
+                        <span class="text-xs text-[#4e1a77]/60">(Owner)</span>
                     </span>
                     <span
                         v-for="member in project.members"
@@ -195,7 +195,7 @@ const taskCounts = computed(() => ({
                 <h3 class="font-semibold text-gray-900">Tasks ({{ localTasks.length }})</h3>
                 <button
                     @click="showAddTask = true"
-                    class="inline-flex items-center gap-1.5 rounded-lg bg-[#5e16bd] px-3 py-1.5 text-sm font-medium text-white shadow-sm hover:bg-[#4c12a1] transition-colors"
+                    class="inline-flex items-center gap-1.5 rounded-lg bg-[#4e1a77] px-3 py-1.5 text-sm font-medium text-white shadow-sm hover:bg-[#3d1560] transition-colors"
                 >
                     <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -222,7 +222,7 @@ const taskCounts = computed(() => ({
                                 class="hover:bg-[#f5f0ff]/20 transition-colors"
                             >
                                 <td class="px-5 py-3.5">
-                                    <Link :href="`/tasks/${task.id}`" class="font-semibold text-[#5e16bd] hover:underline">
+                                    <Link :href="`/tasks/${task.id}`" class="font-semibold text-[#4e1a77] hover:underline">
                                         {{ task.title }}
                                     </Link>
                                 </td>
@@ -234,7 +234,7 @@ const taskCounts = computed(() => ({
                             <tr v-if="!localTasks.length">
                                 <td colspan="5" class="px-5 py-12 text-center text-sm text-gray-400">
                                     No tasks yet.
-                                    <button @click="showAddTask = true" class="ml-1 text-[#5e16bd] hover:underline">Add the first task →</button>
+                                    <button @click="showAddTask = true" class="ml-1 text-[#4e1a77] hover:underline">Add the first task →</button>
                                 </td>
                             </tr>
                         </tbody>
@@ -313,7 +313,7 @@ const taskCounts = computed(() => ({
                             v-model="taskForm.title"
                             type="text"
                             placeholder="Task title"
-                            class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#5e16bd] focus:bg-white focus:ring-1 focus:ring-[#5e16bd] outline-none"
+                            class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#4e1a77] focus:bg-white focus:ring-1 focus:ring-[#4e1a77] outline-none"
                             :class="{ 'border-red-400': taskErrors.title }"
                         />
                         <p v-if="taskErrors.title" class="mt-1 text-xs text-red-600">{{ taskErrors.title }}</p>
@@ -324,7 +324,7 @@ const taskCounts = computed(() => ({
                             <label class="mb-1 block text-sm font-medium text-gray-700">Assign To</label>
                             <select
                                 v-model="taskForm.assigned_to"
-                                class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#5e16bd] focus:ring-1 focus:ring-[#5e16bd] outline-none"
+                                class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#4e1a77] focus:ring-1 focus:ring-[#4e1a77] outline-none"
                             >
                                 <option value="">Unassigned</option>
                                 <option v-for="m in (project.members || [])" :key="m.id" :value="m.id">{{ m.name }}</option>
@@ -334,7 +334,7 @@ const taskCounts = computed(() => ({
                             <label class="mb-1 block text-sm font-medium text-gray-700">Priority</label>
                             <select
                                 v-model="taskForm.priority"
-                                class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#5e16bd] focus:ring-1 focus:ring-[#5e16bd] outline-none"
+                                class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#4e1a77] focus:ring-1 focus:ring-[#4e1a77] outline-none"
                             >
                                 <option value="p0">P0 · Critical</option>
                                 <option value="p1">P1 · High</option>
@@ -349,7 +349,7 @@ const taskCounts = computed(() => ({
                         <input
                             v-model="taskForm.deadline"
                             type="date"
-                            class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#5e16bd] focus:ring-1 focus:ring-[#5e16bd] outline-none"
+                            class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#4e1a77] focus:ring-1 focus:ring-[#4e1a77] outline-none"
                         />
                     </div>
 
@@ -359,7 +359,7 @@ const taskCounts = computed(() => ({
                             v-model="taskForm.description"
                             rows="2"
                             placeholder="Optional details..."
-                            class="block w-full resize-none rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#5e16bd] focus:bg-white focus:ring-1 focus:ring-[#5e16bd] outline-none"
+                            class="block w-full resize-none rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#4e1a77] focus:bg-white focus:ring-1 focus:ring-[#4e1a77] outline-none"
                         />
                     </div>
                 </div>
@@ -374,7 +374,7 @@ const taskCounts = computed(() => ({
                     <button
                         @click="saveTask"
                         :disabled="taskSaving"
-                        class="inline-flex items-center gap-2 rounded-lg bg-[#5e16bd] px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-[#4c12a1] disabled:opacity-50 transition-colors"
+                        class="inline-flex items-center gap-2 rounded-lg bg-[#4e1a77] px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-[#3d1560] disabled:opacity-50 transition-colors"
                     >
                         <svg v-if="taskSaving" class="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>

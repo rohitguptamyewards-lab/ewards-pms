@@ -26,7 +26,7 @@ const typeConfig = {
                 <p class="mt-0.5 text-sm text-gray-500">Manage Git integration providers</p>
             </div>
             <a v-if="isManager" href="/git-providers/create"
-               class="rounded-lg bg-[#5e16bd] px-4 py-2 text-sm font-semibold text-white hover:bg-[#4e12a0]">
+               class="rounded-lg bg-[#4e1a77] px-4 py-2 text-sm font-semibold text-white hover:bg-[#4e12a0]">
                 + Add Provider
             </a>
         </div>

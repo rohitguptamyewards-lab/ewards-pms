@@ -66,7 +66,7 @@ const originConfig = {
                 <p class="mt-0.5 text-sm text-gray-500">{{ initiatives.total ?? initiatives.data?.length ?? 0 }} initiative(s)</p>
             </div>
             <Link v-if="canCreate" href="/initiatives/create"
-                  class="inline-flex items-center gap-2 rounded-lg bg-[#5e16bd] px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[#4c12a1] transition-colors">
+                  class="inline-flex items-center gap-2 rounded-lg bg-[#4e1a77] px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[#3d1560] transition-colors">
                 <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
                 </svg>
@@ -125,7 +125,7 @@ const originConfig = {
                 <tbody class="divide-y divide-gray-50">
                     <tr v-for="item in initiatives.data" :key="item.id" class="group hover:bg-[#f5f0ff]/30 transition-colors">
                         <td class="px-5 py-3.5">
-                            <Link :href="`/initiatives/${item.id}`" class="font-medium text-gray-900 hover:text-[#5e16bd]">
+                            <Link :href="`/initiatives/${item.id}`" class="font-medium text-gray-900 hover:text-[#4e1a77]">
                                 {{ item.title }}
                             </Link>
                             <p class="mt-0.5 text-xs text-gray-400">{{ originConfig[item.origin_type]?.label || item.origin_type }}</p>
@@ -153,7 +153,7 @@ const originConfig = {
                     <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 010 3.75H5.625a1.875 1.875 0 010-3.75z" />
                 </svg>
                 <p class="mt-3 text-sm text-gray-500">No initiatives yet.</p>
-                <Link v-if="canCreate" href="/initiatives/create" class="mt-2 inline-block text-sm font-medium text-[#5e16bd] hover:underline">
+                <Link v-if="canCreate" href="/initiatives/create" class="mt-2 inline-block text-sm font-medium text-[#4e1a77] hover:underline">
                     Create the first initiative
                 </Link>
             </div>
@@ -162,7 +162,7 @@ const originConfig = {
             <div v-if="initiatives.links?.length > 3" class="flex items-center justify-center gap-1 border-t border-gray-100 px-5 py-3">
                 <Link v-for="link in initiatives.links" :key="link.label"
                       :href="link.url || '#'"
-                      :class="[link.active ? 'bg-[#5e16bd] text-white shadow-sm' : 'text-gray-600 hover:bg-gray-100', !link.url ? 'pointer-events-none opacity-40' : '']"
+                      :class="[link.active ? 'bg-[#4e1a77] text-white shadow-sm' : 'text-gray-600 hover:bg-gray-100', !link.url ? 'pointer-events-none opacity-40' : '']"
                       class="rounded-md px-3 py-1.5 text-sm font-medium transition-colors"
                       v-html="link.label" preserve-scroll />
             </div>

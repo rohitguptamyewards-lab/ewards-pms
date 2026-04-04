@@ -48,7 +48,7 @@ const urgencyConfig = {
 const typeConfig = {
     bug:         { classes: 'bg-red-100 text-red-700',    label: 'Bug' },
     new_feature: { classes: 'bg-purple-100 text-purple-700', label: 'New Feature' },
-    improvement: { classes: 'bg-[#ece1ff] text-[#5e16bd]',  label: 'Improvement' },
+    improvement: { classes: 'bg-[#e8ddf0] text-[#4e1a77]',  label: 'Improvement' },
 };
 
 function getUrgency(u) { return urgencyConfig[u] || { classes: 'bg-gray-100 text-gray-600', label: (u || '').replace(/_/g, ' ') }; }
@@ -67,7 +67,7 @@ function getType(t)    { return typeConfig[t]    || { classes: 'bg-gray-100 text
             <Link
                 v-if="canCreate"
                 href="/requests/create"
-                class="inline-flex items-center gap-2 rounded-lg bg-[#5e16bd] px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-[#4c12a1] transition-colors"
+                class="inline-flex items-center gap-2 rounded-lg bg-[#4e1a77] px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-[#3d1560] transition-colors"
             >
                 <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -81,10 +81,11 @@ function getType(t)    { return typeConfig[t]    || { classes: 'bg-gray-100 text
             <div class="flex flex-wrap items-end gap-3">
                 <div class="min-w-[150px]">
                     <label class="mb-1 block text-xs font-semibold uppercase tracking-wide text-gray-400">Status</label>
-                    <select v-model="localFilters.status" class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#5e16bd] focus:ring-1 focus:ring-[#5e16bd] outline-none">
+                    <select v-model="localFilters.status" class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#4e1a77] focus:ring-1 focus:ring-[#4e1a77] outline-none">
                         <option value="">All Statuses</option>
                         <option value="received">Received</option>
                         <option value="under_review">Under Review</option>
+                        <option value="clarification_needed">Clarification Needed</option>
                         <option value="linked">Linked</option>
                         <option value="deferred">Deferred</option>
                         <option value="rejected">Rejected</option>
@@ -93,7 +94,7 @@ function getType(t)    { return typeConfig[t]    || { classes: 'bg-gray-100 text
                 </div>
                 <div class="min-w-[140px]">
                     <label class="mb-1 block text-xs font-semibold uppercase tracking-wide text-gray-400">Type</label>
-                    <select v-model="localFilters.type" class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#5e16bd] focus:ring-1 focus:ring-[#5e16bd] outline-none">
+                    <select v-model="localFilters.type" class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#4e1a77] focus:ring-1 focus:ring-[#4e1a77] outline-none">
                         <option value="">All Types</option>
                         <option value="bug">Bug</option>
                         <option value="new_feature">New Feature</option>
@@ -102,7 +103,7 @@ function getType(t)    { return typeConfig[t]    || { classes: 'bg-gray-100 text
                 </div>
                 <div class="min-w-[160px]">
                     <label class="mb-1 block text-xs font-semibold uppercase tracking-wide text-gray-400">Urgency</label>
-                    <select v-model="localFilters.urgency" class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#5e16bd] focus:ring-1 focus:ring-[#5e16bd] outline-none">
+                    <select v-model="localFilters.urgency" class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#4e1a77] focus:ring-1 focus:ring-[#4e1a77] outline-none">
                         <option value="">All Urgency</option>
                         <option value="merchant_blocked">Merchant Blocked</option>
                         <option value="merchant_unhappy">Merchant Unhappy</option>
@@ -115,11 +116,11 @@ function getType(t)    { return typeConfig[t]    || { classes: 'bg-gray-100 text
                         v-model="localFilters.search"
                         type="text"
                         placeholder="Search requests..."
-                        class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#5e16bd] focus:ring-1 focus:ring-[#5e16bd] outline-none"
+                        class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#4e1a77] focus:ring-1 focus:ring-[#4e1a77] outline-none"
                     />
                 </div>
                 <div class="flex gap-2">
-                    <button @click="applyFilters" class="rounded-lg bg-[#5e16bd] px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-[#4c12a1] transition-colors">
+                    <button @click="applyFilters" class="rounded-lg bg-[#4e1a77] px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-[#3d1560] transition-colors">
                         Apply
                     </button>
                     <button @click="clearFilters" class="rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors">
@@ -151,7 +152,7 @@ function getType(t)    { return typeConfig[t]    || { classes: 'bg-gray-100 text
                             class="group hover:bg-[#f5f0ff]/30 transition-colors"
                         >
                             <td class="px-5 py-3.5">
-                                <Link :href="`/requests/${req.id}`" class="font-semibold text-[#5e16bd] group-hover:underline">
+                                <Link :href="`/requests/${req.id}`" class="font-semibold text-[#4e1a77] group-hover:underline">
                                     {{ req.title }}
                                 </Link>
                             </td>
@@ -192,7 +193,7 @@ function getType(t)    { return typeConfig[t]    || { classes: 'bg-gray-100 text
                     :key="link.label"
                     :href="link.url || '#'"
                     :class="[
-                        link.active ? 'bg-[#5e16bd] text-white shadow-sm' : 'text-gray-600 hover:bg-gray-200',
+                        link.active ? 'bg-[#4e1a77] text-white shadow-sm' : 'text-gray-600 hover:bg-gray-200',
                         !link.url ? 'pointer-events-none opacity-40' : '',
                     ]"
                     class="rounded-md px-3 py-1.5 text-sm font-medium transition-colors"

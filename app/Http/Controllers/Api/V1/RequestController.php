@@ -166,7 +166,7 @@ class RequestController extends Controller
     public function triage(Request $request, int $id)
     {
         $request->validate([
-            'action' => 'required|string|in:accept,defer,reject',
+            'action' => 'required|string|in:accept,defer,reject,clarify',
             'reason' => 'nullable|string',
         ]);
 

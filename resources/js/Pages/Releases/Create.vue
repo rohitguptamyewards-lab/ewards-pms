@@ -76,11 +76,11 @@ function submit() {
                 <p class="text-xs text-gray-400 mb-3">Selected features will be marked as Released.</p>
                 <div class="space-y-2 max-h-64 overflow-y-auto">
                     <label v-for="f in features" :key="f.id"
-                           :class="form.feature_ids.includes(f.id) ? 'border-[#5e16bd]/30 bg-purple-50' : 'border-gray-100'"
+                           :class="form.feature_ids.includes(f.id) ? 'border-[#4e1a77]/30 bg-purple-50' : 'border-gray-100'"
                            class="flex items-center gap-3 rounded-lg border p-3 cursor-pointer transition-colors">
                         <input type="checkbox" :checked="form.feature_ids.includes(f.id)"
                                @change="toggleFeature(f.id)"
-                               class="h-4 w-4 rounded border-gray-300 text-[#5e16bd] focus:ring-[#5e16bd]" />
+                               class="h-4 w-4 rounded border-gray-300 text-[#4e1a77] focus:ring-[#4e1a77]" />
                         <div class="flex-1 min-w-0">
                             <p class="text-sm font-medium text-gray-900">{{ f.title }}</p>
                             <p class="text-xs text-gray-400">{{ f.module_name || 'No module' }} · {{ f.status }}</p>
@@ -95,7 +95,7 @@ function submit() {
             <div class="flex justify-end gap-3">
                 <a href="/releases" class="rounded-lg border border-gray-200 px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50">Cancel</a>
                 <button type="submit" :disabled="form.processing"
-                        class="rounded-lg bg-[#5e16bd] px-6 py-2 text-sm font-semibold text-white hover:bg-[#4e12a0] disabled:opacity-50">
+                        class="rounded-lg bg-[#4e1a77] px-6 py-2 text-sm font-semibold text-white hover:bg-[#4e12a0] disabled:opacity-50">
                     {{ form.processing ? 'Creating...' : 'Create Release' }}
                 </button>
             </div>

@@ -34,7 +34,7 @@ const urgencyConfig = {
 const typeConfig = {
     bug:         { classes: 'bg-red-100 text-red-700',        label: 'Bug' },
     new_feature: { classes: 'bg-purple-100 text-purple-700',  label: 'New Feature' },
-    improvement: { classes: 'bg-[#ece1ff] text-[#5e16bd]',   label: 'Improvement' },
+    improvement: { classes: 'bg-[#e8ddf0] text-[#4e1a77]',   label: 'Improvement' },
 };
 
 function getUrgency(u) { return urgencyConfig[u] || { classes: 'bg-gray-100 text-gray-600', label: (u||'').replace(/_/g,' ') }; }
@@ -54,7 +54,7 @@ function getType(t)    { return typeConfig[t]    || { classes: 'bg-gray-100 text
             <div class="flex gap-3">
                 <Link
                     href="/requests/create"
-                    class="inline-flex items-center gap-2 rounded-lg bg-[#5e16bd] px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-[#4c12a1] transition-colors"
+                    class="inline-flex items-center gap-2 rounded-lg bg-[#4e1a77] px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-[#3d1560] transition-colors"
                 >
                     <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -98,7 +98,7 @@ function getType(t)    { return typeConfig[t]    || { classes: 'bg-gray-100 text
                     <div v-for="req in untriagedRequests" :key="req.id" class="px-5 py-3.5 hover:bg-gray-50 transition-colors">
                         <div class="flex items-start justify-between gap-2">
                             <div class="min-w-0 flex-1">
-                                <Link :href="`/requests/${req.id}`" class="font-medium text-[#5e16bd] hover:underline truncate block">
+                                <Link :href="`/requests/${req.id}`" class="font-medium text-[#4e1a77] hover:underline truncate block">
                                     {{ req.title }}
                                 </Link>
                                 <p class="mt-0.5 text-xs text-gray-500">{{ req.merchant_name || '—' }} · {{ req.requester_name || '—' }}</p>
@@ -134,7 +134,7 @@ function getType(t)    { return typeConfig[t]    || { classes: 'bg-gray-100 text
                     <div v-for="req in merchantBlockedRequests" :key="req.id" class="px-5 py-3.5 hover:bg-gray-50 transition-colors">
                         <div class="flex items-start justify-between gap-2">
                             <div class="min-w-0 flex-1">
-                                <Link :href="`/requests/${req.id}`" class="font-medium text-[#5e16bd] hover:underline truncate block">
+                                <Link :href="`/requests/${req.id}`" class="font-medium text-[#4e1a77] hover:underline truncate block">
                                     {{ req.title }}
                                 </Link>
                                 <p class="mt-0.5 text-xs text-gray-500">{{ req.merchant_name || '—' }}</p>

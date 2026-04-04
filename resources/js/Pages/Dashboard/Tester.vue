@@ -43,7 +43,7 @@ function formatDate(dateStr) {
             </div>
             <Link
                 href="/work-logs/create"
-                class="inline-flex items-center gap-2 rounded-lg bg-[#5e16bd] px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-[#4c12a1] transition-colors"
+                class="inline-flex items-center gap-2 rounded-lg bg-[#4e1a77] px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-[#3d1560] transition-colors"
             >
                 <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -74,7 +74,7 @@ function formatDate(dateStr) {
             <div v-if="blockedTasks.length" class="divide-y divide-gray-50">
                 <div v-for="task in blockedTasks" :key="task.id" class="flex items-center gap-3 px-5 py-3.5 hover:bg-gray-50 transition-colors">
                     <div class="min-w-0 flex-1">
-                        <Link :href="`/tasks/${task.id}`" class="font-medium text-[#5e16bd] hover:underline truncate block">
+                        <Link :href="`/tasks/${task.id}`" class="font-medium text-[#4e1a77] hover:underline truncate block">
                             {{ task.title }}
                         </Link>
                         <p class="text-xs text-gray-400">{{ task.project_name || '—' }}</p>
@@ -107,7 +107,7 @@ function formatDate(dateStr) {
                 <div v-if="openTasks.length" class="divide-y divide-gray-50">
                     <div v-for="task in openTasks" :key="task.id" class="flex items-center gap-3 px-5 py-3.5 hover:bg-gray-50 transition-colors">
                         <div class="min-w-0 flex-1">
-                            <Link :href="`/tasks/${task.id}`" class="font-medium text-[#5e16bd] hover:underline truncate block">{{ task.title }}</Link>
+                            <Link :href="`/tasks/${task.id}`" class="font-medium text-[#4e1a77] hover:underline truncate block">{{ task.title }}</Link>
                             <p class="text-xs text-gray-400">{{ task.project_name || '—' }}</p>
                         </div>
                         <div class="flex shrink-0 flex-col items-end gap-1">
@@ -143,7 +143,7 @@ function formatDate(dateStr) {
                 </div>
                 <div v-else class="px-5 py-10 text-center">
                     <p class="text-sm text-gray-400">No logs for today.</p>
-                    <Link href="/work-logs/create" class="mt-2 inline-block text-sm text-[#5e16bd] hover:underline">Log your first entry →</Link>
+                    <Link href="/work-logs/create" class="mt-2 inline-block text-sm text-[#4e1a77] hover:underline">Log your first entry →</Link>
                 </div>
             </div>
         </div>
@@ -158,7 +158,7 @@ function formatDate(dateStr) {
             </div>
             <div v-if="myProjects.length" class="divide-y divide-gray-50">
                 <div v-for="project in myProjects" :key="project.id" class="flex items-center gap-4 px-5 py-4 hover:bg-gray-50 transition-colors">
-                    <Link :href="`/projects/${project.id}`" class="w-40 shrink-0 font-medium text-[#5e16bd] hover:underline truncate">{{ project.name }}</Link>
+                    <Link :href="`/projects/${project.id}`" class="w-40 shrink-0 font-medium text-[#4e1a77] hover:underline truncate">{{ project.name }}</Link>
                     <div class="min-w-0 flex-1"><ProgressBar :percentage="project.progress || 0" /></div>
                     <span class="shrink-0 text-xs font-semibold text-gray-600">{{ project.progress ?? 0 }}%</span>
                 </div>

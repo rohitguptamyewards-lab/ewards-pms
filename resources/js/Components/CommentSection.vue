@@ -127,7 +127,7 @@ function renderBody(text) {
         .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
     return escaped.replace(
         /@([\w.]+)/g,
-        '<span class="inline-flex items-center rounded bg-[#ece1ff] px-1 py-0.5 text-xs font-semibold text-[#5e16bd]">@$1</span>'
+        '<span class="inline-flex items-center rounded bg-[#e8ddf0] px-1 py-0.5 text-xs font-semibold text-[#4e1a77]">@$1</span>'
     );
 }
 
@@ -157,7 +157,7 @@ function initials(name) {
                     @blur="() => setTimeout(closeMentionList, 200)"
                     rows="3"
                     placeholder="Write a comment... Use @name to mention someone"
-                    class="block w-full resize-none rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm text-gray-800 placeholder-gray-400 focus:border-[#5e16bd] focus:bg-white focus:ring-1 focus:ring-[#5e16bd] outline-none transition"
+                    class="block w-full resize-none rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm text-gray-800 placeholder-gray-400 focus:border-[#4e1a77] focus:bg-white focus:ring-1 focus:ring-[#4e1a77] outline-none transition"
                 />
                 <!-- @mention autocomplete dropdown -->
                 <div v-if="showMentionList"
@@ -169,7 +169,7 @@ function initials(name) {
                         :class="{ 'bg-[#f5f0ff]': idx === mentionIndex }"
                         class="flex w-full items-center gap-2 px-3 py-2 text-left text-sm hover:bg-[#f5f0ff] transition-colors"
                     >
-                        <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#ece1ff] text-xs font-bold text-[#5e16bd]">
+                        <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#e8ddf0] text-xs font-bold text-[#4e1a77]">
                             {{ initials(member.name) }}
                         </span>
                         <span class="truncate font-medium text-gray-800">{{ member.name }}</span>
@@ -184,7 +184,7 @@ function initials(name) {
                     <button
                         @click="submitComment"
                         :disabled="submitting || !newComment.trim()"
-                        class="rounded-lg bg-[#5e16bd] px-4 py-2 text-sm font-medium text-white hover:bg-[#4c12a1] disabled:opacity-50 transition-colors"
+                        class="rounded-lg bg-[#4e1a77] px-4 py-2 text-sm font-medium text-white hover:bg-[#3d1560] disabled:opacity-50 transition-colors"
                     >
                         {{ submitting ? 'Posting...' : 'Post Comment' }}
                     </button>
@@ -200,7 +200,7 @@ function initials(name) {
                 class="flex gap-3"
             >
                 <!-- Avatar -->
-                <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#ece1ff] text-xs font-bold text-[#5e16bd]">
+                <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#e8ddf0] text-xs font-bold text-[#4e1a77]">
                     {{ initials(comment.user_name || comment.user?.name) }}
                 </div>
                 <!-- Bubble -->

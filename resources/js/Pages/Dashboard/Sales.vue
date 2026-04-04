@@ -29,7 +29,7 @@ const urgencyConfig = {
 const typeConfig = {
     bug:         { classes: 'bg-red-100 text-red-700',       label: 'Bug' },
     new_feature: { classes: 'bg-purple-100 text-purple-700', label: 'New Feature' },
-    improvement: { classes: 'bg-[#ece1ff] text-[#5e16bd]',  label: 'Improvement' },
+    improvement: { classes: 'bg-[#e8ddf0] text-[#4e1a77]',  label: 'Improvement' },
 };
 
 function getUrgency(u) { return urgencyConfig[u] || { classes: 'bg-gray-100 text-gray-600', label: (u||'').replace(/_/g,' ') }; }
@@ -48,7 +48,7 @@ function getType(t)    { return typeConfig[t]    || { classes: 'bg-gray-100 text
             </div>
             <Link
                 href="/requests/create"
-                class="inline-flex items-center gap-2 rounded-lg bg-[#5e16bd] px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-[#4c12a1] transition-colors"
+                class="inline-flex items-center gap-2 rounded-lg bg-[#4e1a77] px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-[#3d1560] transition-colors"
             >
                 <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -97,7 +97,7 @@ function getType(t)    { return typeConfig[t]    || { classes: 'bg-gray-100 text
                             class="group hover:bg-[#f5f0ff]/30 transition-colors"
                         >
                             <td class="px-5 py-3.5">
-                                <Link :href="`/requests/${req.id}`" class="font-semibold text-[#5e16bd] group-hover:underline">
+                                <Link :href="`/requests/${req.id}`" class="font-semibold text-[#4e1a77] group-hover:underline">
                                     {{ req.title }}
                                 </Link>
                             </td>
@@ -119,7 +119,7 @@ function getType(t)    { return typeConfig[t]    || { classes: 'bg-gray-100 text
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
                                 </svg>
                                 <p class="text-sm font-medium text-gray-400">No requests submitted yet.</p>
-                                <Link href="/requests/create" class="mt-2 inline-block text-sm text-[#5e16bd] hover:underline">Submit your first request →</Link>
+                                <Link href="/requests/create" class="mt-2 inline-block text-sm text-[#4e1a77] hover:underline">Submit your first request →</Link>
                             </td>
                         </tr>
                     </tbody>

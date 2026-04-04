@@ -27,7 +27,7 @@ function formatDate(d) {
 
     <div>
         <div class="mb-5 flex items-center gap-2 text-sm text-gray-500">
-            <Link href="/team-members" class="hover:text-[#5e16bd]">Team</Link>
+            <Link href="/team-members" class="hover:text-[#4e1a77]">Team</Link>
             <span>/</span>
             <span class="text-gray-800 font-medium">{{ member.name }}</span>
         </div>
@@ -35,7 +35,7 @@ function formatDate(d) {
         <div class="mx-auto max-w-2xl">
             <!-- Profile card -->
             <div class="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden">
-                <div class="bg-gradient-to-r from-[#1e0a45] to-[#5e16bd] px-6 py-8 text-center">
+                <div class="bg-gradient-to-r from-[#2c0f47] to-[#4e1a77] px-6 py-8 text-center">
                     <div class="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-white/20 text-2xl font-bold text-white">
                         {{ initials(member.name) }}
                     </div>
@@ -51,7 +51,7 @@ function formatDate(d) {
                         <p class="text-xs text-gray-400">Features</p>
                     </div>
                     <div class="py-4 text-center">
-                        <p class="text-2xl font-bold text-[#5e16bd]">{{ Number(hoursThisMonth).toFixed(1) }}h</p>
+                        <p class="text-2xl font-bold text-[#4e1a77]">{{ Number(hoursThisMonth).toFixed(1) }}h</p>
                         <p class="text-xs text-gray-400">Hours This Month</p>
                     </div>
                     <div class="py-4 text-center">
