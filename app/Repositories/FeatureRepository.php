@@ -19,10 +19,12 @@ class FeatureRepository
         $query = DB::table('features')
             ->leftJoin('modules', 'features.module_id', '=', 'modules.id')
             ->leftJoin('team_members', 'features.assigned_to', '=', 'team_members.id')
+            ->leftJoin('initiatives', 'features.initiative_id', '=', 'initiatives.id')
             ->select(
                 'features.*',
                 'modules.name as module_name',
                 'team_members.name as assignee_name',
+                'initiatives.title as initiative_title',
                 DB::raw('(SELECT COUNT(*) FROM requests WHERE requests.linked_feature_id = features.id AND requests.deleted_at IS NULL) as request_count')
             )
             ->whereNull('features.deleted_at');
@@ -43,6 +45,14 @@ class FeatureRepository
             $query->where('features.assigned_to', $filters['assigned_to']);
         }
 
+        if (!empty($filters['origin_type'])) {
+            $query->where('features.origin_type', $filters['origin_type']);
+        }
+
+        if (!empty($filters['initiative_id'])) {
+            $query->where('features.initiative_id', $filters['initiative_id']);
+        }
+
         return $query->orderByDesc('features.created_at')->paginate($perPage);
     }
 
@@ -57,10 +67,14 @@ class FeatureRepository
         $feature = DB::table('features')
             ->leftJoin('modules', 'features.module_id', '=', 'modules.id')
             ->leftJoin('team_members', 'features.assigned_to', '=', 'team_members.id')
+            ->leftJoin('team_members as qa', 'features.qa_owner_id', '=', 'qa.id')
+            ->leftJoin('initiatives', 'features.initiative_id', '=', 'initiatives.id')
             ->select(
                 'features.*',
                 'modules.name as module_name',
-                'team_members.name as assignee_name'
+                'team_members.name as assignee_name',
+                'qa.name as qa_owner_name',
+                'initiatives.title as initiative_title'
             )
             ->where('features.id', $id)
             ->whereNull('features.deleted_at')

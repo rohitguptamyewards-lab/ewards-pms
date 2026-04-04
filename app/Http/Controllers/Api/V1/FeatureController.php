@@ -31,8 +31,9 @@ class FeatureController extends Controller
     private function dropdowns(): array
     {
         return [
-            'modules'     => DB::table('modules')->orderBy('name')->select('id', 'name')->get(),
-            'teamMembers' => DB::table('team_members')->where('is_active', true)->orderBy('name')->select('id', 'name')->get(),
+            'modules'      => DB::table('modules')->orderBy('name')->select('id', 'name')->get(),
+            'teamMembers'  => DB::table('team_members')->where('is_active', true)->orderBy('name')->select('id', 'name')->get(),
+            'initiatives'  => DB::table('initiatives')->whereNull('deleted_at')->orderBy('title')->select('id', 'title')->get(),
         ];
     }
 
@@ -42,7 +43,7 @@ class FeatureController extends Controller
     public function index(Request $request): InertiaResponse|JsonResponse
     {
         $features = $this->featureRepository->findAll(
-            $request->only(['status', 'module_id', 'priority', 'search']),
+            $request->only(['status', 'module_id', 'priority', 'search', 'origin_type', 'initiative_id']),
             $request->integer('per_page', 15),
         );
 
@@ -55,6 +56,30 @@ class FeatureController extends Controller
             'isManager' => $this->isManager(),
             'filters'   => $request->only(['status', 'module_id', 'priority']),
             ...$this->dropdowns(),
+        ]);
+    }
+
+    /**
+     * Kanban board view — all non-deleted features grouped by status.
+     */
+    public function kanban(): InertiaResponse
+    {
+        $features = DB::table('features')
+            ->leftJoin('modules', 'features.module_id', '=', 'modules.id')
+            ->leftJoin('team_members', 'features.assigned_to', '=', 'team_members.id')
+            ->select(
+                'features.id', 'features.title', 'features.status', 'features.priority',
+                'features.deadline', 'features.assigned_to',
+                'modules.name as module_name',
+                'team_members.name as assignee_name'
+            )
+            ->whereNull('features.deleted_at')
+            ->orderByDesc('features.updated_at')
+            ->get();
+
+        return Inertia::render('Features/Kanban', [
+            'features'  => $features,
+            'isManager' => $this->isManager(),
         ]);
     }
 
@@ -81,10 +106,15 @@ class FeatureController extends Controller
             'type'            => 'nullable|string|in:bug,improvement,new_feature',
             'priority'        => 'nullable|string|in:p0,p1,p2,p3',
             'module_id'       => 'nullable|integer|exists:modules,id',
+            'initiative_id'   => 'nullable|integer|exists:initiatives,id',
+            'origin_type'     => 'nullable|string|in:request,initiative,tech_debt,bug,idea',
+            'rollout_state'   => 'nullable|string|in:internal,beta_pilot,gradual_ga,full_ga,sunset',
             'status'          => 'nullable|string',
             'deadline'        => 'nullable|date',
             'estimated_hours' => 'nullable|numeric|min:0',
             'assigned_to'     => 'nullable|integer|exists:team_members,id',
+            'qa_owner_id'     => 'nullable|integer|exists:team_members,id',
+            'business_impact' => 'nullable|string',
         ]);
 
         $data['status'] = $data['status'] ?? 'backlog';
@@ -121,10 +151,15 @@ class FeatureController extends Controller
             'type'            => 'nullable|string|in:bug,improvement,new_feature',
             'priority'        => 'nullable|string|in:p0,p1,p2,p3',
             'module_id'       => 'nullable|integer|exists:modules,id',
+            'initiative_id'   => 'nullable|integer|exists:initiatives,id',
+            'origin_type'     => 'nullable|string|in:request,initiative,tech_debt,bug,idea',
+            'rollout_state'   => 'nullable|string|in:internal,beta_pilot,gradual_ga,full_ga,sunset',
             'status'          => 'nullable|string',
             'deadline'        => 'nullable|date',
             'estimated_hours' => 'nullable|numeric|min:0',
             'assigned_to'     => 'nullable|integer|exists:team_members,id',
+            'qa_owner_id'     => 'nullable|integer|exists:team_members,id',
+            'business_impact' => 'nullable|string',
         ]);
 
         $this->featureRepository->update($id, $data);

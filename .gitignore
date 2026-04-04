@@ -22,3 +22,11 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
+
+# Temp files
+~$*
+output.txt
+pms-doc-text.txt
+*.sqlite
+database/database.sqlite
+/.claude

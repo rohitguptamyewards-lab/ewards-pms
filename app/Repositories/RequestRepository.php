@@ -164,7 +164,7 @@ class RequestRepository
             DB::table('requests')
                 ->where('id', $sourceId)
                 ->update([
-                    'status'     => 'completed',
+                    'status'     => 'fulfilled',
                     'updated_at' => now(),
                 ]);
 

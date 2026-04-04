@@ -16,10 +16,10 @@ const colorMap = {
     request: {
         received:     'bg-slate-100  text-slate-700  ring-1 ring-slate-200',
         under_review: 'bg-yellow-100 text-yellow-700 ring-1 ring-yellow-200',
-        accepted:     'bg-green-100  text-green-700  ring-1 ring-green-200',
+        linked:       'bg-blue-100   text-blue-700   ring-1 ring-blue-200',
         deferred:     'bg-orange-100 text-orange-700 ring-1 ring-orange-200',
         rejected:     'bg-red-100    text-red-700    ring-1 ring-red-200',
-        completed:    'bg-emerald-100 text-emerald-700 ring-1 ring-emerald-200',
+        fulfilled:    'bg-emerald-100 text-emerald-700 ring-1 ring-emerald-200',
     },
     project: {
         active:    'bg-green-100  text-green-700  ring-1 ring-green-200',
@@ -43,15 +43,15 @@ const colorMap = {
 
 const dotMap = {
     open:              'bg-slate-400',
-    in_progress:       'bg-[#f5f0ff]0',
+    in_progress:       'bg-[#5e16bd]',
     blocked:           'bg-red-500',
     done:              'bg-green-500',
     received:          'bg-slate-400',
     under_review:      'bg-yellow-500',
-    accepted:          'bg-green-500',
+    linked:            'bg-blue-500',
     deferred:          'bg-orange-500',
     rejected:          'bg-red-500',
-    completed:         'bg-emerald-500',
+    fulfilled:         'bg-emerald-500',
     active:            'bg-green-500',
     on_hold:           'bg-yellow-500',
     backlog:           'bg-slate-400',

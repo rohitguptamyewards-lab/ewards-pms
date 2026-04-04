@@ -14,16 +14,16 @@ return new class extends Migration
         Schema::create('audit_logs', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id')->nullable();
-            $table->string('event'); // created, updated, deleted
-            $table->string('auditable_type');
-            $table->unsignedBigInteger('auditable_id');
-            $table->json('old_values')->nullable();
-            $table->json('new_values')->nullable();
+            $table->string('action'); // created, updated, deleted
+            $table->string('entity_type');
+            $table->unsignedBigInteger('entity_id');
+            $table->json('changes')->nullable();
+            $table->string('ip_address', 45)->nullable();
             $table->timestamp('created_at')->nullable();
 
-            $table->index(['auditable_type', 'auditable_id']);
+            $table->index(['entity_type', 'entity_id']);
             $table->index('user_id');
-            $table->index('event');
+            $table->index('action');
         });
     }
 

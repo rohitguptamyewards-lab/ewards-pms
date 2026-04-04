@@ -5,8 +5,9 @@ import AppLayout from '@/Layouts/AppLayout.vue';
 defineOptions({ layout: AppLayout });
 
 defineProps({
-    modules:     { type: Array, default: () => [] },
-    teamMembers: { type: Array, default: () => [] },
+    modules:      { type: Array, default: () => [] },
+    teamMembers:  { type: Array, default: () => [] },
+    initiatives:  { type: Array, default: () => [] },
 });
 
 const form = useForm({
@@ -15,10 +16,15 @@ const form = useForm({
     type:            '',
     priority:        'p2',
     module_id:       '',
+    initiative_id:   '',
+    origin_type:     '',
+    rollout_state:   '',
     status:          'backlog',
     deadline:        '',
     estimated_hours: '',
     assigned_to:     '',
+    qa_owner_id:     '',
+    business_impact: '',
 });
 
 function submit() {
@@ -95,7 +101,7 @@ function submit() {
                     </div>
                 </div>
 
-                <!-- Module + Status -->
+                <!-- Module + Initiative -->
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label for="module_id" class="mb-1.5 block text-sm font-semibold text-gray-700">Module</label>
@@ -109,6 +115,55 @@ function submit() {
                         </select>
                     </div>
                     <div>
+                        <label for="initiative_id" class="mb-1.5 block text-sm font-semibold text-gray-700">Initiative</label>
+                        <select
+                            id="initiative_id"
+                            v-model="form.initiative_id"
+                            class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#5e16bd] focus:bg-white focus:ring-1 focus:ring-[#5e16bd] outline-none transition"
+                        >
+                            <option value="">No initiative</option>
+                            <option v-for="i in initiatives" :key="i.id" :value="i.id">{{ i.title }}</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Origin Type + Rollout State -->
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label for="origin_type" class="mb-1.5 block text-sm font-semibold text-gray-700">Origin</label>
+                        <select
+                            id="origin_type"
+                            v-model="form.origin_type"
+                            class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#5e16bd] focus:bg-white focus:ring-1 focus:ring-[#5e16bd] outline-none transition"
+                        >
+                            <option value="">Not specified</option>
+                            <option value="request">Request</option>
+                            <option value="initiative">Initiative</option>
+                            <option value="tech_debt">Tech Debt</option>
+                            <option value="bug">Bug</option>
+                            <option value="idea">Idea</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="rollout_state" class="mb-1.5 block text-sm font-semibold text-gray-700">Rollout State</label>
+                        <select
+                            id="rollout_state"
+                            v-model="form.rollout_state"
+                            class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#5e16bd] focus:bg-white focus:ring-1 focus:ring-[#5e16bd] outline-none transition"
+                        >
+                            <option value="">Not set</option>
+                            <option value="internal">Internal</option>
+                            <option value="beta_pilot">Beta / Pilot</option>
+                            <option value="gradual_ga">Gradual GA</option>
+                            <option value="full_ga">Full GA</option>
+                            <option value="sunset">Sunset</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Status + Initial Status -->
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
                         <label for="status" class="mb-1.5 block text-sm font-semibold text-gray-700">Initial Status</label>
                         <select
                             id="status"
@@ -121,7 +176,7 @@ function submit() {
                     </div>
                 </div>
 
-                <!-- Assigned To + Deadline -->
+                <!-- Assigned To + QA Owner -->
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label for="assigned_to" class="mb-1.5 block text-sm font-semibold text-gray-700">Assign To</label>
@@ -135,6 +190,21 @@ function submit() {
                         </select>
                     </div>
                     <div>
+                        <label for="qa_owner_id" class="mb-1.5 block text-sm font-semibold text-gray-700">QA Owner</label>
+                        <select
+                            id="qa_owner_id"
+                            v-model="form.qa_owner_id"
+                            class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#5e16bd] focus:bg-white focus:ring-1 focus:ring-[#5e16bd] outline-none transition"
+                        >
+                            <option value="">Unassigned</option>
+                            <option v-for="m in teamMembers" :key="m.id" :value="m.id">{{ m.name }}</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Deadline + Estimated Hours -->
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
                         <label for="deadline" class="mb-1.5 block text-sm font-semibold text-gray-700">Deadline</label>
                         <input
                             id="deadline"
@@ -145,25 +215,38 @@ function submit() {
                         />
                         <p v-if="form.errors.deadline" class="mt-1 text-xs text-red-600">{{ form.errors.deadline }}</p>
                     </div>
+                    <div>
+                        <label for="estimated_hours" class="mb-1.5 block text-sm font-semibold text-gray-700">
+                            Estimated Hours
+                            <span class="ml-1 text-xs font-normal text-gray-400">(optional)</span>
+                        </label>
+                        <input
+                            id="estimated_hours"
+                            v-model.number="form.estimated_hours"
+                            type="number"
+                            step="0.5"
+                            min="0"
+                            placeholder="e.g. 8"
+                            class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#5e16bd] focus:bg-white focus:ring-1 focus:ring-[#5e16bd] outline-none transition"
+                            :class="{ 'border-red-400': form.errors.estimated_hours }"
+                        />
+                        <p v-if="form.errors.estimated_hours" class="mt-1 text-xs text-red-600">{{ form.errors.estimated_hours }}</p>
+                    </div>
                 </div>
 
-                <!-- Estimated Hours -->
+                <!-- Business Impact -->
                 <div>
-                    <label for="estimated_hours" class="mb-1.5 block text-sm font-semibold text-gray-700">
-                        Estimated Hours
+                    <label for="business_impact" class="mb-1.5 block text-sm font-semibold text-gray-700">
+                        Business Impact
                         <span class="ml-1 text-xs font-normal text-gray-400">(optional)</span>
                     </label>
-                    <input
-                        id="estimated_hours"
-                        v-model.number="form.estimated_hours"
-                        type="number"
-                        step="0.5"
-                        min="0"
-                        placeholder="e.g. 8"
-                        class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#5e16bd] focus:bg-white focus:ring-1 focus:ring-[#5e16bd] outline-none transition"
-                        :class="{ 'border-red-400': form.errors.estimated_hours }"
+                    <textarea
+                        id="business_impact"
+                        v-model="form.business_impact"
+                        rows="2"
+                        placeholder="Revenue impact, user value, strategic importance..."
+                        class="block w-full resize-none rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#5e16bd] focus:bg-white focus:ring-1 focus:ring-[#5e16bd] outline-none transition"
                     />
-                    <p v-if="form.errors.estimated_hours" class="mt-1 text-xs text-red-600">{{ form.errors.estimated_hours }}</p>
                 </div>
 
                 <!-- Description -->

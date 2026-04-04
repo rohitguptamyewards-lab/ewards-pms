@@ -17,7 +17,7 @@ class StoreCommentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'commentable_type' => ['required', 'string', 'in:task,project,request'],
+            'commentable_type' => ['required', 'string', 'in:task,project,request,feature,initiative,idea,decision'],
             'commentable_id' => ['required', 'integer'],
             'body' => ['required', 'string'],
             'parent_id' => ['nullable', 'integer', 'exists:comments,id'],

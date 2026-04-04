@@ -140,6 +140,14 @@ async function saveFeatureLink() {
                     <p class="mt-1 text-sm font-medium text-gray-800">{{ request.demand_count ?? 0 }}</p>
                 </div>
                 <div>
+                    <p class="text-xs font-semibold uppercase tracking-wide text-gray-400">Revenue Impact</p>
+                    <p class="mt-1 text-sm font-medium text-gray-800">{{ request.revenue_impact ? '₹' + Number(request.revenue_impact).toLocaleString() : '—' }}</p>
+                </div>
+                <div>
+                    <p class="text-xs font-semibold uppercase tracking-wide text-gray-400">Requester</p>
+                    <p class="mt-1 text-sm font-medium text-gray-800">{{ request.requester_name || '—' }}</p>
+                </div>
+                <div>
                     <p class="text-xs font-semibold uppercase tracking-wide text-gray-400">Created</p>
                     <p class="mt-1 text-sm font-medium text-gray-800">{{ formatDate(request.created_at) }}</p>
                 </div>
@@ -153,8 +161,8 @@ async function saveFeatureLink() {
                 </Link>
             </div>
 
-            <!-- Feature linking (managers, accepted requests) -->
-            <div v-if="canTriage && request.status === 'accepted'" class="mt-4 border-t border-gray-100 pt-4">
+            <!-- Feature linking (managers, linked requests) -->
+            <div v-if="canTriage && request.status === 'linked'" class="mt-4 border-t border-gray-100 pt-4">
                 <p class="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-400">Link to Feature</p>
                 <div class="flex items-center gap-2">
                     <select
@@ -180,8 +188,8 @@ async function saveFeatureLink() {
                 </p>
             </div>
 
-            <!-- Triage Buttons (manager roles only, received status) -->
-            <div v-if="canTriage && request.status === 'received'" class="mt-5 flex flex-wrap items-center gap-3 border-t border-gray-100 pt-5">
+            <!-- Triage Buttons (manager roles only, received / under_review status) -->
+            <div v-if="canTriage && ['received', 'under_review'].includes(request.status)" class="mt-5 flex flex-wrap items-center gap-3 border-t border-gray-100 pt-5">
                 <p class="w-full text-xs font-semibold uppercase tracking-wide text-gray-400">Triage</p>
                 <button
                     @click="openTriage('accept')"

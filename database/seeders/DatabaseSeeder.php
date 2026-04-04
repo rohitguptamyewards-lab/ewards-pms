@@ -21,7 +21,12 @@ class DatabaseSeeder extends Seeder
         $password = Hash::make('password');
 
         // Truncate tables in reverse dependency order
-        DB::statement('SET FOREIGN_KEY_CHECKS=0');
+        $driver = DB::getDriverName();
+        if ($driver === 'sqlite') {
+            DB::statement('PRAGMA foreign_keys = OFF');
+        } else {
+            DB::statement('SET FOREIGN_KEY_CHECKS=0');
+        }
         DB::table('comments')->truncate();
         DB::table('work_logs')->truncate();
         DB::table('requests')->truncate();
@@ -32,7 +37,11 @@ class DatabaseSeeder extends Seeder
         DB::table('modules')->truncate();
         DB::table('merchants')->truncate();
         DB::table('team_members')->truncate();
-        DB::statement('SET FOREIGN_KEY_CHECKS=1');
+        if ($driver === 'sqlite') {
+            DB::statement('PRAGMA foreign_keys = ON');
+        } else {
+            DB::statement('SET FOREIGN_KEY_CHECKS=1');
+        }
 
         // ---------------------------------------------------------------
         // 1. Team Members (6 -- one per role)
@@ -94,6 +103,26 @@ class DatabaseSeeder extends Seeder
                 'email'      => 'deepak@example.com',
                 'password'   => $password,
                 'role'       => 'analyst',
+                'is_active'  => true,
+                'created_at' => $now,
+                'updated_at' => $now,
+            ],
+            [
+                'id'         => 7,
+                'name'       => 'Neha Gupta',
+                'email'      => 'neha@example.com',
+                'password'   => $password,
+                'role'       => 'manager',
+                'is_active'  => true,
+                'created_at' => $now,
+                'updated_at' => $now,
+            ],
+            [
+                'id'         => 8,
+                'name'       => 'Amit Kumar',
+                'email'      => 'amit@example.com',
+                'password'   => $password,
+                'role'       => 'mc_team',
                 'is_active'  => true,
                 'created_at' => $now,
                 'updated_at' => $now,
@@ -349,7 +378,7 @@ class DatabaseSeeder extends Seeder
                 'requested_by'       => 6,
                 'type'               => 'improvement',
                 'urgency'            => 'nice_to_have',
-                'status'             => 'accepted',
+                'status'             => 'under_review',
                 'demand_count'       => 1,
                 'linked_feature_id'  => null,
                 'created_at'         => $now,

@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, watch, nextTick } from 'vue';
 import axios from 'axios';
 
 const props = defineProps({
@@ -8,10 +8,91 @@ const props = defineProps({
     commentableId:  { type: Number, required: true },
 });
 
-const localComments = ref([...props.comments]);
-const newComment    = ref('');
-const submitting    = ref(false);
-const error         = ref('');
+const localComments   = ref([...props.comments]);
+const newComment      = ref('');
+const submitting      = ref(false);
+const error           = ref('');
+const textareaRef     = ref(null);
+
+// @mention autocomplete state
+const showMentionList = ref(false);
+const mentionQuery    = ref('');
+const mentionResults  = ref([]);
+const mentionIndex    = ref(0);
+const mentionStart    = ref(-1);
+let mentionDebounce   = null;
+
+function onInput(e) {
+    const textarea = e.target;
+    const cursor   = textarea.selectionStart;
+    const text     = textarea.value.substring(0, cursor);
+
+    // Check if we're in an @mention context
+    const atIdx = text.lastIndexOf('@');
+    if (atIdx >= 0) {
+        const afterAt   = text.substring(atIdx + 1);
+        const hasSpace  = /\s/.test(afterAt);
+        if (!hasSpace && afterAt.length <= 30) {
+            mentionStart.value = atIdx;
+            mentionQuery.value = afterAt;
+            searchMentions(afterAt);
+            return;
+        }
+    }
+    closeMentionList();
+}
+
+function searchMentions(q) {
+    clearTimeout(mentionDebounce);
+    mentionDebounce = setTimeout(async () => {
+        try {
+            const { data } = await axios.get('/api/v1/comments/mentions', { params: { q } });
+            mentionResults.value = data;
+            mentionIndex.value = 0;
+            showMentionList.value = mentionResults.value.length > 0;
+        } catch {
+            closeMentionList();
+        }
+    }, 200);
+}
+
+function closeMentionList() {
+    showMentionList.value = false;
+    mentionResults.value  = [];
+    mentionIndex.value    = 0;
+}
+
+function selectMention(member) {
+    const text   = newComment.value;
+    const before = text.substring(0, mentionStart.value);
+    const after  = text.substring(mentionStart.value + 1 + mentionQuery.value.length);
+    const name   = member.name.replace(/\s/g, '.');
+    newComment.value = before + '@' + name + ' ' + after;
+    closeMentionList();
+    nextTick(() => {
+        if (textareaRef.value) {
+            const pos = (before + '@' + name + ' ').length;
+            textareaRef.value.focus();
+            textareaRef.value.setSelectionRange(pos, pos);
+        }
+    });
+}
+
+function onKeydown(e) {
+    if (!showMentionList.value) return;
+    if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        mentionIndex.value = (mentionIndex.value + 1) % mentionResults.value.length;
+    } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        mentionIndex.value = (mentionIndex.value - 1 + mentionResults.value.length) % mentionResults.value.length;
+    } else if (e.key === 'Enter' && mentionResults.value.length) {
+        e.preventDefault();
+        selectMention(mentionResults.value[mentionIndex.value]);
+    } else if (e.key === 'Escape') {
+        closeMentionList();
+    }
+}
 
 async function submitComment() {
     if (!newComment.value.trim()) return;
@@ -50,7 +131,6 @@ function renderBody(text) {
     );
 }
 
-// Get initials from name
 function initials(name) {
     if (!name) return '?';
     return name.split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase();
@@ -68,12 +148,35 @@ function initials(name) {
 
         <!-- New comment form -->
         <div class="mb-6 rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
-            <textarea
-                v-model="newComment"
-                rows="3"
-                placeholder="Write a comment... Use @name to mention someone"
-                class="block w-full resize-none rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm text-gray-800 placeholder-gray-400 focus:border-[#5e16bd] focus:bg-white focus:ring-1 focus:ring-[#5e16bd] outline-none transition"
-            />
+            <div class="relative">
+                <textarea
+                    ref="textareaRef"
+                    v-model="newComment"
+                    @input="onInput"
+                    @keydown="onKeydown"
+                    @blur="() => setTimeout(closeMentionList, 200)"
+                    rows="3"
+                    placeholder="Write a comment... Use @name to mention someone"
+                    class="block w-full resize-none rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm text-gray-800 placeholder-gray-400 focus:border-[#5e16bd] focus:bg-white focus:ring-1 focus:ring-[#5e16bd] outline-none transition"
+                />
+                <!-- @mention autocomplete dropdown -->
+                <div v-if="showMentionList"
+                     class="absolute left-0 bottom-full mb-1 z-20 w-64 max-h-48 overflow-y-auto rounded-lg border border-gray-200 bg-white shadow-lg">
+                    <button
+                        v-for="(member, idx) in mentionResults"
+                        :key="member.id"
+                        @mousedown.prevent="selectMention(member)"
+                        :class="{ 'bg-[#f5f0ff]': idx === mentionIndex }"
+                        class="flex w-full items-center gap-2 px-3 py-2 text-left text-sm hover:bg-[#f5f0ff] transition-colors"
+                    >
+                        <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#ece1ff] text-xs font-bold text-[#5e16bd]">
+                            {{ initials(member.name) }}
+                        </span>
+                        <span class="truncate font-medium text-gray-800">{{ member.name }}</span>
+                        <span class="ml-auto text-xs text-gray-400 capitalize">{{ (member.role || '').replace('_', ' ') }}</span>
+                    </button>
+                </div>
+            </div>
             <div class="mt-3 flex items-center justify-between">
                 <p class="text-xs text-gray-400">Tip: Use <span class="font-medium text-gray-500">@name</span> to mention a team member</p>
                 <div class="flex items-center gap-2">

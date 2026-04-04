@@ -12,6 +12,7 @@ const props = defineProps({
     isManager:   { type: Boolean, default: false },
     modules:     { type: Array,  default: () => [] },
     teamMembers: { type: Array,  default: () => [] },
+    initiatives: { type: Array,  default: () => [] },
 });
 
 const page = usePage();
@@ -44,6 +45,22 @@ const TRANSITION_BTN = {
     backlog:           'bg-gray-500 hover:bg-gray-600 text-white',
 };
 
+const ROLLOUT_CONFIG = {
+    internal:    { label: 'Internal',      classes: 'bg-gray-100 text-gray-600' },
+    beta_pilot:  { label: 'Beta / Pilot',  classes: 'bg-yellow-100 text-yellow-700' },
+    gradual_ga:  { label: 'Gradual GA',    classes: 'bg-blue-100 text-blue-700' },
+    full_ga:     { label: 'Full GA',       classes: 'bg-emerald-100 text-emerald-700' },
+    sunset:      { label: 'Sunset',        classes: 'bg-red-100 text-red-600' },
+};
+
+const ORIGIN_CONFIG = {
+    request:    { label: 'Request',    classes: 'bg-blue-100 text-blue-700' },
+    initiative: { label: 'Initiative', classes: 'bg-purple-100 text-purple-700' },
+    tech_debt:  { label: 'Tech Debt',  classes: 'bg-orange-100 text-orange-700' },
+    bug:        { label: 'Bug',        classes: 'bg-red-100 text-red-600' },
+    idea:       { label: 'Idea',       classes: 'bg-teal-100 text-teal-700' },
+};
+
 const currentStatus = ref(props.feature.status || 'backlog');
 const updatingStatus = ref(false);
 const statusError = ref('');
@@ -71,9 +88,14 @@ const form = useForm({
     type:            props.feature.type || '',
     priority:        props.feature.priority || 'p2',
     module_id:       props.feature.module_id || '',
+    initiative_id:   props.feature.initiative_id || '',
+    origin_type:     props.feature.origin_type || '',
+    rollout_state:   props.feature.rollout_state || '',
     deadline:        props.feature.deadline ? props.feature.deadline.slice(0, 10) : '',
     estimated_hours: props.feature.estimated_hours || '',
     assigned_to:     props.feature.assigned_to || '',
+    qa_owner_id:     props.feature.qa_owner_id || '',
+    business_impact: props.feature.business_impact || '',
     status:          props.feature.status || 'backlog',
 });
 
@@ -117,6 +139,14 @@ function formatDate(d) {
                         <span v-if="feature.type" class="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-600 capitalize">
                             {{ (feature.type || '').replace('_', ' ') }}
                         </span>
+                        <span v-if="feature.origin_type" :class="ORIGIN_CONFIG[feature.origin_type]?.classes || 'bg-gray-100 text-gray-600'"
+                              class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium">
+                            {{ ORIGIN_CONFIG[feature.origin_type]?.label || feature.origin_type }}
+                        </span>
+                        <span v-if="feature.rollout_state" :class="ROLLOUT_CONFIG[feature.rollout_state]?.classes || 'bg-gray-100 text-gray-600'"
+                              class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium">
+                            {{ ROLLOUT_CONFIG[feature.rollout_state]?.label || feature.rollout_state }}
+                        </span>
                     </div>
                 </div>
                 <button
@@ -138,8 +168,16 @@ function formatDate(d) {
                     <p class="mt-1 text-sm font-medium text-gray-800">{{ feature.assignee_name || '—' }}</p>
                 </div>
                 <div>
+                    <p class="text-xs font-semibold uppercase tracking-wide text-gray-400">QA Owner</p>
+                    <p class="mt-1 text-sm font-medium text-gray-800">{{ feature.qa_owner_name || '—' }}</p>
+                </div>
+                <div>
                     <p class="text-xs font-semibold uppercase tracking-wide text-gray-400">Module</p>
                     <p class="mt-1 text-sm font-medium text-gray-800">{{ feature.module_name || '—' }}</p>
+                </div>
+                <div>
+                    <p class="text-xs font-semibold uppercase tracking-wide text-gray-400">Initiative</p>
+                    <p class="mt-1 text-sm font-medium text-gray-800">{{ feature.initiative_title || '—' }}</p>
                 </div>
                 <div>
                     <p class="text-xs font-semibold uppercase tracking-wide text-gray-400">Deadline</p>
@@ -149,6 +187,12 @@ function formatDate(d) {
                     <p class="text-xs font-semibold uppercase tracking-wide text-gray-400">Est. Hours</p>
                     <p class="mt-1 text-sm font-medium text-gray-800">{{ feature.estimated_hours ? feature.estimated_hours + 'h' : '—' }}</p>
                 </div>
+            </div>
+
+            <!-- Business Impact -->
+            <div v-if="feature.business_impact && !editMode" class="mt-4 border-t border-gray-100 pt-4">
+                <p class="text-xs font-semibold uppercase tracking-wide text-gray-400">Business Impact</p>
+                <p class="mt-1 text-sm text-gray-700 whitespace-pre-wrap leading-relaxed">{{ feature.business_impact }}</p>
             </div>
 
             <!-- Description -->
@@ -197,8 +241,48 @@ function formatDate(d) {
                             </select>
                         </div>
                         <div>
+                            <label class="mb-1 block text-sm font-medium text-gray-700">Initiative</label>
+                            <select v-model="form.initiative_id" class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#5e16bd] focus:ring-1 focus:ring-[#5e16bd] outline-none">
+                                <option value="">No initiative</option>
+                                <option v-for="i in initiatives" :key="i.id" :value="i.id">{{ i.title }}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="mb-1 block text-sm font-medium text-gray-700">Origin</label>
+                            <select v-model="form.origin_type" class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#5e16bd] focus:ring-1 focus:ring-[#5e16bd] outline-none">
+                                <option value="">Not specified</option>
+                                <option value="request">Request</option>
+                                <option value="initiative">Initiative</option>
+                                <option value="tech_debt">Tech Debt</option>
+                                <option value="bug">Bug</option>
+                                <option value="idea">Idea</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="mb-1 block text-sm font-medium text-gray-700">Rollout State</label>
+                            <select v-model="form.rollout_state" class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#5e16bd] focus:ring-1 focus:ring-[#5e16bd] outline-none">
+                                <option value="">Not set</option>
+                                <option value="internal">Internal</option>
+                                <option value="beta_pilot">Beta / Pilot</option>
+                                <option value="gradual_ga">Gradual GA</option>
+                                <option value="full_ga">Full GA</option>
+                                <option value="sunset">Sunset</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
                             <label class="mb-1 block text-sm font-medium text-gray-700">Assign To</label>
                             <select v-model="form.assigned_to" class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#5e16bd] focus:ring-1 focus:ring-[#5e16bd] outline-none">
+                                <option value="">Unassigned</option>
+                                <option v-for="m in teamMembers" :key="m.id" :value="m.id">{{ m.name }}</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="mb-1 block text-sm font-medium text-gray-700">QA Owner</label>
+                            <select v-model="form.qa_owner_id" class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#5e16bd] focus:ring-1 focus:ring-[#5e16bd] outline-none">
                                 <option value="">Unassigned</option>
                                 <option v-for="m in teamMembers" :key="m.id" :value="m.id">{{ m.name }}</option>
                             </select>
@@ -213,6 +297,11 @@ function formatDate(d) {
                             <label class="mb-1 block text-sm font-medium text-gray-700">Est. Hours</label>
                             <input v-model.number="form.estimated_hours" type="number" step="0.5" min="0" class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#5e16bd] focus:ring-1 focus:ring-[#5e16bd] outline-none" />
                         </div>
+                    </div>
+                    <div>
+                        <label class="mb-1 block text-sm font-medium text-gray-700">Business Impact</label>
+                        <textarea v-model="form.business_impact" rows="2" placeholder="Revenue impact, user value, strategic importance..."
+                            class="block w-full resize-none rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#5e16bd] focus:ring-1 focus:ring-[#5e16bd] outline-none" />
                     </div>
                     <div>
                         <label class="mb-1 block text-sm font-medium text-gray-700">Description</label>

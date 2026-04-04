@@ -26,7 +26,7 @@ class PmsRequest extends Model
         'urgency',
         'requested_by',
         'demand_count',
-        'expected_revenue_impact',
+        'revenue_impact',
         'status',
         'linked_feature_id',
         'tenant_id',
@@ -39,7 +39,7 @@ class PmsRequest extends Model
             'urgency' => RequestUrgency::class,
             'status' => RequestStatus::class,
             'demand_count' => 'integer',
-            'expected_revenue_impact' => 'decimal:2',
+            'revenue_impact' => 'decimal:2',
         ];
     }
 

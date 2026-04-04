@@ -34,12 +34,28 @@ class CommentController extends Controller
     }
 
     /**
-     * Store a new comment.
+     * Store a new comment. Extracts @mentions from body.
      */
     public function store(StoreCommentRequest $request): JsonResponse
     {
         $data = $request->validated();
         $data['user_id'] = auth()->id();
+
+        // Extract @mentions from body
+        preg_match_all('/@([\w.]+)/', $data['body'] ?? '', $matches);
+        if (!empty($matches[1])) {
+            $mentionedIds = DB::table('team_members')
+                ->whereIn('name', $matches[1])
+                ->orWhere(function ($q) use ($matches) {
+                    // Also match by first name or slug-style names
+                    foreach ($matches[1] as $mention) {
+                        $q->orWhere('name', 'LIKE', $mention . '%');
+                    }
+                })
+                ->pluck('id')
+                ->toArray();
+            $data['mentions'] = json_encode(array_values(array_unique($mentionedIds)));
+        }
 
         $id = $this->commentRepository->create($data);
 
@@ -50,5 +66,23 @@ class CommentController extends Controller
             ->first();
 
         return response()->json($comment, 201);
+    }
+
+    /**
+     * Search team members for @mention autocomplete.
+     */
+    public function mentionSearch(Request $request): JsonResponse
+    {
+        $q = $request->input('q', '');
+
+        $members = DB::table('team_members')
+            ->where('is_active', true)
+            ->where('name', 'LIKE', '%' . $q . '%')
+            ->select('id', 'name', 'role')
+            ->orderBy('name')
+            ->limit(10)
+            ->get();
+
+        return response()->json($members);
     }
 }

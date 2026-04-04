@@ -2,8 +2,11 @@
 
 namespace App\Models;
 
+use App\Enums\FeatureOriginType;
+use App\Enums\FeaturePriority;
+use App\Enums\FeatureRolloutState;
 use App\Enums\FeatureStatus;
-use App\Enums\TaskPriority;
+use App\Enums\FeatureType;
 use App\Traits\Auditable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -39,9 +42,12 @@ class Feature extends Model
     protected function casts(): array
     {
         return [
-            'status' => FeatureStatus::class,
-            'priority' => TaskPriority::class,
-            'deadline' => 'date',
+            'status'        => FeatureStatus::class,
+            'type'          => FeatureType::class,
+            'priority'      => FeaturePriority::class,
+            'origin_type'   => FeatureOriginType::class,
+            'rollout_state' => FeatureRolloutState::class,
+            'deadline'      => 'date',
             'estimated_hours' => 'decimal:2',
         ];
     }
@@ -51,13 +57,33 @@ class Feature extends Model
         return $this->belongsTo(Module::class);
     }
 
+    public function initiative(): BelongsTo
+    {
+        return $this->belongsTo(Initiative::class);
+    }
+
     public function assignedTo(): BelongsTo
     {
         return $this->belongsTo(TeamMember::class, 'assigned_to');
     }
 
+    public function qaOwner(): BelongsTo
+    {
+        return $this->belongsTo(TeamMember::class, 'qa_owner_id');
+    }
+
     public function requests(): HasMany
     {
         return $this->hasMany(PmsRequest::class, 'linked_feature_id');
+    }
+
+    public function comments()
+    {
+        return $this->morphMany(Comment::class, 'commentable');
+    }
+
+    public function documents()
+    {
+        return $this->morphMany(Document::class, 'documentable');
     }
 }

@@ -14,9 +14,10 @@ const props = defineProps({
 });
 
 const localFilters = ref({
-    status:    props.filters.status    || '',
-    priority:  props.filters.priority  || '',
-    module_id: props.filters.module_id || '',
+    status:      props.filters.status      || '',
+    priority:    props.filters.priority    || '',
+    module_id:   props.filters.module_id   || '',
+    origin_type: props.filters.origin_type || '',
 });
 
 function applyFilters() {
@@ -26,9 +27,17 @@ function applyFilters() {
 }
 
 function clearFilters() {
-    localFilters.value = { status: '', priority: '', module_id: '' };
+    localFilters.value = { status: '', priority: '', module_id: '', origin_type: '' };
     router.get('/features', {}, { preserveState: true, preserveScroll: true });
 }
+
+const originConfig = {
+    request:    { label: 'Request',    classes: 'bg-blue-100 text-blue-700' },
+    initiative: { label: 'Initiative', classes: 'bg-purple-100 text-purple-700' },
+    tech_debt:  { label: 'Tech Debt',  classes: 'bg-orange-100 text-orange-700' },
+    bug:        { label: 'Bug',        classes: 'bg-red-100 text-red-600' },
+    idea:       { label: 'Idea',       classes: 'bg-teal-100 text-teal-700' },
+};
 
 const statusConfig = {
     backlog:           { classes: 'bg-gray-100 text-gray-600',       label: 'Backlog' },
@@ -102,6 +111,13 @@ function formatDate(dateStr) {
                         <option v-for="m in modules" :key="m.id" :value="m.id">{{ m.name }}</option>
                     </select>
                 </div>
+                <div class="min-w-[140px]">
+                    <label class="mb-1 block text-xs font-semibold uppercase tracking-wide text-gray-400">Origin</label>
+                    <select v-model="localFilters.origin_type" class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#5e16bd] focus:ring-1 focus:ring-[#5e16bd] outline-none">
+                        <option value="">All Origins</option>
+                        <option v-for="(cfg, key) in originConfig" :key="key" :value="key">{{ cfg.label }}</option>
+                    </select>
+                </div>
                 <div class="flex gap-2">
                     <button @click="applyFilters" class="rounded-lg bg-[#5e16bd] px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-[#4c12a1] transition-colors">
                         Apply
@@ -124,6 +140,7 @@ function formatDate(dateStr) {
                             <th class="px-5 py-3.5">Assignee</th>
                             <th class="px-5 py-3.5">Status</th>
                             <th class="px-5 py-3.5">Priority</th>
+                            <th class="px-5 py-3.5">Origin</th>
                             <th class="px-5 py-3.5 text-right">Requests</th>
                             <th class="px-5 py-3.5">Deadline</th>
                         </tr>
@@ -158,11 +175,18 @@ function formatDate(dateStr) {
                             <td class="px-5 py-3.5">
                                 <PriorityBadge :priority="feature.priority" />
                             </td>
+                            <td class="px-5 py-3.5">
+                                <span v-if="feature.origin_type" :class="originConfig[feature.origin_type]?.classes || 'bg-gray-100 text-gray-600'"
+                                      class="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium">
+                                    {{ originConfig[feature.origin_type]?.label || feature.origin_type }}
+                                </span>
+                                <span v-else class="text-gray-300">—</span>
+                            </td>
                             <td class="px-5 py-3.5 text-right font-medium text-gray-700">{{ feature.request_count ?? 0 }}</td>
                             <td class="px-5 py-3.5 text-gray-400">{{ formatDate(feature.deadline) }}</td>
                         </tr>
                         <tr v-if="!features.data?.length">
-                            <td colspan="7" class="px-5 py-12 text-center">
+                            <td colspan="8" class="px-5 py-12 text-center">
                                 <svg class="mx-auto mb-3 h-10 w-10 text-gray-200" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                                 </svg>

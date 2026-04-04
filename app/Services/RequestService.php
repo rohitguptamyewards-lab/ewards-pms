@@ -85,15 +85,16 @@ class RequestService
             case 'accept':
                 // Create a Feature from the request data
                 $featureId = $this->featureRepository->create([
-                    'title'       => $request->title,
-                    'description' => $request->description,
-                    'type'        => $request->type,
-                    'status'      => 'backlog',
+                    'title'        => $request->title,
+                    'description'  => $request->description,
+                    'type'         => $request->type,
+                    'origin_type'  => 'request',
+                    'status'       => 'backlog',
                 ]);
 
-                // Link request to the new feature and update status
+                // Link request to the new feature and update status to 'linked'
                 $this->requestRepository->update($requestId, [
-                    'status'            => 'accepted',
+                    'status'            => 'linked',
                     'linked_feature_id' => $featureId,
                 ]);
                 break;

@@ -21,8 +21,16 @@ class Comment extends Model
         'commentable_id',
         'user_id',
         'body',
+        'mentions',
         'parent_id',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'mentions' => 'array',
+        ];
+    }
 
     public function commentable(): MorphTo
     {

@@ -85,10 +85,10 @@ function getType(t)    { return typeConfig[t]    || { classes: 'bg-gray-100 text
                         <option value="">All Statuses</option>
                         <option value="received">Received</option>
                         <option value="under_review">Under Review</option>
-                        <option value="accepted">Accepted</option>
+                        <option value="linked">Linked</option>
                         <option value="deferred">Deferred</option>
                         <option value="rejected">Rejected</option>
-                        <option value="completed">Completed</option>
+                        <option value="fulfilled">Fulfilled</option>
                     </select>
                 </div>
                 <div class="min-w-[140px]">
