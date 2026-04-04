@@ -28,7 +28,7 @@
             </div>
             <div class="body">
                 <h2>{{ $heading }}</h2>
-                <p>{!! nl2br(e($body)) !!}</p>
+                <p>{!! preg_replace('/(https?:\/\/[^\s<]+)/', '<a href="$1" style="color:#4e1a77;text-decoration:underline;">$1</a>', nl2br(e($body))) !!}</p>
                 @if($actionUrl && $actionLabel)
                     <p style="text-align: center; margin-top: 24px;">
                         <a href="{{ $actionUrl }}" class="btn">{{ $actionLabel }}</a>

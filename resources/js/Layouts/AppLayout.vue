@@ -1,6 +1,8 @@
 <script setup>
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import { Link, usePage, router } from '@inertiajs/vue3';
+
+const sidebarOpen = ref(false);
 
 const page  = usePage();
 const user  = computed(() => page.props.auth?.user);
@@ -243,29 +245,33 @@ function logout() {
 
 <template>
     <div class="flex h-screen overflow-hidden bg-[#f8f4fa]">
+        <!-- Mobile overlay -->
+        <div v-if="sidebarOpen" class="fixed inset-0 z-30 bg-black/50 lg:hidden" @click="sidebarOpen = false" />
+
         <!-- Sidebar -->
-        <aside class="flex w-64 flex-shrink-0 flex-col border-r border-gray-200 bg-white">
-            <!-- Logo -->
-            <div class="flex h-16 items-center gap-2 px-5">
-                <!-- eWards logo: E in dark, W in orange, ARDS in dark -->
+        <aside :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'" class="fixed inset-y-0 left-0 z-40 flex w-64 flex-col border-r border-gray-200 bg-white transition-transform duration-200 lg:static lg:translate-x-0">
+            <!-- Logo + close btn -->
+            <div class="flex h-16 items-center justify-between px-5">
                 <svg class="h-7" viewBox="0 0 140 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <text x="0" y="24" font-family="Arial, Helvetica, sans-serif" font-size="26" font-weight="700" letter-spacing="-0.5">
                         <tspan fill="#2c0f47">E</tspan><tspan fill="#f97316">W</tspan><tspan fill="#2c0f47">ARDS</tspan>
                     </text>
                 </svg>
+                <button @click="sidebarOpen = false" class="rounded-md p-1 text-gray-400 hover:text-gray-600 lg:hidden">
+                    <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                </button>
             </div>
 
             <!-- Nav -->
             <nav class="mt-1 flex-1 overflow-y-auto px-2 pb-3">
                 <template v-for="item in navItems" :key="item.href || item.label">
-                    <!-- Section header -->
                     <p v-if="item.header" class="mb-1 mt-5 px-4 text-[10px] font-bold uppercase tracking-widest text-gray-400">
                         {{ item.label }}
                     </p>
-                    <!-- Nav link -->
                     <Link
                         v-else
                         :href="item.href"
+                        @click="sidebarOpen = false"
                         :class="[
                             isActive(item.href)
                                 ? 'text-[#4e1a77] font-semibold border-l-[3px] border-[#4e1a77] bg-[#f8f4fa]'
@@ -314,11 +320,19 @@ function logout() {
         <!-- Main -->
         <div class="flex flex-1 flex-col overflow-hidden">
             <!-- Topbar -->
-            <header class="flex h-16 shrink-0 items-center justify-between border-b border-gray-200 bg-white px-6">
+            <header class="flex h-16 shrink-0 items-center justify-between border-b border-gray-200 bg-white px-4 sm:px-6">
                 <div class="flex items-center gap-3">
-                    <!-- Hamburger icon -->
-                    <svg class="h-5 w-5 text-gray-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                    <!-- Hamburger - opens sidebar on mobile -->
+                    <button @click="sidebarOpen = true" class="rounded-md p-1 text-gray-500 hover:text-gray-700 lg:hidden">
+                        <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                        </svg>
+                    </button>
+                    <!-- Logo on mobile topbar -->
+                    <svg class="h-5 lg:hidden" viewBox="0 0 140 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <text x="0" y="24" font-family="Arial, Helvetica, sans-serif" font-size="26" font-weight="700" letter-spacing="-0.5">
+                            <tspan fill="#2c0f47">E</tspan><tspan fill="#f97316">W</tspan><tspan fill="#2c0f47">ARDS</tspan>
+                        </text>
                     </svg>
                 </div>
                 <div class="flex items-center gap-3">
@@ -331,14 +345,11 @@ function logout() {
                         <p class="text-sm font-medium text-gray-800">{{ user?.name }}</p>
                         <p class="text-xs text-gray-400">{{ user?.email }}</p>
                     </div>
-                    <svg class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
-                    </svg>
                 </div>
             </header>
 
             <!-- Content -->
-            <main class="flex-1 overflow-y-auto p-6">
+            <main class="flex-1 overflow-y-auto p-3 sm:p-6">
                 <slot />
             </main>
         </div>
