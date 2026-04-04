@@ -87,7 +87,7 @@ class PromptTemplateRepository
 
         if (!empty($filters['tags']) && is_array($filters['tags'])) {
             foreach ($filters['tags'] as $tag) {
-                $query->whereRaw('JSON_CONTAINS(prompt_templates.tags, ?)', [json_encode($tag)]);
+                $query->whereRaw('prompt_templates.tags::jsonb @> ?::jsonb', [json_encode([$tag])]);
             }
         }
 
