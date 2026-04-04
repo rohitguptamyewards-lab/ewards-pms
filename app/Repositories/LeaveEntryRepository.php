@@ -24,7 +24,7 @@ class LeaveEntryRepository
             $query->where('leave_entries.leave_type', $filters['leave_type']);
         }
         if (!empty($filters['month'])) {
-            $query->whereRaw("DATE_FORMAT(leave_entries.leave_date, '%Y-%m') = ?", [$filters['month']]);
+            $query->whereRaw("TO_CHAR(leave_entries.leave_date, 'YYYY-MM') = ?", [$filters['month']]);
         }
 
         return $query->orderByDesc('leave_entries.leave_date')->paginate($perPage);

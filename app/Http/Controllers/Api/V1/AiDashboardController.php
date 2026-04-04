@@ -53,8 +53,8 @@ class AiDashboardController extends Controller
             ->select(
                 'tm.id as member_id', 'tm.name as member_name',
                 DB::raw('COUNT(*) as usage_count'),
-                DB::raw("GROUP_CONCAT(DISTINCT at.name) as tools_used"),
-                DB::raw("GROUP_CONCAT(DISTINCT aul.capability) as capabilities_used")
+                DB::raw("STRING_AGG(DISTINCT at.name, ',') as tools_used"),
+                DB::raw("STRING_AGG(DISTINCT aul.capability, ',') as capabilities_used")
             )
             ->orderByDesc('usage_count')
             ->get();

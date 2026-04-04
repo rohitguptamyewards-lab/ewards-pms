@@ -22,8 +22,8 @@ class ProjectRepository
                 'projects.*',
                 'team_members.name as owner_name',
                 DB::raw('(SELECT COUNT(*) FROM tasks WHERE tasks.project_id = projects.id AND tasks.deleted_at IS NULL) as task_count'),
-                DB::raw('(SELECT IFNULL(ROUND(SUM(CASE WHEN tasks.status = \'done\' THEN 1 ELSE 0 END) * 100.0 / NULLIF(COUNT(*), 0), 2), 0) FROM tasks WHERE tasks.project_id = projects.id AND tasks.deleted_at IS NULL) as progress'),
-                DB::raw('(SELECT IFNULL(SUM(hours_spent), 0) FROM work_logs WHERE work_logs.project_id = projects.id AND work_logs.deleted_at IS NULL) as total_effort')
+                DB::raw('(SELECT COALESCE(ROUND(SUM(CASE WHEN tasks.status = \'done\' THEN 1 ELSE 0 END) * 100.0 / NULLIF(COUNT(*), 0), 2), 0) FROM tasks WHERE tasks.project_id = projects.id AND tasks.deleted_at IS NULL) as progress'),
+                DB::raw('(SELECT COALESCE(SUM(hours_spent), 0) FROM work_logs WHERE work_logs.project_id = projects.id AND work_logs.deleted_at IS NULL) as total_effort')
             )
             ->whereNull('projects.deleted_at');
 
@@ -53,7 +53,7 @@ class ProjectRepository
                 'team_members.name as owner_name',
                 DB::raw('(SELECT COUNT(*) FROM tasks WHERE tasks.project_id = projects.id AND tasks.deleted_at IS NULL) as task_count'),
                 DB::raw('(SELECT COUNT(*) FROM tasks WHERE tasks.project_id = projects.id AND tasks.status = \'done\' AND tasks.deleted_at IS NULL) as done_task_count'),
-                DB::raw('(SELECT IFNULL(SUM(hours_spent), 0) FROM work_logs WHERE work_logs.project_id = projects.id AND work_logs.deleted_at IS NULL) as total_effort')
+                DB::raw('(SELECT COALESCE(SUM(hours_spent), 0) FROM work_logs WHERE work_logs.project_id = projects.id AND work_logs.deleted_at IS NULL) as total_effort')
             )
             ->where('projects.id', $id)
             ->whereNull('projects.deleted_at')
@@ -83,7 +83,7 @@ class ProjectRepository
                 'projects.*',
                 'team_members.name as owner_name',
                 DB::raw('(SELECT COUNT(*) FROM tasks WHERE tasks.project_id = projects.id AND tasks.deleted_at IS NULL) as task_count'),
-                DB::raw('(SELECT IFNULL(ROUND(SUM(CASE WHEN tasks.status = \'done\' THEN 1 ELSE 0 END) * 100.0 / NULLIF(COUNT(*), 0), 2), 0) FROM tasks WHERE tasks.project_id = projects.id AND tasks.deleted_at IS NULL) as progress')
+                DB::raw('(SELECT COALESCE(ROUND(SUM(CASE WHEN tasks.status = \'done\' THEN 1 ELSE 0 END) * 100.0 / NULLIF(COUNT(*), 0), 2), 0) FROM tasks WHERE tasks.project_id = projects.id AND tasks.deleted_at IS NULL) as progress')
             )
             ->whereNull('projects.deleted_at')
             ->where(function ($q) use ($userId) {

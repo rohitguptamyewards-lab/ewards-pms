@@ -17,5 +17,14 @@ php artisan view:cache
 # ── Run pending migrations ──
 php artisan migrate --force
 
+# ── Fix permissions after cache commands (ran as root, Apache runs as www-data) ──
+chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
+
+# ── Enable PHP error logging to stderr (visible in Render logs) ──
+echo "error_log = /dev/stderr" >> /usr/local/etc/php/conf.d/docker-errors.ini
+echo "log_errors = On" >> /usr/local/etc/php/conf.d/docker-errors.ini
+echo "display_errors = Off" >> /usr/local/etc/php/conf.d/docker-errors.ini
+
 echo "=== Ready — starting Apache on port ${PORT} ==="
 exec apache2-foreground

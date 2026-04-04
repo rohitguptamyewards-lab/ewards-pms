@@ -79,8 +79,8 @@ class TeamMemberController extends Controller
                 'projects.priority',
                 'projects.end_date',
                 'owners.name as owner_name',
-                DB::raw("(SELECT IFNULL(SUM(wl.hours_spent), 0) FROM work_logs wl WHERE wl.project_id = projects.id AND wl.user_id = {$id} AND wl.deleted_at IS NULL) as my_hours"),
-                DB::raw("(SELECT IFNULL(ROUND(SUM(CASE WHEN t.status = 'done' THEN 1 ELSE 0 END) * 100.0 / NULLIF(COUNT(*), 0), 1), 0) FROM tasks t WHERE t.project_id = projects.id AND t.deleted_at IS NULL) as progress")
+                DB::raw("(SELECT COALESCE(SUM(wl.hours_spent), 0) FROM work_logs wl WHERE wl.project_id = projects.id AND wl.user_id = {$id} AND wl.deleted_at IS NULL) as my_hours"),
+                DB::raw("(SELECT COALESCE(ROUND(SUM(CASE WHEN t.status = 'done' THEN 1 ELSE 0 END) * 100.0 / NULLIF(COUNT(*), 0), 1), 0) FROM tasks t WHERE t.project_id = projects.id AND t.deleted_at IS NULL) as progress")
             )
             ->where('project_members.user_id', $id)
             ->whereNull('projects.deleted_at')
