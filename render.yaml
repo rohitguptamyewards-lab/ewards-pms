@@ -49,8 +49,7 @@ services:
         sync: false
       - key: MAIL_PASSWORD
         sync: false
-      - key: MAIL_SCHEME
-        value: tls
+      # Port 587 auto-negotiates STARTTLS; no explicit scheme needed
       - key: MAIL_FROM_ADDRESS
         sync: false
       - key: MAIL_FROM_NAME
