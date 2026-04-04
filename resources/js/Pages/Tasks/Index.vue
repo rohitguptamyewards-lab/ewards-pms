@@ -48,46 +48,46 @@ function isOverdue(dateStr, status) {
     <Head title="Tasks" />
 
     <div>
-        <div class="mb-6 flex items-center justify-between">
+        <div class="mb-4 flex items-center justify-between sm:mb-6">
             <div>
-                <h1 class="text-2xl font-bold text-gray-900">Tasks</h1>
+                <h1 class="text-xl font-bold text-gray-900 sm:text-2xl">Tasks</h1>
                 <p class="mt-0.5 text-sm text-gray-500">{{ tasks.length }} task{{ tasks.length !== 1 ? 's' : '' }}</p>
             </div>
         </div>
 
         <!-- Filters -->
         <div class="mb-5 rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
-            <div class="flex flex-wrap items-end gap-3">
-                <div class="min-w-[160px]">
+            <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:flex lg:flex-wrap lg:items-end">
+                <div>
                     <label class="mb-1 block text-xs font-semibold uppercase tracking-wide text-gray-400">Project</label>
                     <select v-model="localFilters.project_id" class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#4e1a77] focus:ring-1 focus:ring-[#4e1a77] outline-none">
                         <option value="">All Projects</option>
                         <option v-for="p in projects" :key="p.id" :value="p.id">{{ p.name }}</option>
                     </select>
                 </div>
-                <div class="min-w-[160px]">
+                <div>
                     <label class="mb-1 block text-xs font-semibold uppercase tracking-wide text-gray-400">Assignee</label>
                     <select v-model="localFilters.user_id" class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#4e1a77] focus:ring-1 focus:ring-[#4e1a77] outline-none">
                         <option value="">All Users</option>
                         <option v-for="m in teamMembers" :key="m.id" :value="m.id">{{ m.name }}</option>
                     </select>
                 </div>
-                <div class="min-w-[140px]">
+                <div>
                     <label class="mb-1 block text-xs font-semibold uppercase tracking-wide text-gray-400">Status</label>
                     <select v-model="localFilters.status" class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#4e1a77] focus:ring-1 focus:ring-[#4e1a77] outline-none">
                         <option value="">All Statuses</option>
                         <option v-for="s in statuses" :key="s" :value="s">{{ s.replace('_', ' ').replace(/\b\w/g, c => c.toUpperCase()) }}</option>
                     </select>
                 </div>
-                <div class="min-w-[140px]">
+                <div>
                     <label class="mb-1 block text-xs font-semibold uppercase tracking-wide text-gray-400">Deadline Before</label>
                     <input v-model="localFilters.deadline_to" type="date" class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#4e1a77] focus:ring-1 focus:ring-[#4e1a77] outline-none" />
                 </div>
-                <div class="flex gap-2">
-                    <button @click="applyFilters" class="rounded-lg bg-[#4e1a77] px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-[#3d1560] transition-colors">
+                <div class="flex gap-2 sm:col-span-2 lg:col-span-1">
+                    <button @click="applyFilters" class="flex-1 rounded-lg bg-[#4e1a77] px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-[#3d1560] transition-colors sm:flex-none">
                         Apply
                     </button>
-                    <button @click="clearFilters" class="rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors">
+                    <button @click="clearFilters" class="flex-1 rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors sm:flex-none">
                         Clear
                     </button>
                 </div>

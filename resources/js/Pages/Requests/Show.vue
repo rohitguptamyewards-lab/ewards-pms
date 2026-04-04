@@ -128,7 +128,7 @@ async function saveFeatureLink() {
             </div>
 
             <!-- Meta grid -->
-            <div class="mt-5 grid grid-cols-2 gap-4 border-t border-gray-100 pt-5 sm:grid-cols-4">
+            <div class="mt-5 grid grid-cols-1 gap-4 border-t border-gray-100 pt-5 sm:grid-cols-2 lg:grid-cols-4">
                 <div>
                     <p class="text-xs font-semibold uppercase tracking-wide text-gray-400">Merchant</p>
                     <p class="mt-1 text-sm font-medium text-gray-800">{{ request.merchant?.name || request.merchant_name || '—' }}</p>

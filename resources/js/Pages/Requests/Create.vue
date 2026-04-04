@@ -180,7 +180,7 @@ async function mergeTo(targetId) {
                 </div>
 
                 <!-- Type + Urgency row -->
-                <div class="grid grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <div>
                         <label for="type" class="mb-1.5 block text-sm font-semibold text-gray-700">
                             Type <span class="text-red-500">*</span>

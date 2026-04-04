@@ -128,7 +128,7 @@ const taskCounts = computed(() => ({
         </div>
 
         <!-- Tabs -->
-        <div class="mt-6 border-b border-gray-200">
+        <div class="mt-6 overflow-x-auto border-b border-gray-200">
             <nav class="-mb-px flex gap-1">
                 <button
                     v-for="tab in tabs"

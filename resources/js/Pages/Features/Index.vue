@@ -62,9 +62,9 @@ function formatDate(dateStr) {
     <Head title="Features" />
 
     <div>
-        <div class="mb-6 flex items-center justify-between">
+        <div class="mb-4 flex flex-col gap-3 sm:mb-6 sm:flex-row sm:items-center sm:justify-between">
             <div>
-                <h1 class="text-2xl font-bold text-gray-900">Features</h1>
+                <h1 class="text-xl font-bold text-gray-900 sm:text-2xl">Features</h1>
                 <p class="mt-0.5 text-sm text-gray-500">Product feature pipeline</p>
             </div>
             <Link
@@ -81,8 +81,8 @@ function formatDate(dateStr) {
 
         <!-- Filters -->
         <div class="mb-5 rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
-            <div class="flex flex-wrap items-end gap-3">
-                <div class="min-w-[160px]">
+            <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:flex lg:flex-wrap lg:items-end">
+                <div>
                     <label class="mb-1 block text-xs font-semibold uppercase tracking-wide text-gray-400">Status</label>
                     <select v-model="localFilters.status" class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#4e1a77] focus:ring-1 focus:ring-[#4e1a77] outline-none">
                         <option value="">All Statuses</option>
@@ -94,7 +94,7 @@ function formatDate(dateStr) {
                         <option value="released">Released</option>
                     </select>
                 </div>
-                <div class="min-w-[130px]">
+                <div>
                     <label class="mb-1 block text-xs font-semibold uppercase tracking-wide text-gray-400">Priority</label>
                     <select v-model="localFilters.priority" class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#4e1a77] focus:ring-1 focus:ring-[#4e1a77] outline-none">
                         <option value="">All Priorities</option>
@@ -104,25 +104,25 @@ function formatDate(dateStr) {
                         <option value="p3">P3 · Low</option>
                     </select>
                 </div>
-                <div v-if="modules.length" class="min-w-[160px]">
+                <div v-if="modules.length">
                     <label class="mb-1 block text-xs font-semibold uppercase tracking-wide text-gray-400">Module</label>
                     <select v-model="localFilters.module_id" class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#4e1a77] focus:ring-1 focus:ring-[#4e1a77] outline-none">
                         <option value="">All Modules</option>
                         <option v-for="m in modules" :key="m.id" :value="m.id">{{ m.name }}</option>
                     </select>
                 </div>
-                <div class="min-w-[140px]">
+                <div>
                     <label class="mb-1 block text-xs font-semibold uppercase tracking-wide text-gray-400">Origin</label>
                     <select v-model="localFilters.origin_type" class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#4e1a77] focus:ring-1 focus:ring-[#4e1a77] outline-none">
                         <option value="">All Origins</option>
                         <option v-for="(cfg, key) in originConfig" :key="key" :value="key">{{ cfg.label }}</option>
                     </select>
                 </div>
-                <div class="flex gap-2">
-                    <button @click="applyFilters" class="rounded-lg bg-[#4e1a77] px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-[#3d1560] transition-colors">
+                <div class="flex gap-2 sm:col-span-2 lg:col-span-1">
+                    <button @click="applyFilters" class="flex-1 rounded-lg bg-[#4e1a77] px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-[#3d1560] transition-colors sm:flex-none">
                         Apply
                     </button>
-                    <button @click="clearFilters" class="rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors">
+                    <button @click="clearFilters" class="flex-1 rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors sm:flex-none">
                         Clear
                     </button>
                 </div>

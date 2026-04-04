@@ -59,9 +59,9 @@ function getType(t)    { return typeConfig[t]    || { classes: 'bg-gray-100 text
     <Head title="Requests" />
 
     <div>
-        <div class="mb-6 flex items-center justify-between">
+        <div class="mb-4 flex flex-col gap-3 sm:mb-6 sm:flex-row sm:items-center sm:justify-between">
             <div>
-                <h1 class="text-2xl font-bold text-gray-900">Requests</h1>
+                <h1 class="text-xl font-bold text-gray-900 sm:text-2xl">Requests</h1>
                 <p class="mt-0.5 text-sm text-gray-500">{{ requests.data?.length ?? 0 }} request{{ (requests.data?.length ?? 0) !== 1 ? 's' : '' }}</p>
             </div>
             <Link
@@ -78,8 +78,8 @@ function getType(t)    { return typeConfig[t]    || { classes: 'bg-gray-100 text
 
         <!-- Filters -->
         <div class="mb-5 rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
-            <div class="flex flex-wrap items-end gap-3">
-                <div class="min-w-[150px]">
+            <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:flex lg:flex-wrap lg:items-end">
+                <div>
                     <label class="mb-1 block text-xs font-semibold uppercase tracking-wide text-gray-400">Status</label>
                     <select v-model="localFilters.status" class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#4e1a77] focus:ring-1 focus:ring-[#4e1a77] outline-none">
                         <option value="">All Statuses</option>
@@ -92,7 +92,7 @@ function getType(t)    { return typeConfig[t]    || { classes: 'bg-gray-100 text
                         <option value="fulfilled">Fulfilled</option>
                     </select>
                 </div>
-                <div class="min-w-[140px]">
+                <div>
                     <label class="mb-1 block text-xs font-semibold uppercase tracking-wide text-gray-400">Type</label>
                     <select v-model="localFilters.type" class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#4e1a77] focus:ring-1 focus:ring-[#4e1a77] outline-none">
                         <option value="">All Types</option>
@@ -101,7 +101,7 @@ function getType(t)    { return typeConfig[t]    || { classes: 'bg-gray-100 text
                         <option value="improvement">Improvement</option>
                     </select>
                 </div>
-                <div class="min-w-[160px]">
+                <div>
                     <label class="mb-1 block text-xs font-semibold uppercase tracking-wide text-gray-400">Urgency</label>
                     <select v-model="localFilters.urgency" class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#4e1a77] focus:ring-1 focus:ring-[#4e1a77] outline-none">
                         <option value="">All Urgency</option>
@@ -110,7 +110,7 @@ function getType(t)    { return typeConfig[t]    || { classes: 'bg-gray-100 text
                         <option value="nice_to_have">Nice to Have</option>
                     </select>
                 </div>
-                <div class="min-w-[200px] flex-1">
+                <div class="sm:col-span-2 lg:col-span-1 lg:flex-1 lg:min-w-[180px]">
                     <label class="mb-1 block text-xs font-semibold uppercase tracking-wide text-gray-400">Search</label>
                     <input
                         v-model="localFilters.search"
@@ -119,11 +119,11 @@ function getType(t)    { return typeConfig[t]    || { classes: 'bg-gray-100 text
                         class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#4e1a77] focus:ring-1 focus:ring-[#4e1a77] outline-none"
                     />
                 </div>
-                <div class="flex gap-2">
-                    <button @click="applyFilters" class="rounded-lg bg-[#4e1a77] px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-[#3d1560] transition-colors">
+                <div class="flex gap-2 sm:col-span-2 lg:col-span-1">
+                    <button @click="applyFilters" class="flex-1 rounded-lg bg-[#4e1a77] px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-[#3d1560] transition-colors sm:flex-none">
                         Apply
                     </button>
-                    <button @click="clearFilters" class="rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors">
+                    <button @click="clearFilters" class="flex-1 rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors sm:flex-none">
                         Clear
                     </button>
                 </div>

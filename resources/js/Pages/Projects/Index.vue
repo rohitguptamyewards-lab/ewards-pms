@@ -26,9 +26,9 @@ function formatDate(dateStr) {
 
     <div>
         <!-- Page header -->
-        <div class="mb-6 flex items-center justify-between">
+        <div class="mb-4 flex flex-col gap-3 sm:mb-6 sm:flex-row sm:items-center sm:justify-between">
             <div>
-                <h1 class="text-2xl font-bold text-gray-900">Projects</h1>
+                <h1 class="text-xl font-bold text-gray-900 sm:text-2xl">Projects</h1>
                 <p class="mt-0.5 text-sm text-gray-500">{{ projects.data?.length ?? 0 }} project{{ (projects.data?.length ?? 0) !== 1 ? 's' : '' }}</p>
             </div>
             <Link
