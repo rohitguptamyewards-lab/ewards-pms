@@ -244,22 +244,22 @@ function logout() {
 <template>
     <div class="flex h-screen overflow-hidden bg-[#f8f4fa]">
         <!-- Sidebar -->
-        <aside class="flex w-64 flex-shrink-0 flex-col bg-[#2c0f47]">
+        <aside class="flex w-64 flex-shrink-0 flex-col border-r border-gray-200 bg-white">
             <!-- Logo -->
-            <div class="flex h-16 items-center gap-3 border-b border-white/10 px-5">
-                <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-[#4e1a77]">
-                    <svg class="h-5 w-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
-                    </svg>
-                </div>
-                <span class="text-base font-bold text-white tracking-tight">eWards PMS</span>
+            <div class="flex h-16 items-center gap-2 px-5">
+                <!-- eWards logo: E in dark, W in orange, ARDS in dark -->
+                <svg class="h-7" viewBox="0 0 140 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <text x="0" y="24" font-family="Arial, Helvetica, sans-serif" font-size="26" font-weight="700" letter-spacing="-0.5">
+                        <tspan fill="#2c0f47">E</tspan><tspan fill="#f97316">W</tspan><tspan fill="#2c0f47">ARDS</tspan>
+                    </text>
+                </svg>
             </div>
 
             <!-- Nav -->
-            <nav class="mt-3 flex-1 overflow-y-auto px-3 pb-3">
+            <nav class="mt-1 flex-1 overflow-y-auto px-2 pb-3">
                 <template v-for="item in navItems" :key="item.href || item.label">
                     <!-- Section header -->
-                    <p v-if="item.header" class="mb-1 mt-5 px-3 text-[10px] font-bold uppercase tracking-widest text-white/30">
+                    <p v-if="item.header" class="mb-1 mt-5 px-4 text-[10px] font-bold uppercase tracking-widest text-gray-400">
                         {{ item.label }}
                     </p>
                     <!-- Nav link -->
@@ -268,16 +268,19 @@ function logout() {
                         :href="item.href"
                         :class="[
                             isActive(item.href)
-                                ? 'bg-[#4e1a77] text-white shadow-sm border-l-3 border-[#f97316]'
-                                : 'text-white/60 hover:bg-[#3d1560] hover:text-white',
-                            item.indent ? 'pl-7 text-xs py-2' : 'text-sm py-2.5',
+                                ? 'text-[#4e1a77] font-semibold border-l-[3px] border-[#4e1a77] bg-[#f8f4fa]'
+                                : 'text-gray-600 hover:bg-gray-50 hover:text-[#4e1a77] border-l-[3px] border-transparent',
+                            item.indent ? 'pl-8 text-xs py-2' : 'text-sm py-2.5',
                         ]"
-                        class="flex items-center gap-3 rounded-lg px-3 font-medium transition-all duration-150"
+                        class="flex items-center gap-3 px-4 transition-all duration-150"
                     >
                         <svg
                             v-if="item.icon"
-                            class="h-4 w-4 flex-shrink-0"
-                            :class="item.indent ? 'h-3.5 w-3.5' : ''"
+                            :class="[
+                                isActive(item.href) ? 'text-[#4e1a77]' : 'text-gray-400',
+                                item.indent ? 'h-3.5 w-3.5' : 'h-[18px] w-[18px]',
+                            ]"
+                            class="flex-shrink-0"
                             fill="none"
                             stroke="currentColor"
                             stroke-width="2"
@@ -290,16 +293,16 @@ function logout() {
             </nav>
 
             <!-- User footer -->
-            <div class="border-t border-white/10 p-4">
+            <div class="border-t border-gray-200 p-4">
                 <div class="flex items-center gap-3">
-                    <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#4e1a77] text-sm font-bold text-white">
+                    <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#e8ddf0] text-sm font-bold text-[#4e1a77]">
                         {{ avatarInitial }}
                     </div>
                     <div class="min-w-0 flex-1">
-                        <p class="truncate text-sm font-medium text-white">{{ user?.name }}</p>
+                        <p class="truncate text-sm font-medium text-gray-800">{{ user?.name }}</p>
                         <p class="truncate text-xs text-gray-400">{{ roleLabel }}</p>
                     </div>
-                    <button @click="logout" class="shrink-0 rounded-md p-1.5 text-gray-400 hover:bg-white/10 hover:text-white transition-colors" title="Sign out">
+                    <button @click="logout" class="shrink-0 rounded-md p-1.5 text-gray-400 hover:bg-gray-100 hover:text-[#4e1a77] transition-colors" title="Sign out">
                         <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                         </svg>
@@ -311,18 +314,26 @@ function logout() {
         <!-- Main -->
         <div class="flex flex-1 flex-col overflow-hidden">
             <!-- Topbar -->
-            <header class="flex h-16 shrink-0 items-center justify-between border-b border-[#d9cce6] bg-white px-6 shadow-sm">
-                <div class="flex items-center gap-2 text-sm text-gray-500">
-                    <span class="font-semibold text-[#4e1a77]">eWards PMS</span>
+            <header class="flex h-16 shrink-0 items-center justify-between border-b border-gray-200 bg-white px-6">
+                <div class="flex items-center gap-3">
+                    <!-- Hamburger icon -->
+                    <svg class="h-5 w-5 text-gray-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                    </svg>
                 </div>
                 <div class="flex items-center gap-3">
-                    <div class="flex h-8 w-8 items-center justify-center rounded-full bg-[#e8ddf0] text-sm font-bold text-[#4e1a77]">
-                        {{ avatarInitial }}
+                    <div class="flex h-9 w-9 items-center justify-center rounded-full bg-gray-200 text-sm font-bold text-gray-600">
+                        <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+                        </svg>
                     </div>
                     <div class="hidden sm:block">
                         <p class="text-sm font-medium text-gray-800">{{ user?.name }}</p>
-                        <p class="text-xs text-gray-400">{{ roleLabel }}</p>
+                        <p class="text-xs text-gray-400">{{ user?.email }}</p>
                     </div>
+                    <svg class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                    </svg>
                 </div>
             </header>
 
