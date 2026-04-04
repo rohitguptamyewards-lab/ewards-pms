@@ -231,7 +231,6 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::get('/health', [HealthController::class, 'index']);
-Route::get('/health/debug-email', [HealthController::class, 'debugEmail']);
 
 Route::get('/documentation', function () {
     return response()->file(public_path('documentation.html'));

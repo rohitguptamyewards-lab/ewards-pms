@@ -40,17 +40,10 @@ services:
       - key: PORT
         value: "10000"
       - key: MAIL_MAILER
-        value: smtp
-      - key: MAIL_HOST
-        value: smtp.gmail.com
-      - key: MAIL_PORT
-        value: "587"
-      - key: MAIL_USERNAME
-        sync: false
-      - key: MAIL_PASSWORD
-        sync: false
-      # Port 587 auto-negotiates STARTTLS; no explicit scheme needed
+        value: brevo
       - key: MAIL_FROM_ADDRESS
-        sync: false
+        value: "project.tool.ewards@gmail.com"
       - key: MAIL_FROM_NAME
         value: "eWards PMS"
+      - key: BREVO_API_KEY
+        sync: false

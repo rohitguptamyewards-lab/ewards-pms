@@ -30,3 +30,5 @@ pms-doc-text.txt
 *.sqlite
 database/database.sqlite
 /.claude
+composer-setup.php
+composer.phar

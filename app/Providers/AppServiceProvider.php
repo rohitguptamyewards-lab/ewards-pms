@@ -10,8 +10,11 @@ use App\Listeners\SendTaskStatusEmail;
 use App\Listeners\SendWorkLogEmail;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
+use Symfony\Component\Mailer\Bridge\Brevo\Transport\BrevoTransportFactory;
+use Symfony\Component\Mailer\Transport\Dsn;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -40,6 +43,13 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Register Brevo (Sendinblue) HTTP API mailer transport
+        Mail::extend('brevo', function () {
+            $apiKey = config('services.brevo.key');
+            $factory = new BrevoTransportFactory();
+            return $factory->create(new Dsn('brevo+api', 'default', $apiKey));
+        });
+
         // Force HTTPS in production (Render's load balancer terminates SSL)
         if ($this->app->environment('production')) {
             URL::forceScheme('https');

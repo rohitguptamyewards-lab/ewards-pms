@@ -102,7 +102,6 @@ class EmailNotificationService
                     'to'    => $email,
                     'error' => $e->getMessage(),
                 ]);
-                throw $e; // Re-throw so debug endpoint can catch it
             }
         }
     }
