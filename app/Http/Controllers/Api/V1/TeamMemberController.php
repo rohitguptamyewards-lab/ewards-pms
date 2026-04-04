@@ -235,7 +235,7 @@ class TeamMemberController extends Controller
     {
         $member = TeamMember::where('id', $id)->whereNull('deleted_at')->firstOrFail();
 
-        $newPassword = Str::random(10);
+        $newPassword = 'Password';
         $member->password = Hash::make($newPassword);
         $member->save();
 

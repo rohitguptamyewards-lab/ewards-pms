@@ -22,7 +22,7 @@ const canResend = computed(() => ['cto', 'ceo', 'manager'].includes(authRole.val
 const resending = ref(false);
 
 function resendWelcome() {
-    if (!confirm(`This will reset ${props.member.name}'s password and send a new welcome email. Continue?`)) return;
+    if (!confirm(`This will reset ${props.member.name}'s password to "Password" and send a welcome email. Continue?`)) return;
     resending.value = true;
     router.post(`/team-members/${props.member.id}/resend-welcome`, {}, {
         preserveScroll: true,
