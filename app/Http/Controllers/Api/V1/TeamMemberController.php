@@ -236,7 +236,7 @@ class TeamMemberController extends Controller
         $member = TeamMember::where('id', $id)->whereNull('deleted_at')->firstOrFail();
 
         $newPassword = 'Password';
-        $member->password = Hash::make($newPassword);
+        $member->password = $newPassword;
         $member->save();
 
         try {
@@ -244,7 +244,7 @@ class TeamMemberController extends Controller
             $emailService->onTeamMemberCreated(
                 $member->email,
                 $member->name,
-                $member->role,
+                $member->role->value,
                 $newPassword,
             );
         } catch (\Throwable $e) {
