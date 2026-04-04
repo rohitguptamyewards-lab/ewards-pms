@@ -1,6 +1,6 @@
 <script setup>
-import { ref } from 'vue';
-import { Head, Link } from '@inertiajs/vue3';
+import { ref, computed } from 'vue';
+import { Head, Link, router, usePage } from '@inertiajs/vue3';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import StatusBadge from '@/Components/StatusBadge.vue';
 import PriorityBadge from '@/Components/PriorityBadge.vue';
@@ -8,13 +8,27 @@ import StatsCard from '@/Components/StatsCard.vue';
 
 defineOptions({ layout: AppLayout });
 
-defineProps({
+const props = defineProps({
     member:     { type: Object, required: true },
     projects:   { type: Array, default: () => [] },
     tasks:      { type: Array, default: () => [] },
     recentLogs: { type: Array, default: () => [] },
     stats:      { type: Object, default: () => ({}) },
 });
+
+const page = usePage();
+const authRole = computed(() => page.props.auth?.user?.role);
+const canResend = computed(() => ['cto', 'ceo', 'manager'].includes(authRole.value));
+const resending = ref(false);
+
+function resendWelcome() {
+    if (!confirm(`This will reset ${props.member.name}'s password and send a new welcome email. Continue?`)) return;
+    resending.value = true;
+    router.post(`/team-members/${props.member.id}/resend-welcome`, {}, {
+        preserveScroll: true,
+        onFinish: () => resending.value = false,
+    });
+}
 
 const activeTab = ref('overview');
 const tabs = [
@@ -101,7 +115,31 @@ function statusColor(status) {
                         </span>
                     </div>
                 </div>
+                <!-- Resend Welcome Email button -->
+                <button
+                    v-if="canResend"
+                    @click="resendWelcome"
+                    :disabled="resending"
+                    class="shrink-0 inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-600 shadow-sm hover:bg-gray-50 transition-colors disabled:opacity-50"
+                >
+                    <svg v-if="resending" class="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+                    </svg>
+                    <svg v-else class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+                    </svg>
+                    {{ resending ? 'Sending...' : 'Resend Welcome Email' }}
+                </button>
             </div>
+        </div>
+
+        <!-- Flash messages -->
+        <div v-if="$page.props.flash?.success" class="mt-3 rounded-lg bg-emerald-50 border border-emerald-200 px-4 py-3 text-sm text-emerald-700">
+            {{ $page.props.flash.success }}
+        </div>
+        <div v-if="$page.props.flash?.error" class="mt-3 rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
+            {{ $page.props.flash.error }}
         </div>
 
         <!-- Stats row -->

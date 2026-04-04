@@ -126,6 +126,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/team-members/create', [TeamMemberController::class, 'create'])->name('team-members.create');
     Route::post('/team-members', [TeamMemberController::class, 'store'])->name('team-members.store');
     Route::get('/team-members/{id}', [TeamMemberController::class, 'show'])->name('team-members.show');
+    Route::post('/team-members/{id}/resend-welcome', [TeamMemberController::class, 'resendWelcome'])->name('team-members.resend-welcome');
 
     // -------------------------------------------------------------------------
     // Phase 2 — Daily Tracking + Git Integration

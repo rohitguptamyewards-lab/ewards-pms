@@ -9,6 +9,8 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rules\Password;
 use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
@@ -224,5 +226,35 @@ class TeamMemberController extends Controller
         }
 
         return Inertia::render('TeamMembers/Show', $payload);
+    }
+
+    /**
+     * Resend welcome email with a fresh temporary password.
+     */
+    public function resendWelcome(int $id): RedirectResponse
+    {
+        $member = TeamMember::where('id', $id)->whereNull('deleted_at')->firstOrFail();
+
+        $newPassword = Str::random(10);
+        $member->password = Hash::make($newPassword);
+        $member->save();
+
+        try {
+            $emailService = app(EmailNotificationService::class);
+            $emailService->onTeamMemberCreated(
+                $member->email,
+                $member->name,
+                $member->role,
+                $newPassword,
+            );
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::warning('Resend welcome email failed', [
+                'email' => $member->email,
+                'error' => $e->getMessage(),
+            ]);
+            return back()->with('error', 'Failed to send email: ' . $e->getMessage());
+        }
+
+        return back()->with('success', 'Welcome email sent to ' . $member->email . ' with a new temporary password.');
     }
 }
