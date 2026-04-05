@@ -29,7 +29,7 @@ class ProjectController extends Controller
         $user    = auth()->user();
         $roleRaw = $user->role;
         $role    = $roleRaw instanceof \App\Enums\Role ? $roleRaw->value : (string) $roleRaw;
-        $isManager = in_array($role, ['cto', 'ceo', 'manager', 'mc_team']);
+        $isManager = in_array($role, ['cto', 'ceo', 'manager']);
 
         if ($isManager) {
             $projects = $this->projectRepository->findAll();
@@ -64,9 +64,11 @@ class ProjectController extends Controller
 
     /**
      * Store a new project and optionally add members.
+     * Only CTO, CEO, Manager can create projects.
      */
     public function store(StoreProjectRequest $request)
     {
+        abort_unless(in_array($this->authRole(), ['cto', 'ceo', 'manager']), 403, 'Only managers can create projects.');
         $data = $request->validated();
         $memberIds = $data['member_ids'] ?? [];
         unset($data['member_ids']);
@@ -175,22 +177,50 @@ class ProjectController extends Controller
         ]);
     }
 
+    private function authRole(): string
+    {
+        $role = auth()->user()->role;
+        return $role instanceof \App\Enums\Role ? $role->value : (string) $role;
+    }
+
     /**
      * Update project fields.
+     * Only CTO, CEO, Manager can update projects.
      */
     public function update(Request $request, int $id): JsonResponse
     {
+        abort_unless(in_array($this->authRole(), ['cto', 'ceo', 'manager']), 403, 'Only managers can update projects.');
+
+        $oldProject = $this->projectRepository->findById($id);
+        $oldStatus = $oldProject->status ?? null;
+
         $this->projectRepository->update($id, $request->all());
         $project = $this->projectRepository->findById($id);
+
+        // Log status change as a comment
+        $newStatus = $project->status ?? null;
+        if ($newStatus && $oldStatus && $newStatus !== $oldStatus) {
+            $userName = auth()->user()->name;
+            DB::table('comments')->insert([
+                'commentable_type' => 'project',
+                'commentable_id'   => $id,
+                'user_id'          => auth()->id(),
+                'body'             => "Status changed from \"{$oldStatus}\" to \"{$newStatus}\" by {$userName}.",
+                'created_at'       => now(),
+                'updated_at'       => now(),
+            ]);
+        }
 
         return response()->json($project);
     }
 
     /**
      * Add a member to a project.
+     * Only CTO, CEO, Manager can add members.
      */
     public function addMember(Request $request, int $id): JsonResponse
     {
+        abort_unless(in_array($this->authRole(), ['cto', 'ceo', 'manager']), 403);
         $request->validate([
             'user_id' => 'required|integer|exists:team_members,id',
         ]);

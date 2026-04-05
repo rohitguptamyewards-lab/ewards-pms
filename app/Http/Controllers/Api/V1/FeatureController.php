@@ -20,7 +20,7 @@ class FeatureController extends Controller
 
     private function managerRoles(): array
     {
-        return ['cto', 'ceo', 'manager', 'mc_team'];
+        return ['cto', 'ceo', 'manager'];
     }
 
     private function isManager(): bool
@@ -215,9 +215,12 @@ class FeatureController extends Controller
 
     /**
      * Update a feature via API (JSON).
+     * Only managers can update features.
      */
     public function update(Request $request, int $id): JsonResponse
     {
+        abort_unless($this->isManager(), 403, 'Only managers can update features.');
+
         $this->featureRepository->update($id, $request->all());
 
         return response()->json($this->featureRepository->findById($id));

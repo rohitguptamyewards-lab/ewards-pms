@@ -124,10 +124,19 @@ class RequestController extends Controller
 
     /**
      * Update request fields.
+     * MC Team & Sales can only update their own requests and cannot change status.
      */
     public function update(Request $request, int $id): JsonResponse
     {
-        $this->requestRepository->update($id, $request->all());
+        $role = $this->authRole();
+        $data = $request->all();
+
+        // MC Team & Sales cannot change status — only managers can
+        if (in_array($role, ['mc_team', 'sales'])) {
+            unset($data['status']);
+        }
+
+        $this->requestRepository->update($id, $data);
         $pmsRequest = $this->requestRepository->findById($id);
 
         return response()->json($pmsRequest);
@@ -160,11 +169,20 @@ class RequestController extends Controller
         ]);
     }
 
+    private function authRole(): string
+    {
+        $role = auth()->user()->role;
+        return $role instanceof \App\Enums\Role ? $role->value : (string) $role;
+    }
+
     /**
      * Triage a request (accept, defer, reject, etc.).
+     * Only CTO, CEO, and Manager can triage.
      */
     public function triage(Request $request, int $id)
     {
+        abort_unless(in_array($this->authRole(), ['cto', 'ceo', 'manager']), 403, 'Only managers can triage requests.');
+
         $request->validate([
             'action' => 'required|string|in:accept,defer,reject,clarify',
             'reason' => 'nullable|string',

@@ -1,6 +1,6 @@
 <script setup>
-import { Head, Link } from '@inertiajs/vue3';
-import { ref } from 'vue';
+import { Head, Link, usePage } from '@inertiajs/vue3';
+import { ref, computed } from 'vue';
 import axios from 'axios';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import StatusBadge from '@/Components/StatusBadge.vue';
@@ -8,6 +8,10 @@ import PriorityBadge from '@/Components/PriorityBadge.vue';
 import CommentSection from '@/Components/CommentSection.vue';
 
 defineOptions({ layout: AppLayout });
+
+const page = usePage();
+const authRole = computed(() => page.props.auth?.user?.role);
+const canEditTask = computed(() => !['mc_team', 'sales'].includes(authRole.value));
 
 const props = defineProps({
     task:        { type: Object, required: true },
@@ -129,7 +133,7 @@ function isOverdue(deadline) {
                     <div class="mt-1 flex items-center gap-1.5">
                         <p class="text-sm font-medium text-gray-800">{{ currentAssignee }}</p>
                         <button
-                            v-if="teamMembers.length"
+                            v-if="teamMembers.length && canEditTask"
                             @click="showReassign = !showReassign"
                             class="rounded p-0.5 text-gray-400 hover:text-[#4e1a77] hover:bg-[#f5f0ff] transition-colors"
                             title="Change assignee"
@@ -186,8 +190,8 @@ function isOverdue(deadline) {
                 <p class="mt-1 text-sm text-gray-700 whitespace-pre-wrap leading-relaxed">{{ task.description }}</p>
             </div>
 
-            <!-- Status transitions -->
-            <div class="mt-5 border-t border-gray-100 pt-5">
+            <!-- Status transitions (hidden for MC Team & Sales) -->
+            <div v-if="canEditTask" class="mt-5 border-t border-gray-100 pt-5">
                 <p class="mb-3 text-xs font-semibold uppercase tracking-wide text-gray-400">Update Status</p>
                 <div v-if="allowedTransitions().length" class="flex flex-wrap items-center gap-2">
                     <button

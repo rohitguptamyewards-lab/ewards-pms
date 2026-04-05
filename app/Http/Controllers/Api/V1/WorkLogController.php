@@ -27,7 +27,7 @@ class WorkLogController extends Controller
     {
         $filters = $request->only(['project_id', 'task_id', 'user_id', 'date_from', 'date_to']);
 
-        $managerRoles = ['cto', 'ceo', 'manager', 'mc_team'];
+        $managerRoles = ['cto', 'ceo', 'manager'];
         $roleRaw = auth()->user()->role;
         $userRole = $roleRaw instanceof \App\Enums\Role ? $roleRaw->value : (string) $roleRaw;
 
@@ -167,10 +167,15 @@ class WorkLogController extends Controller
     }
 
     /**
-     * Update a work log.
+     * Update a work log. Only owner or CTO can update.
      */
     public function update(Request $request, int $id): JsonResponse
     {
+        $workLog = DB::table('work_logs')->where('id', $id)->whereNull('deleted_at')->firstOrFail();
+        $roleRaw = auth()->user()->role;
+        $role = $roleRaw instanceof \App\Enums\Role ? $roleRaw->value : (string) $roleRaw;
+        abort_unless($workLog->user_id === auth()->id() || $role === 'cto', 403, 'You can only edit your own work logs.');
+
         $this->workLogRepository->update($id, $request->all());
         $workLog = DB::table('work_logs')->where('id', $id)->first();
 
@@ -178,10 +183,15 @@ class WorkLogController extends Controller
     }
 
     /**
-     * Delete a work log.
+     * Delete a work log. Only owner or CTO can delete.
      */
     public function destroy(int $id): JsonResponse
     {
+        $workLog = DB::table('work_logs')->where('id', $id)->whereNull('deleted_at')->firstOrFail();
+        $roleRaw = auth()->user()->role;
+        $role = $roleRaw instanceof \App\Enums\Role ? $roleRaw->value : (string) $roleRaw;
+        abort_unless($workLog->user_id === auth()->id() || $role === 'cto', 403, 'You can only delete your own work logs.');
+
         $this->workLogRepository->delete($id);
 
         return response()->json(['message' => 'Work log deleted successfully.']);

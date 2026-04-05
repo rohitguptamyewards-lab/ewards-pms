@@ -128,11 +128,22 @@ class TaskController extends Controller
         ]);
     }
 
+    private function authRole(): string
+    {
+        $role = auth()->user()->role;
+        return $role instanceof \App\Enums\Role ? $role->value : (string) $role;
+    }
+
     /**
      * Update task fields.
+     * Only the assignee, project owner, or managers can update tasks.
+     * MC Team & Sales cannot update tasks.
      */
     public function update(Request $request, int $id): JsonResponse
     {
+        $role = $this->authRole();
+        abort_if(in_array($role, ['mc_team', 'sales']), 403, 'You do not have permission to update tasks.');
+
         $this->taskRepository->update($id, $request->all());
         $task = $this->taskRepository->findById($id);
 
@@ -141,9 +152,13 @@ class TaskController extends Controller
 
     /**
      * Change task status with transition validation.
+     * MC Team & Sales cannot change task status.
      */
     public function changeStatus(Request $request, int $id): JsonResponse
     {
+        $role = $this->authRole();
+        abort_if(in_array($role, ['mc_team', 'sales']), 403, 'You do not have permission to change task status.');
+
         $request->validate([
             'status' => 'required|string|in:open,in_progress,blocked,done',
         ]);

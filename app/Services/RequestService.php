@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Repositories\FeatureRepository;
 use App\Repositories\RequestRepository;
 use App\Services\EmailNotificationService;
+use Illuminate\Support\Facades\DB;
 use InvalidArgumentException;
 
 class RequestService
@@ -83,6 +84,9 @@ class RequestService
             throw new InvalidArgumentException("Request #{$requestId} not found.");
         }
 
+        $userName = auth()->user()->name ?? 'System';
+        $oldStatus = $request->status ?? 'received';
+
         switch ($action) {
             case 'accept':
                 // Create a Feature from the request data
@@ -99,24 +103,29 @@ class RequestService
                     'status'            => 'linked',
                     'linked_feature_id' => $featureId,
                 ]);
+
+                $this->logRequestComment($requestId, "Request accepted and linked to a new feature by {$userName}." . ($reason ? "\nReason: {$reason}" : ''));
                 break;
 
             case 'defer':
                 $this->requestRepository->update($requestId, [
                     'status' => 'deferred',
                 ]);
+                $this->logRequestComment($requestId, "Request deferred by {$userName}." . ($reason ? "\nReason: {$reason}" : ''));
                 break;
 
             case 'reject':
                 $this->requestRepository->update($requestId, [
                     'status' => 'rejected',
                 ]);
+                $this->logRequestComment($requestId, "Request rejected by {$userName}." . ($reason ? "\nReason: {$reason}" : ''));
                 break;
 
             case 'clarify':
                 $this->requestRepository->update($requestId, [
                     'status' => 'clarification_needed',
                 ]);
+                $this->logRequestComment($requestId, "Clarification requested by {$userName}." . ($reason ? "\n\n{$reason}" : ''));
                 // Send email to the requester asking for clarification
                 try {
                     $this->emailService->onRequestClarificationNeeded($requestId, $reason);
@@ -131,6 +140,21 @@ class RequestService
         try {
             $this->emailService->onRequestTriaged($requestId, $action, $reason);
         } catch (\Throwable $e) {}
+    }
+
+    /**
+     * Log a system comment on a request for audit trail.
+     */
+    private function logRequestComment(int $requestId, string $body): void
+    {
+        DB::table('comments')->insert([
+            'commentable_type' => 'request',
+            'commentable_id'   => $requestId,
+            'user_id'          => auth()->id(),
+            'body'             => $body,
+            'created_at'       => now(),
+            'updated_at'       => now(),
+        ]);
     }
 
     /**
