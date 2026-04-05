@@ -23,7 +23,7 @@ class DeadlineController extends Controller
     {
         $role = auth()->user()->role;
         $value = $role instanceof \App\Enums\Role ? $role->value : (string) $role;
-        return in_array($value, ['cto', 'ceo', 'manager', 'mc_team']);
+        return in_array($value, ['cto', 'ceo', 'manager']);
     }
 
     public function index(Request $request): InertiaResponse|JsonResponse
@@ -90,6 +90,7 @@ class DeadlineController extends Controller
 
     public function store(StoreDeadlineRequest $request): JsonResponse
     {
+        abort_unless($this->isManager(), 403);
         $id = $this->deadlineService->create($request->validated());
 
         return response()->json($this->deadlineRepository->findById($id), 201);
@@ -97,6 +98,7 @@ class DeadlineController extends Controller
 
     public function update(Request $request, int $id): JsonResponse
     {
+        abort_unless($this->isManager(), 403);
         // If due_date changed, cascade
         if ($request->has('due_date')) {
             $this->deadlineService->cascadeDeadlineChange($id, $request->input('due_date'));

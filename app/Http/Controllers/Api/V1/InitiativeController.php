@@ -75,8 +75,16 @@ class InitiativeController extends Controller
         ]);
     }
 
+    private function isManager(): bool
+    {
+        $role = auth()->user()->role;
+        $value = $role instanceof \App\Enums\Role ? $role->value : (string) $role;
+        return in_array($value, ['cto', 'ceo', 'manager']);
+    }
+
     public function updateWeb(StoreInitiativeRequest $request, int $id)
     {
+        abort_unless($this->isManager(), 403);
         $this->repository->update($id, $request->validated());
 
         return redirect()->route('initiatives.show', $id)
@@ -87,6 +95,7 @@ class InitiativeController extends Controller
 
     public function store(StoreInitiativeRequest $request): JsonResponse
     {
+        abort_unless($this->isManager(), 403);
         $data = $request->validated();
         $data['tenant_id'] = null;
 
@@ -108,6 +117,7 @@ class InitiativeController extends Controller
 
     public function update(StoreInitiativeRequest $request, int $id): JsonResponse
     {
+        abort_unless($this->isManager(), 403);
         $this->repository->update($id, $request->validated());
 
         return response()->json(['message' => 'Initiative updated.']);

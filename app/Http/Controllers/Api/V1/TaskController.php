@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreTaskRequest;
 use App\Repositories\TaskRepository;
+use App\Services\EmailNotificationService;
 use App\Services\TaskService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -18,6 +19,7 @@ class TaskController extends Controller
     public function __construct(
         private readonly TaskService $taskService,
         private readonly TaskRepository $taskRepository,
+        private readonly EmailNotificationService $emailService,
     ) {}
 
     /**
@@ -30,7 +32,7 @@ class TaskController extends Controller
         $user    = auth()->user();
         $roleRaw = $user->role;
         $role    = $roleRaw instanceof \App\Enums\Role ? $roleRaw->value : (string) $roleRaw;
-        $isManager = in_array($role, ['cto', 'ceo', 'manager', 'mc_team']);
+        $isManager = in_array($role, ['cto', 'ceo', 'manager']);
 
         // Non-managers only see tasks assigned to them
         if (! $isManager) {
@@ -68,7 +70,15 @@ class TaskController extends Controller
      */
     public function store(StoreTaskRequest $request): JsonResponse
     {
-        $id = $this->taskRepository->create($request->validated());
+        $data = $request->validated();
+        $id = $this->taskRepository->create($data);
+
+        // Notify assignee
+        if (!empty($data['assigned_to'])) {
+            try {
+                $this->emailService->onTaskAssigned($id, (int) $data['assigned_to'], auth()->id());
+            } catch (\Throwable $e) {}
+        }
 
         return response()->json($this->taskRepository->findById($id), 201);
     }
@@ -144,8 +154,19 @@ class TaskController extends Controller
         $role = $this->authRole();
         abort_if(in_array($role, ['mc_team', 'sales']), 403, 'You do not have permission to update tasks.');
 
+        $oldTask = DB::table('tasks')->where('id', $id)->first();
+        $oldAssignee = $oldTask->assigned_to ?? null;
+
         $this->taskRepository->update($id, $request->all());
         $task = $this->taskRepository->findById($id);
+
+        // Notify new assignee if changed
+        $newAssignee = $request->input('assigned_to');
+        if ($newAssignee && (int) $newAssignee !== (int) $oldAssignee) {
+            try {
+                $this->emailService->onTaskAssigned($id, (int) $newAssignee, auth()->id());
+            } catch (\Throwable $e) {}
+        }
 
         return response()->json($task);
     }

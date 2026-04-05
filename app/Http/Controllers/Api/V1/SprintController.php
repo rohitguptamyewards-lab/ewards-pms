@@ -23,7 +23,7 @@ class SprintController extends Controller
     {
         $role = auth()->user()->role;
         $value = $role instanceof \App\Enums\Role ? $role->value : (string) $role;
-        return in_array($value, ['cto', 'ceo', 'manager', 'mc_team']);
+        return in_array($value, ['cto', 'ceo', 'manager']);
     }
 
     public function index(Request $request): InertiaResponse|JsonResponse
@@ -103,6 +103,7 @@ class SprintController extends Controller
 
     public function store(StoreSprintRequest $request): JsonResponse
     {
+        abort_unless($this->isManager(), 403);
         $id = $this->sprintService->create($request->validated());
 
         return response()->json($this->sprintRepository->findById($id), 201);
@@ -118,6 +119,7 @@ class SprintController extends Controller
 
     public function update(Request $request, int $id): JsonResponse
     {
+        abort_unless($this->isManager(), 403);
         $this->sprintRepository->update($id, $request->all());
 
         return response()->json($this->sprintRepository->findById($id));

@@ -164,9 +164,10 @@ class FeatureController extends Controller
             'business_impact' => 'nullable|string',
         ]);
 
-        // Check if status is changing for email notification
         $oldFeature = $this->featureRepository->findById($id);
         $oldStatus = $oldFeature->status ?? null;
+        $oldAssignee = $oldFeature->assigned_to ?? null;
+        $oldQaOwner = $oldFeature->qa_owner_id ?? null;
 
         $this->featureRepository->update($id, $data);
 
@@ -175,9 +176,23 @@ class FeatureController extends Controller
         if ($newStatus && $oldStatus && $newStatus !== $oldStatus) {
             try {
                 $this->emailService->onFeatureStatusChanged($id, $oldStatus, $newStatus, auth()->id());
-            } catch (\Throwable $e) {
-                // Never let email failure break the action
-            }
+            } catch (\Throwable $e) {}
+        }
+
+        // Send email if assignee changed
+        $newAssignee = $data['assigned_to'] ?? null;
+        if ($newAssignee && (int) $newAssignee !== (int) $oldAssignee) {
+            try {
+                $this->emailService->onFeatureAssigned($id, (int) $newAssignee, auth()->id());
+            } catch (\Throwable $e) {}
+        }
+
+        // Send email if QA owner changed
+        $newQaOwner = $data['qa_owner_id'] ?? null;
+        if ($newQaOwner && (int) $newQaOwner !== (int) $oldQaOwner) {
+            try {
+                $this->emailService->onFeatureQaAssigned($id, (int) $newQaOwner, auth()->id());
+            } catch (\Throwable $e) {}
         }
 
         return redirect()->route('features.show', $id)->with('success', 'Feature updated.');

@@ -19,6 +19,13 @@ class DecisionController extends Controller
         protected DecisionService $service
     ) {}
 
+    private function isManager(): bool
+    {
+        $role = auth()->user()->role;
+        $value = $role instanceof \App\Enums\Role ? $role->value : (string) $role;
+        return in_array($value, ['cto', 'ceo', 'manager']);
+    }
+
     // ── Web Routes ──────────────────────────────────────────
 
     public function index(Request $request): InertiaResponse
@@ -49,6 +56,7 @@ class DecisionController extends Controller
 
     public function storeWeb(StoreDecisionRequest $request)
     {
+        abort_unless($this->isManager(), 403);
         $data = $request->validated();
         $id = $this->repository->create($data);
 
@@ -81,6 +89,7 @@ class DecisionController extends Controller
 
     public function store(StoreDecisionRequest $request): JsonResponse
     {
+        abort_unless($this->isManager(), 403);
         $id = $this->repository->create($request->validated());
 
         return response()->json(['id' => $id, 'message' => 'Decision recorded.'], 201);
@@ -102,6 +111,7 @@ class DecisionController extends Controller
      */
     public function supersede(StoreDecisionRequest $request, int $id): JsonResponse
     {
+        abort_unless($this->isManager(), 403);
         $newId = $this->service->supersedeDecision($id, $request->validated());
 
         return response()->json([

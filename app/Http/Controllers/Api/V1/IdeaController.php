@@ -18,6 +18,13 @@ class IdeaController extends Controller
         protected IdeaService $service
     ) {}
 
+    private function isManager(): bool
+    {
+        $role = auth()->user()->role;
+        $value = $role instanceof \App\Enums\Role ? $role->value : (string) $role;
+        return in_array($value, ['cto', 'ceo', 'manager']);
+    }
+
     // ── Web Routes ──────────────────────────────────────────
 
     public function index(Request $request): InertiaResponse
@@ -38,6 +45,7 @@ class IdeaController extends Controller
 
     public function storeWeb(StoreIdeaRequest $request)
     {
+        abort_unless($this->isManager(), 403);
         $data = $request->validated();
         $data['created_by'] = auth()->id();
 
@@ -64,6 +72,7 @@ class IdeaController extends Controller
 
     public function store(StoreIdeaRequest $request): JsonResponse
     {
+        abort_unless($this->isManager(), 403);
         $data = $request->validated();
         $data['created_by'] = auth()->id();
 

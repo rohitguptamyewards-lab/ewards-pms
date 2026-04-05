@@ -13,7 +13,7 @@ const props = defineProps({
 
 const page = usePage();
 const role = computed(() => page.props.auth?.user?.role);
-const canCreate = computed(() => ['cto', 'ceo', 'manager', 'mc_team'].includes(role.value));
+const canCreate = computed(() => ['cto', 'ceo', 'manager'].includes(role.value));
 
 function formatDate(dateStr) {
     if (!dateStr) return '—';

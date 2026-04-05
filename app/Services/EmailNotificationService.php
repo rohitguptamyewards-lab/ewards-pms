@@ -214,6 +214,74 @@ class EmailNotificationService
         $this->notifyManagers($subject, $heading, $body, $url, 'View Feature');
     }
 
+    /**
+     * Notify a user when they are assigned to a feature.
+     */
+    public function onFeatureAssigned(int $featureId, int $assigneeId, int $assignedById): void
+    {
+        if ($assigneeId === $assignedById) return;
+
+        $feature = DB::table('features')->where('id', $featureId)->first();
+        $assignedBy = DB::table('team_members')->where('id', $assignedById)->value('name');
+
+        if (!$feature) return;
+
+        $subject = "Feature Assigned: {$feature->title}";
+        $heading = "You've Been Assigned a Feature";
+        $body = "You have been assigned to work on the feature \"{$feature->title}\".\nAssigned by: {$assignedBy}";
+
+        $url = $this->baseUrl() . "/features/{$featureId}";
+        $this->notifyUsers([$assigneeId], $subject, $heading, $body, $url, 'View Feature');
+    }
+
+    /**
+     * Notify a user when they are assigned as QA owner of a feature.
+     */
+    public function onFeatureQaAssigned(int $featureId, int $qaOwnerId, int $assignedById): void
+    {
+        if ($qaOwnerId === $assignedById) return;
+
+        $feature = DB::table('features')->where('id', $featureId)->first();
+        $assignedBy = DB::table('team_members')->where('id', $assignedById)->value('name');
+
+        if (!$feature) return;
+
+        $subject = "QA Assignment: {$feature->title}";
+        $heading = "You've Been Assigned as QA Owner";
+        $body = "You have been assigned as the QA owner for feature \"{$feature->title}\".\nAssigned by: {$assignedBy}";
+
+        $url = $this->baseUrl() . "/features/{$featureId}";
+        $this->notifyUsers([$qaOwnerId], $subject, $heading, $body, $url, 'View Feature');
+    }
+
+    /**
+     * Notify a user when a task is assigned to them.
+     */
+    public function onTaskAssigned(int $taskId, int $assigneeId, int $assignedById): void
+    {
+        if ($assigneeId === $assignedById) return;
+
+        $task = DB::table('tasks')
+            ->leftJoin('projects', 'tasks.project_id', '=', 'projects.id')
+            ->select('tasks.title', 'projects.name as project_name')
+            ->where('tasks.id', $taskId)
+            ->first();
+        $assignedBy = DB::table('team_members')->where('id', $assignedById)->value('name');
+
+        if (!$task) return;
+
+        $subject = "Task Assigned: {$task->title}";
+        $heading = "You've Been Assigned a Task";
+        $body = "You have been assigned the task \"{$task->title}\"";
+        if ($task->project_name) {
+            $body .= " in project \"{$task->project_name}\"";
+        }
+        $body .= ".\nAssigned by: {$assignedBy}";
+
+        $url = $this->baseUrl() . "/tasks/{$taskId}";
+        $this->notifyUsers([$assigneeId], $subject, $heading, $body, $url, 'View Task');
+    }
+
     public function onProjectMemberAdded(int $projectId, int $userId): void
     {
         $project = DB::table('projects')->where('id', $projectId)->value('name');
