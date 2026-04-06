@@ -1,62 +1,39 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-/**
- * Item 41 — Merchant tier fulfilment rates (enterprise/mid-market/SMB).
- * Item 51 — Merchant lookup with full history.
- */
 return new class extends Migration
 {
     public function up(): void
     {
-        Schema::table('merchants', function (Blueprint $table) {
-            if (!Schema::hasColumn('merchants', 'tier')) {
-                $table->string('tier')->default('smb')->after('name')
-                    ->comment('enterprise | mid_market | smb');
-            }
-            if (!Schema::hasColumn('merchants', 'industry')) {
-                $table->string('industry')->nullable()->after('tier');
-            }
-            if (!Schema::hasColumn('merchants', 'account_manager_id')) {
-                $table->string('account_manager_id')->nullable()->after('industry');
-            }
-            if (!Schema::hasColumn('merchants', 'contract_value')) {
-                $table->decimal('contract_value', 14, 2)->nullable()->after('account_manager_id');
-            }
-            if (!Schema::hasColumn('merchants', 'contract_start')) {
-                $table->date('contract_start')->nullable()->after('contract_value');
-            }
-            if (!Schema::hasColumn('merchants', 'contract_end')) {
-                $table->date('contract_end')->nullable()->after('contract_start');
-            }
-        });
+        DB::statement("ALTER TABLE merchants ADD COLUMN IF NOT EXISTS tier VARCHAR(255) NOT NULL DEFAULT 'smb'");
+        DB::statement("ALTER TABLE merchants ADD COLUMN IF NOT EXISTS industry VARCHAR(255)");
+        DB::statement("ALTER TABLE merchants ADD COLUMN IF NOT EXISTS account_manager_id VARCHAR(255)");
+        DB::statement("ALTER TABLE merchants ADD COLUMN IF NOT EXISTS contract_value DECIMAL(14,2)");
+        DB::statement("ALTER TABLE merchants ADD COLUMN IF NOT EXISTS contract_start DATE");
+        DB::statement("ALTER TABLE merchants ADD COLUMN IF NOT EXISTS contract_end DATE");
 
-        // Sprint ETA field on requests (item 50)
-        Schema::table('requests', function (Blueprint $table) {
-            if (!Schema::hasColumn('requests', 'sprint_eta')) {
-                $table->date('sprint_eta')->nullable()->after('linked_feature_id')
-                    ->comment('ETA date derived from sprint planning');
-            }
-            if (!Schema::hasColumn('requests', 'linked_sprint_id')) {
-                $table->unsignedBigInteger('linked_sprint_id')->nullable()->after('sprint_eta');
-                $table->foreign('linked_sprint_id')->references('id')->on('sprints')->nullOnDelete();
-            }
-        });
+        DB::statement("ALTER TABLE requests ADD COLUMN IF NOT EXISTS sprint_eta DATE");
+        DB::statement("ALTER TABLE requests ADD COLUMN IF NOT EXISTS linked_sprint_id BIGINT");
+
+        $fk = DB::selectOne("SELECT 1 FROM information_schema.table_constraints WHERE constraint_name = 'requests_linked_sprint_id_foreign' AND table_name = 'requests'");
+        if (!$fk) {
+            DB::statement("ALTER TABLE requests ADD CONSTRAINT requests_linked_sprint_id_foreign FOREIGN KEY (linked_sprint_id) REFERENCES sprints(id) ON DELETE SET NULL");
+        }
     }
 
     public function down(): void
     {
-        Schema::table('requests', function (Blueprint $table) {
+        Schema::table('requests', function ($table) {
             if (Schema::hasColumn('requests', 'linked_sprint_id')) {
                 $table->dropForeign(['linked_sprint_id']);
                 $table->dropColumn(['sprint_eta', 'linked_sprint_id']);
             }
         });
 
-        Schema::table('merchants', function (Blueprint $table) {
+        Schema::table('merchants', function ($table) {
             $cols = array_filter([
                 Schema::hasColumn('merchants', 'tier') ? 'tier' : null,
                 Schema::hasColumn('merchants', 'industry') ? 'industry' : null,

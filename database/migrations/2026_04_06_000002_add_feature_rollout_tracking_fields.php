@@ -1,52 +1,38 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-/**
- * Item 71 — Feature rollout tracking: rollout_percentage, rollout_notes, rolled_back_at.
- * Item 43 — CTO-attributed estimate labeling.
- */
 return new class extends Migration
 {
     public function up(): void
     {
-        Schema::table('features', function (Blueprint $table) {
-            if (!Schema::hasColumn('features', 'rollout_percentage')) {
-                $table->unsignedTinyInteger('rollout_percentage')->default(0)->after('rollout_state')
-                    ->comment('0-100: percentage of users/merchants receiving this feature');
-            }
-            if (!Schema::hasColumn('features', 'rollout_notes')) {
-                $table->text('rollout_notes')->nullable()->after('rollout_percentage');
-            }
-            if (!Schema::hasColumn('features', 'rolled_back_at')) {
-                $table->timestamp('rolled_back_at')->nullable()->after('rollout_notes');
-            }
-            if (!Schema::hasColumn('features', 'rolled_back_by')) {
-                $table->unsignedBigInteger('rolled_back_by')->nullable()->after('rolled_back_at');
-                $table->foreign('rolled_back_by')->references('id')->on('team_members')->nullOnDelete();
-            }
-            if (!Schema::hasColumn('features', 'cto_estimated_hours')) {
-                $table->decimal('cto_estimated_hours', 8, 2)->nullable()->after('estimated_hours')
-                    ->comment('CTO-provided estimate (labeled separately from dev estimate)');
-            }
-            if (!Schema::hasColumn('features', 'cto_estimated_by')) {
-                $table->unsignedBigInteger('cto_estimated_by')->nullable()->after('cto_estimated_hours');
-                $table->foreign('cto_estimated_by')->references('id')->on('team_members')->nullOnDelete();
-            }
-        });
+        DB::statement("ALTER TABLE features ADD COLUMN IF NOT EXISTS rollout_percentage SMALLINT NOT NULL DEFAULT 0");
+        DB::statement("ALTER TABLE features ADD COLUMN IF NOT EXISTS rollout_notes TEXT");
+        DB::statement("ALTER TABLE features ADD COLUMN IF NOT EXISTS rolled_back_at TIMESTAMP");
+        DB::statement("ALTER TABLE features ADD COLUMN IF NOT EXISTS rolled_back_by BIGINT");
+        DB::statement("ALTER TABLE features ADD COLUMN IF NOT EXISTS cto_estimated_hours DECIMAL(8,2)");
+        DB::statement("ALTER TABLE features ADD COLUMN IF NOT EXISTS cto_estimated_by BIGINT");
+
+        // Add FKs only if they don't already exist
+        $fk1 = DB::selectOne("SELECT 1 FROM information_schema.table_constraints WHERE constraint_name = 'features_rolled_back_by_foreign' AND table_name = 'features'");
+        if (!$fk1) {
+            DB::statement("ALTER TABLE features ADD CONSTRAINT features_rolled_back_by_foreign FOREIGN KEY (rolled_back_by) REFERENCES team_members(id) ON DELETE SET NULL");
+        }
+
+        $fk2 = DB::selectOne("SELECT 1 FROM information_schema.table_constraints WHERE constraint_name = 'features_cto_estimated_by_foreign' AND table_name = 'features'");
+        if (!$fk2) {
+            DB::statement("ALTER TABLE features ADD CONSTRAINT features_cto_estimated_by_foreign FOREIGN KEY (cto_estimated_by) REFERENCES team_members(id) ON DELETE SET NULL");
+        }
     }
 
     public function down(): void
     {
-        Schema::table('features', function (Blueprint $table) {
-            if (Schema::hasColumn('features', 'rolled_back_by')) {
-                $table->dropForeign(['rolled_back_by']);
-            }
-            if (Schema::hasColumn('features', 'cto_estimated_by')) {
-                $table->dropForeign(['cto_estimated_by']);
-            }
+        Schema::table('features', function ($table) {
+            if (Schema::hasColumn('features', 'rolled_back_by')) $table->dropForeign(['rolled_back_by']);
+            if (Schema::hasColumn('features', 'cto_estimated_by')) $table->dropForeign(['cto_estimated_by']);
+
             $cols = array_filter([
                 Schema::hasColumn('features', 'rollout_percentage') ? 'rollout_percentage' : null,
                 Schema::hasColumn('features', 'rollout_notes') ? 'rollout_notes' : null,
