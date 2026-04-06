@@ -76,7 +76,10 @@ const calcDuration = computed(() => {
 watch(() => form.project_id, () => { form.task_id = ''; });
 
 function submitEntry() {
-    form.post('/work-logs', {
+    form.transform(data => ({
+        ...data,
+        task_id: data.task_id || null,
+    })).post('/work-logs', {
         preserveScroll: true,
         onSuccess: () => {
             form.reset();
@@ -174,32 +177,16 @@ function getProjectColor(projectId) {
     return projectColors[projectId % projectColors.length];
 }
 
-/* ── Project search for dropdown ── */
-const projectSearch = ref('');
-const showProjectDropdown = ref(false);
-const filteredProjects = computed(() => {
-    const q = projectSearch.value.toLowerCase();
-    if (!q) return props.projectsWithTasks;
-    return props.projectsWithTasks.filter(p => p.name.toLowerCase().includes(q));
+/* ── Submission helpers ── */
+const canSubmit = computed(() => form.project_id && calcDuration && !form.processing);
+
+const disabledReason = computed(() => {
+    if (form.processing) return 'Submitting...';
+    if (!form.project_id) return 'Select a project';
+    if (!form.end_time) return 'Enter end time';
+    if (!calcDuration) return 'End time must be after start';
+    return '';
 });
-
-function selectProject(p) {
-    form.project_id = p.id;
-    projectSearch.value = p.name;
-    showProjectDropdown.value = false;
-}
-
-function onProjectFocus() {
-    showProjectDropdown.value = true;
-    if (form.project_id) {
-        const p = props.projectsWithTasks.find(x => x.id === Number(form.project_id));
-        if (p) projectSearch.value = p.name;
-    }
-}
-
-function onProjectBlur() {
-    setTimeout(() => { showProjectDropdown.value = false; }, 200);
-}
 
 function getProjectName(id) {
     const p = props.projects.find(x => x.id === id) || props.projectsWithTasks.find(x => x.id === id);
@@ -283,34 +270,21 @@ function getProjectName(id) {
                     />
                 </div>
 
-                <!-- Project dropdown (searchable) -->
-                <div class="relative w-full lg:w-56 border-b lg:border-b-0 lg:border-r border-gray-100">
+                <!-- Project dropdown -->
+                <div class="w-full lg:w-56 border-b lg:border-b-0 lg:border-r border-gray-100">
                     <div class="flex items-center px-3">
-                        <span v-if="form.project_id" class="mr-2 h-2.5 w-2.5 rounded-full flex-shrink-0" :style="{ backgroundColor: getProjectColor(form.project_id) }"></span>
+                        <span v-if="form.project_id" class="mr-2 h-2.5 w-2.5 rounded-full flex-shrink-0" :style="{ backgroundColor: getProjectColor(Number(form.project_id)) }"></span>
                         <svg v-else class="mr-2 h-4 w-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
                         </svg>
-                        <input
-                            v-model="projectSearch"
-                            @focus="onProjectFocus"
-                            @blur="onProjectBlur"
-                            type="text"
-                            placeholder="Project"
-                            class="w-full py-3.5 text-sm text-gray-700 placeholder-gray-400 outline-none bg-transparent"
-                        />
-                    </div>
-                    <!-- Dropdown -->
-                    <div v-if="showProjectDropdown && filteredProjects.length" class="absolute left-0 right-0 top-full z-20 max-h-48 overflow-y-auto rounded-b-lg border border-t-0 border-gray-200 bg-white shadow-lg">
-                        <button
-                            v-for="p in filteredProjects"
-                            :key="p.id"
-                            type="button"
-                            @mousedown.prevent="selectProject(p)"
-                            class="flex w-full items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-[#f8f4fa] transition-colors"
+                        <select
+                            v-model="form.project_id"
+                            class="w-full py-3.5 text-sm outline-none bg-transparent cursor-pointer"
+                            :class="form.project_id ? 'text-gray-700' : 'text-gray-400'"
                         >
-                            <span class="h-2.5 w-2.5 rounded-full flex-shrink-0" :style="{ backgroundColor: getProjectColor(p.id) }"></span>
-                            {{ p.name }}
-                        </button>
+                            <option value="">Project *</option>
+                            <option v-for="p in projectsWithTasks" :key="p.id" :value="p.id">{{ p.name }}</option>
+                        </select>
                     </div>
                 </div>
 
@@ -370,11 +344,13 @@ function getProjectName(id) {
                 </div>
 
                 <!-- ADD Button -->
-                <div class="p-2">
+                <div class="flex items-center gap-2 p-2">
+                    <span v-if="disabledReason" class="hidden sm:inline text-xs text-gray-400 whitespace-nowrap">{{ disabledReason }}</span>
                     <button
                         type="submit"
-                        :disabled="form.processing || !calcDuration || !form.project_id"
+                        :disabled="!canSubmit"
                         class="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 rounded-lg bg-[#059669] px-5 py-2.5 text-sm font-bold text-white shadow-sm hover:bg-[#047857] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                        :title="disabledReason || 'Add work log entry'"
                     >
                         <svg v-if="form.processing" class="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
@@ -489,7 +465,7 @@ function getProjectName(id) {
                                     </svg>
                                 </button>
                                 <!-- Replay (copy as new entry) -->
-                                <button @click="form.note = log.note || ''; form.project_id = log.project_id; projectSearch = getProjectName(log.project_id); form.task_id = log.task_id || ''; form.status = log.status || 'done'" class="rounded p-1 text-gray-400 hover:text-emerald-600 hover:bg-emerald-50 transition-colors" title="Copy to new entry">
+                                <button @click="form.note = log.note || ''; form.project_id = log.project_id; form.task_id = log.task_id || ''; form.status = log.status || 'done'" class="rounded p-1 text-gray-400 hover:text-emerald-600 hover:bg-emerald-50 transition-colors" title="Copy to new entry">
                                     <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z" />
                                     </svg>
