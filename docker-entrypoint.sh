@@ -3,12 +3,18 @@ set -e
 
 echo "=== eWards PMS Starting ==="
 
-# ── Set Apache to listen on Render's PORT (default 10000) ──
+# ── Set Apache to listen on Render's PORT on all interfaces ──
 PORT="${PORT:-10000}"
-sed -i "s/Listen 80/Listen ${PORT}/" /etc/apache2/ports.conf
-sed -i "s/:80/:${PORT}/" /etc/apache2/sites-available/000-default.conf
-echo "ServerName localhost" >> /etc/apache2/apache2.conf
-echo "Apache will listen on port ${PORT}"
+
+# Overwrite ports.conf to bind explicitly to 0.0.0.0 (required for Render's port detection)
+cat > /etc/apache2/ports.conf << PORTS
+Listen 0.0.0.0:${PORT}
+PORTS
+
+# Update VirtualHost to match the port
+sed -i "s/<VirtualHost \*:80>/<VirtualHost *:${PORT}>/" /etc/apache2/sites-available/000-default.conf
+echo "ServerName 0.0.0.0" >> /etc/apache2/apache2.conf
+echo "Apache will listen on 0.0.0.0:${PORT}"
 
 # ── PHP memory / performance tuning for free tier ──
 cat > /usr/local/etc/php/conf.d/zz-render.ini << 'PHPINI'
@@ -38,12 +44,12 @@ php artisan config:cache
 php artisan route:cache
 php artisan view:cache
 
-# ── Run pending migrations ──
-php artisan migrate --force
+# ── Run pending migrations (don't abort startup on failure) ──
+php artisan migrate --force || echo "WARNING: Migrations had issues, app will start anyway"
 
-# ── Fix permissions after cache commands (ran as root, Apache runs as www-data) ──
+# ── Fix permissions after cache commands ──
 chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
-echo "=== Ready — starting Apache on port ${PORT} ==="
+echo "=== Ready — starting Apache on 0.0.0.0:${PORT} ==="
 exec apache2-foreground

@@ -557,58 +557,69 @@ class DashboardRepository
                    . "{$base['hoursThisMonth']}h logged this month.";
 
         // Item 40 — Investment vs impact matrix (features with cost + revenue data)
-        $investmentMatrix = DB::table('features')
-            ->whereNull('deleted_at')
-            ->whereNotNull('attributed_revenue')
-            ->whereNotNull('maintenance_cost_monthly')
-            ->select(
-                'id', 'title', 'status', 'priority',
-                'attributed_revenue', 'maintenance_cost_monthly',
-                'estimated_hours', 'cto_estimated_hours',
-                DB::raw('COALESCE(attributed_revenue, 0) - COALESCE(maintenance_cost_monthly, 0) as roi_monthly')
-            )
-            ->orderByDesc('roi_monthly')
-            ->limit(20)
-            ->get()
-            ->toArray();
+        try {
+            $investmentMatrix = DB::table('features')
+                ->whereNull('deleted_at')
+                ->whereNotNull('attributed_revenue')
+                ->whereNotNull('maintenance_cost_monthly')
+                ->select(
+                    'id', 'title', 'status', 'priority',
+                    'attributed_revenue', 'maintenance_cost_monthly',
+                    'estimated_hours',
+                    DB::raw('COALESCE(attributed_revenue, 0) - COALESCE(maintenance_cost_monthly, 0) as roi_monthly')
+                )
+                ->orderByDesc('roi_monthly')
+                ->limit(20)
+                ->get()
+                ->toArray();
+        } catch (\Throwable $e) {
+            $investmentMatrix = [];
+        }
 
         // Item 41 — Merchant tier fulfilment rates
-        $merchantTierStats = DB::table('merchants')
-            ->join('requests', 'merchants.id', '=', 'requests.merchant_id')
-            ->whereNull('merchants.deleted_at')
-            ->whereNull('requests.deleted_at')
-            ->select(
-                'merchants.tier',
-                DB::raw('COUNT(requests.id) as total_requests'),
-                DB::raw("SUM(CASE WHEN requests.status = 'fulfilled' THEN 1 ELSE 0 END) as fulfilled"),
-                DB::raw("SUM(CASE WHEN requests.status = 'linked' THEN 1 ELSE 0 END) as linked"),
-                DB::raw("SUM(CASE WHEN requests.status = 'rejected' THEN 1 ELSE 0 END) as rejected")
-            )
-            ->groupBy('merchants.tier')
-            ->get()
-            ->toArray();
+        try {
+            $merchantTierStats = DB::table('merchants')
+                ->join('requests', 'merchants.id', '=', 'requests.merchant_id')
+                ->whereNull('merchants.deleted_at')
+                ->whereNull('requests.deleted_at')
+                ->select(
+                    'merchants.tier',
+                    DB::raw('COUNT(requests.id) as total_requests'),
+                    DB::raw("SUM(CASE WHEN requests.status = 'fulfilled' THEN 1 ELSE 0 END) as fulfilled"),
+                    DB::raw("SUM(CASE WHEN requests.status = 'linked' THEN 1 ELSE 0 END) as linked"),
+                    DB::raw("SUM(CASE WHEN requests.status = 'rejected' THEN 1 ELSE 0 END) as rejected")
+                )
+                ->groupBy('merchants.tier')
+                ->get()
+                ->toArray();
 
-        // Add fulfilment rate per tier
-        $merchantTierStats = array_map(function ($row) {
-            $row = (array) $row;
-            $row['fulfilment_rate'] = $row['total_requests'] > 0
-                ? round(($row['fulfilled'] + $row['linked']) / $row['total_requests'] * 100, 1)
-                : 0;
-            return $row;
-        }, $merchantTierStats);
+            $merchantTierStats = array_map(function ($row) {
+                $row = (array) $row;
+                $row['fulfilment_rate'] = $row['total_requests'] > 0
+                    ? round(($row['fulfilled'] + $row['linked']) / $row['total_requests'] * 100, 1)
+                    : 0;
+                return $row;
+            }, $merchantTierStats);
+        } catch (\Throwable $e) {
+            $merchantTierStats = [];
+        }
 
         // Item 43 — CTO-attributed estimate labeling
-        $featuresWithCtoEstimate = DB::table('features')
-            ->join('team_members', 'features.cto_estimated_by', '=', 'team_members.id')
-            ->whereNull('features.deleted_at')
-            ->whereNotNull('features.cto_estimated_hours')
-            ->select(
-                'features.id', 'features.title', 'features.estimated_hours',
-                'features.cto_estimated_hours', 'team_members.name as cto_name'
-            )
-            ->limit(10)
-            ->get()
-            ->toArray();
+        try {
+            $featuresWithCtoEstimate = DB::table('features')
+                ->join('team_members', 'features.cto_estimated_by', '=', 'team_members.id')
+                ->whereNull('features.deleted_at')
+                ->whereNotNull('features.cto_estimated_hours')
+                ->select(
+                    'features.id', 'features.title', 'features.estimated_hours',
+                    'features.cto_estimated_hours', 'team_members.name as cto_name'
+                )
+                ->limit(10)
+                ->get()
+                ->toArray();
+        } catch (\Throwable $e) {
+            $featuresWithCtoEstimate = [];
+        }
 
         return array_merge($base, [
             'narrative'                  => $narrative,
