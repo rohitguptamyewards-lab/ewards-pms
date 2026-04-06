@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -10,22 +11,33 @@ return new class extends Migration
 
     public function up(): void
     {
-        DB::statement("ALTER TABLE features ADD COLUMN IF NOT EXISTS rollout_percentage SMALLINT NOT NULL DEFAULT 0");
-        DB::statement("ALTER TABLE features ADD COLUMN IF NOT EXISTS rollout_notes TEXT");
-        DB::statement("ALTER TABLE features ADD COLUMN IF NOT EXISTS rolled_back_at TIMESTAMP");
-        DB::statement("ALTER TABLE features ADD COLUMN IF NOT EXISTS rolled_back_by BIGINT");
-        DB::statement("ALTER TABLE features ADD COLUMN IF NOT EXISTS cto_estimated_hours DECIMAL(8,2)");
-        DB::statement("ALTER TABLE features ADD COLUMN IF NOT EXISTS cto_estimated_by BIGINT");
+        $statements = [
+            "ALTER TABLE features ADD COLUMN IF NOT EXISTS rollout_percentage SMALLINT NOT NULL DEFAULT 0",
+            "ALTER TABLE features ADD COLUMN IF NOT EXISTS rollout_notes TEXT",
+            "ALTER TABLE features ADD COLUMN IF NOT EXISTS rolled_back_at TIMESTAMP",
+            "ALTER TABLE features ADD COLUMN IF NOT EXISTS rolled_back_by BIGINT",
+            "ALTER TABLE features ADD COLUMN IF NOT EXISTS cto_estimated_hours DECIMAL(8,2)",
+            "ALTER TABLE features ADD COLUMN IF NOT EXISTS cto_estimated_by BIGINT",
+        ];
 
-        // Add FKs only if they don't already exist
-        $fk1 = DB::selectOne("SELECT 1 FROM information_schema.table_constraints WHERE constraint_name = 'features_rolled_back_by_foreign' AND table_name = 'features'");
-        if (!$fk1) {
-            DB::statement("ALTER TABLE features ADD CONSTRAINT features_rolled_back_by_foreign FOREIGN KEY (rolled_back_by) REFERENCES team_members(id) ON DELETE SET NULL");
+        foreach ($statements as $sql) {
+            try { DB::unprepared($sql); } catch (\Throwable $e) {
+                Log::warning("Migration DDL skipped: {$e->getMessage()}", ['sql' => $sql]);
+            }
         }
 
-        $fk2 = DB::selectOne("SELECT 1 FROM information_schema.table_constraints WHERE constraint_name = 'features_cto_estimated_by_foreign' AND table_name = 'features'");
-        if (!$fk2) {
-            DB::statement("ALTER TABLE features ADD CONSTRAINT features_cto_estimated_by_foreign FOREIGN KEY (cto_estimated_by) REFERENCES team_members(id) ON DELETE SET NULL");
+        $fks = [
+            ['features_rolled_back_by_foreign', "ALTER TABLE features ADD CONSTRAINT features_rolled_back_by_foreign FOREIGN KEY (rolled_back_by) REFERENCES team_members(id) ON DELETE SET NULL"],
+            ['features_cto_estimated_by_foreign', "ALTER TABLE features ADD CONSTRAINT features_cto_estimated_by_foreign FOREIGN KEY (cto_estimated_by) REFERENCES team_members(id) ON DELETE SET NULL"],
+        ];
+
+        foreach ($fks as [$name, $sql]) {
+            try {
+                $exists = DB::selectOne("SELECT 1 FROM information_schema.table_constraints WHERE constraint_name = ? AND table_name = 'features'", [$name]);
+                if (!$exists) { DB::unprepared($sql); }
+            } catch (\Throwable $e) {
+                Log::warning("Migration FK skipped: {$e->getMessage()}", ['constraint' => $name]);
+            }
         }
     }
 

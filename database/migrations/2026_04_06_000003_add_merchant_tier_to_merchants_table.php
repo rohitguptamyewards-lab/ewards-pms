@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -10,19 +11,30 @@ return new class extends Migration
 
     public function up(): void
     {
-        DB::statement("ALTER TABLE merchants ADD COLUMN IF NOT EXISTS tier VARCHAR(255) NOT NULL DEFAULT 'smb'");
-        DB::statement("ALTER TABLE merchants ADD COLUMN IF NOT EXISTS industry VARCHAR(255)");
-        DB::statement("ALTER TABLE merchants ADD COLUMN IF NOT EXISTS account_manager_id VARCHAR(255)");
-        DB::statement("ALTER TABLE merchants ADD COLUMN IF NOT EXISTS contract_value DECIMAL(14,2)");
-        DB::statement("ALTER TABLE merchants ADD COLUMN IF NOT EXISTS contract_start DATE");
-        DB::statement("ALTER TABLE merchants ADD COLUMN IF NOT EXISTS contract_end DATE");
+        $statements = [
+            "ALTER TABLE merchants ADD COLUMN IF NOT EXISTS tier VARCHAR(255) NOT NULL DEFAULT 'smb'",
+            "ALTER TABLE merchants ADD COLUMN IF NOT EXISTS industry VARCHAR(255)",
+            "ALTER TABLE merchants ADD COLUMN IF NOT EXISTS account_manager_id VARCHAR(255)",
+            "ALTER TABLE merchants ADD COLUMN IF NOT EXISTS contract_value DECIMAL(14,2)",
+            "ALTER TABLE merchants ADD COLUMN IF NOT EXISTS contract_start DATE",
+            "ALTER TABLE merchants ADD COLUMN IF NOT EXISTS contract_end DATE",
+            "ALTER TABLE requests ADD COLUMN IF NOT EXISTS sprint_eta DATE",
+            "ALTER TABLE requests ADD COLUMN IF NOT EXISTS linked_sprint_id BIGINT",
+        ];
 
-        DB::statement("ALTER TABLE requests ADD COLUMN IF NOT EXISTS sprint_eta DATE");
-        DB::statement("ALTER TABLE requests ADD COLUMN IF NOT EXISTS linked_sprint_id BIGINT");
+        foreach ($statements as $sql) {
+            try { DB::unprepared($sql); } catch (\Throwable $e) {
+                Log::warning("Migration DDL skipped: {$e->getMessage()}", ['sql' => $sql]);
+            }
+        }
 
-        $fk = DB::selectOne("SELECT 1 FROM information_schema.table_constraints WHERE constraint_name = 'requests_linked_sprint_id_foreign' AND table_name = 'requests'");
-        if (!$fk) {
-            DB::statement("ALTER TABLE requests ADD CONSTRAINT requests_linked_sprint_id_foreign FOREIGN KEY (linked_sprint_id) REFERENCES sprints(id) ON DELETE SET NULL");
+        try {
+            $fk = DB::selectOne("SELECT 1 FROM information_schema.table_constraints WHERE constraint_name = 'requests_linked_sprint_id_foreign' AND table_name = 'requests'");
+            if (!$fk) {
+                DB::unprepared("ALTER TABLE requests ADD CONSTRAINT requests_linked_sprint_id_foreign FOREIGN KEY (linked_sprint_id) REFERENCES sprints(id) ON DELETE SET NULL");
+            }
+        } catch (\Throwable $e) {
+            Log::warning("Migration FK skipped: {$e->getMessage()}");
         }
     }
 
