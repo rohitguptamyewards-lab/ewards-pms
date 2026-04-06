@@ -71,7 +71,7 @@ function initials(name) {
                         </div>
                         <div>
                             <h3 class="text-sm font-bold text-gray-900">{{ member.name }}</h3>
-                            <p class="text-xs text-gray-400 capitalize">{{ (member.role || '').replace('_', ' ') }} &middot; Joined {{ formatDate(member.join_date) }}</p>
+                            <p class="text-xs text-gray-400 capitalize">{{ (member.role || '').replace('_', ' ') }} &middot; Joined {{ formatDate(member.joining_date) }}</p>
                         </div>
                     </div>
                     <div class="text-right">

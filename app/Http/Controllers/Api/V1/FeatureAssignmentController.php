@@ -16,6 +16,13 @@ class FeatureAssignmentController extends Controller
         private readonly FeatureAssignmentRepository $assignmentRepository,
     ) {}
 
+    private function isManager(): bool
+    {
+        $role = auth()->user()->role;
+        $value = $role instanceof \App\Enums\Role ? $role->value : (string) $role;
+        return in_array($value, ['cto', 'ceo', 'manager']);
+    }
+
     public function index(Request $request): JsonResponse
     {
         $assignments = $this->assignmentRepository->findAll(
@@ -33,6 +40,8 @@ class FeatureAssignmentController extends Controller
 
     public function store(StoreFeatureAssignmentRequest $request): JsonResponse
     {
+        abort_unless($this->isManager(), 403, 'Only managers can assign features.');
+
         $data = $request->validated();
         $id = $this->assignmentService->create($data);
 
@@ -48,6 +57,8 @@ class FeatureAssignmentController extends Controller
 
     public function remove(int $id): JsonResponse
     {
+        abort_unless($this->isManager(), 403, 'Only managers can remove feature assignments.');
+
         $this->assignmentService->remove($id);
 
         return response()->json(['message' => 'Assignment removed']);

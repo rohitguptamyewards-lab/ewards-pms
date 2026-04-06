@@ -1,6 +1,10 @@
 <script setup>
+/**
+ * Item 74 — Mobile-first "New Request" flow for sales.
+ * Redesigned as a step-by-step wizard optimized for mobile touch.
+ */
 import { Head, Link, useForm, router } from '@inertiajs/vue3';
-import { ref, watch } from 'vue';
+import { ref, computed, watch } from 'vue';
 import axios from 'axios';
 import AppLayout from '@/Layouts/AppLayout.vue';
 
@@ -10,6 +14,12 @@ defineProps({
     merchants: { type: Array, default: () => [] },
 });
 
+const step             = ref(1);
+const totalSteps       = 3;
+const duplicates       = ref([]);
+const checkingDups     = ref(false);
+const merchantSearch   = ref('');
+
 const form = useForm({
     title:       '',
     description: '',
@@ -18,30 +28,40 @@ const form = useForm({
     urgency:     '',
 });
 
-const duplicates        = ref([]);
-const checkingDuplicates = ref(false);
-const merchantSearch    = ref('');
-
 let debounceTimer = null;
-
 watch(() => form.title, (val) => {
     if (debounceTimer) clearTimeout(debounceTimer);
+    duplicates.value = [];
     if (val.length >= 3) {
         debounceTimer = setTimeout(async () => {
-            checkingDuplicates.value = true;
+            checkingDups.value = true;
             try {
                 const { data } = await axios.get('/api/v1/requests/check-duplicates', { params: { title: val } });
                 duplicates.value = data.duplicates || [];
-            } catch {
-                duplicates.value = [];
-            } finally {
-                checkingDuplicates.value = false;
-            }
+            } catch { duplicates.value = []; }
+            finally { checkingDups.value = false; }
         }, 400);
-    } else {
-        duplicates.value = [];
     }
 });
+
+// Step validation
+const step1Valid = computed(() => form.title.trim().length >= 3);
+const step2Valid = computed(() => !!form.type && !!form.urgency);
+const step3Valid = computed(() => form.description.trim().length >= 10);
+
+const canProceed = computed(() => {
+    if (step.value === 1) return step1Valid.value;
+    if (step.value === 2) return step2Valid.value;
+    if (step.value === 3) return step3Valid.value;
+    return false;
+});
+
+function nextStep() {
+    if (canProceed.value && step.value < totalSteps) step.value++;
+}
+function prevStep() {
+    if (step.value > 1) step.value--;
+}
 
 function submit() {
     form.post('/requests');
@@ -50,67 +70,76 @@ function submit() {
 async function mergeTo(targetId) {
     if (!confirm('This will submit your request and merge it with the selected existing request. Continue?')) return;
     try {
-        // Create this request first via API (returns JSON)
         const { data: newReq } = await axios.post('/api/v1/requests', {
-            title:       form.title,
-            description: form.description,
-            merchant_id: form.merchant_id || null,
-            type:        form.type,
-            urgency:     form.urgency,
+            title: form.title, description: form.description,
+            merchant_id: form.merchant_id || null, type: form.type, urgency: form.urgency,
         });
-        // Merge the newly created request into the existing target
         await axios.post(`/api/v1/requests/${newReq.id}/merge`, { target_id: targetId });
         router.visit('/requests');
     } catch (e) {
         const errors = e.response?.data?.errors;
-        if (errors) {
-            const msgs = Object.values(errors).flat().join('\n');
-            alert('Please fix the following before merging:\n' + msgs);
-        } else {
-            alert(e.response?.data?.message || 'Failed to merge request.');
-        }
+        if (errors) alert('Please fix:\n' + Object.values(errors).flat().join('\n'));
+        else alert(e.response?.data?.message || 'Failed to merge.');
     }
 }
+
+const TYPE_OPTIONS = [
+    { value: 'bug',         label: 'Bug',         desc: 'Something is broken',     icon: '🐛', color: 'border-red-200 bg-red-50 text-red-800 hover:bg-red-100' },
+    { value: 'new_feature', label: 'New Feature', desc: 'Brand new capability',     icon: '✨', color: 'border-purple-200 bg-purple-50 text-purple-800 hover:bg-purple-100' },
+    { value: 'improvement', label: 'Improvement', desc: 'Enhance existing feature', icon: '⚡', color: 'border-blue-200 bg-blue-50 text-blue-800 hover:bg-blue-100' },
+];
+
+const URGENCY_OPTIONS = [
+    { value: 'merchant_blocked', label: 'Merchant Blocked', desc: 'Merchant cannot proceed',    icon: '🚨', color: 'border-red-200 bg-red-50 text-red-800 hover:bg-red-100' },
+    { value: 'merchant_unhappy', label: 'Merchant Unhappy', desc: 'Significant dissatisfaction', icon: '😕', color: 'border-orange-200 bg-orange-50 text-orange-800 hover:bg-orange-100' },
+    { value: 'nice_to_have',     label: 'Nice to Have',     desc: 'Would improve experience',   icon: '💡', color: 'border-gray-200 bg-gray-50 text-gray-700 hover:bg-gray-100' },
+];
 </script>
 
 <template>
     <Head title="New Request" />
 
-    <div class="mx-auto max-w-2xl">
-        <!-- Breadcrumb -->
-        <div class="mb-4 flex items-center gap-2 text-sm text-gray-500">
-            <Link href="/requests" class="hover:text-gray-700">Requests</Link>
-            <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
-            </svg>
-            <span class="font-medium text-gray-900">New Request</span>
+    <div class="mx-auto max-w-lg px-1 sm:px-0">
+        <!-- Header -->
+        <div class="mb-5 flex items-center gap-3">
+            <Link href="/requests" class="flex h-9 w-9 items-center justify-center rounded-full border border-gray-200 bg-white shadow-sm hover:bg-gray-50 transition-colors">
+                <svg class="h-4 w-4 text-gray-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+                </svg>
+            </Link>
+            <div>
+                <h1 class="text-lg font-bold text-gray-900">New Request</h1>
+                <p class="text-xs text-gray-500">Step {{ step }} of {{ totalSteps }}</p>
+            </div>
         </div>
 
-        <div class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
-            <div class="border-b border-gray-100 bg-gray-50 px-6 py-4">
-                <h1 class="text-lg font-bold text-gray-900">New Request</h1>
-                <p class="mt-0.5 text-sm text-gray-500">Submit a merchant feature request or bug report</p>
-            </div>
+        <!-- Progress bar -->
+        <div class="mb-6 flex gap-1.5">
+            <div v-for="s in totalSteps" :key="s" class="h-1.5 flex-1 rounded-full transition-all duration-300"
+                :class="s <= step ? 'bg-[#4e1a77]' : 'bg-gray-200'" />
+        </div>
 
-            <form @submit.prevent="submit" class="space-y-5 p-6">
+        <!-- ── Step 1: Title & Merchant ── -->
+        <div v-if="step === 1" class="space-y-5">
+            <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+                <p class="mb-4 text-xs font-semibold uppercase tracking-wide text-gray-400">Step 1 — What's the request?</p>
+
                 <!-- Title -->
-                <div>
-                    <label for="title" class="mb-1.5 block text-sm font-semibold text-gray-700">
-                        Title <span class="text-red-500">*</span>
-                    </label>
+                <div class="mb-4">
+                    <label class="mb-2 block text-sm font-semibold text-gray-800">Request Title <span class="text-red-500">*</span></label>
                     <input
-                        id="title"
                         v-model="form.title"
                         type="text"
-                        required
-                        placeholder="Brief description of the request"
-                        class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#4e1a77] focus:bg-white focus:ring-1 focus:ring-[#4e1a77] outline-none transition"
+                        autofocus
+                        autocomplete="off"
+                        placeholder="e.g. Add bulk export feature to reports"
+                        class="block w-full rounded-xl border-2 border-gray-200 bg-gray-50 px-4 py-3.5 text-sm placeholder-gray-400 focus:border-[#4e1a77] focus:bg-white outline-none transition"
                         :class="{ 'border-red-400 bg-red-50': form.errors.title }"
                     />
-                    <p v-if="form.errors.title" class="mt-1 text-xs text-red-600">{{ form.errors.title }}</p>
+                    <p v-if="form.errors.title" class="mt-1.5 text-xs text-red-600">{{ form.errors.title }}</p>
 
-                    <!-- Duplicate check spinner -->
-                    <p v-if="checkingDuplicates" class="mt-1 flex items-center gap-1 text-xs text-gray-400">
+                    <!-- Duplicate check -->
+                    <p v-if="checkingDups" class="mt-2 flex items-center gap-1.5 text-xs text-gray-400">
                         <svg class="h-3 w-3 animate-spin" fill="none" viewBox="0 0 24 24">
                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
                             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
@@ -119,127 +148,189 @@ async function mergeTo(targetId) {
                     </p>
 
                     <!-- Duplicate warning -->
-                    <div v-if="duplicates.length" class="mt-2 rounded-lg border border-amber-200 bg-amber-50 p-3">
-                        <p class="text-sm font-semibold text-amber-800">⚠ Similar requests found — consider merging:</p>
-                        <ul class="mt-2 space-y-2">
-                            <li v-for="dup in duplicates" :key="dup.id" class="flex items-center justify-between text-sm">
-                                <span class="text-amber-700 truncate mr-3">{{ dup.title }}</span>
-                                <button
-                                    type="button"
-                                    @click="mergeTo(dup.id)"
-                                    class="shrink-0 rounded-md bg-amber-600 px-2.5 py-1 text-xs font-semibold text-white hover:bg-amber-700 transition-colors"
-                                >
-                                    Merge into this
+                    <div v-if="duplicates.length" class="mt-3 rounded-xl border-2 border-amber-200 bg-amber-50 p-4">
+                        <p class="text-sm font-semibold text-amber-900">Similar requests found:</p>
+                        <div class="mt-3 space-y-2">
+                            <div v-for="dup in duplicates" :key="dup.id" class="flex items-center justify-between gap-3 rounded-lg bg-white p-3 shadow-sm">
+                                <span class="flex-1 truncate text-xs text-amber-800">{{ dup.title }}</span>
+                                <button type="button" @click="mergeTo(dup.id)"
+                                    class="shrink-0 rounded-lg bg-amber-500 px-3 py-1.5 text-xs font-semibold text-white hover:bg-amber-600 active:scale-95 transition">
+                                    Merge →
                                 </button>
-                            </li>
-                        </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Merchant (optional) -->
+                <div>
+                    <label class="mb-2 block text-sm font-semibold text-gray-800">Merchant <span class="text-xs font-normal text-gray-400">(optional)</span></label>
+                    <input
+                        v-model="merchantSearch"
+                        type="text"
+                        placeholder="Search merchant name..."
+                        class="mb-2 block w-full rounded-xl border-2 border-gray-200 bg-gray-50 px-4 py-3 text-sm placeholder-gray-400 focus:border-[#4e1a77] focus:bg-white outline-none transition"
+                    />
+                    <select
+                        v-model="form.merchant_id"
+                        class="block w-full rounded-xl border-2 border-gray-200 bg-gray-50 px-4 py-3.5 text-sm focus:border-[#4e1a77] focus:bg-white outline-none transition"
+                    >
+                        <option value="">No specific merchant</option>
+                        <option
+                            v-for="m in merchants.filter(m => !merchantSearch || m.name.toLowerCase().includes(merchantSearch.toLowerCase()))"
+                            :key="m.id"
+                            :value="m.id"
+                        >{{ m.name }}</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Next -->
+            <button
+                type="button"
+                @click="nextStep"
+                :disabled="!step1Valid"
+                class="w-full rounded-xl bg-[#4e1a77] py-4 text-sm font-bold text-white shadow-lg disabled:opacity-40 hover:bg-[#3d1560] active:scale-[0.99] transition"
+            >
+                Continue →
+            </button>
+        </div>
+
+        <!-- ── Step 2: Type & Urgency ── -->
+        <div v-if="step === 2" class="space-y-5">
+            <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+                <p class="mb-4 text-xs font-semibold uppercase tracking-wide text-gray-400">Step 2 — Request type & urgency</p>
+
+                <!-- Type -->
+                <div class="mb-5">
+                    <label class="mb-3 block text-sm font-semibold text-gray-800">Type <span class="text-red-500">*</span></label>
+                    <div class="space-y-2.5">
+                        <button
+                            v-for="opt in TYPE_OPTIONS"
+                            :key="opt.value"
+                            type="button"
+                            @click="form.type = opt.value"
+                            :class="['w-full rounded-xl border-2 p-4 text-left transition active:scale-[0.99]', form.type === opt.value ? opt.color + ' border-current ring-2 ring-offset-1 ring-[#4e1a77]' : opt.color]"
+                        >
+                            <div class="flex items-center gap-3">
+                                <span class="text-xl">{{ opt.icon }}</span>
+                                <div>
+                                    <p class="text-sm font-semibold">{{ opt.label }}</p>
+                                    <p class="text-xs opacity-70">{{ opt.desc }}</p>
+                                </div>
+                                <div class="ml-auto">
+                                    <div class="h-5 w-5 rounded-full border-2" :class="form.type === opt.value ? 'border-[#4e1a77] bg-[#4e1a77]' : 'border-gray-300'">
+                                        <svg v-if="form.type === opt.value" class="h-full w-full text-white" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Urgency -->
+                <div>
+                    <label class="mb-3 block text-sm font-semibold text-gray-800">Urgency <span class="text-red-500">*</span></label>
+                    <div class="space-y-2.5">
+                        <button
+                            v-for="opt in URGENCY_OPTIONS"
+                            :key="opt.value"
+                            type="button"
+                            @click="form.urgency = opt.value"
+                            :class="['w-full rounded-xl border-2 p-4 text-left transition active:scale-[0.99]', form.urgency === opt.value ? opt.color + ' border-current ring-2 ring-offset-1 ring-[#4e1a77]' : opt.color]"
+                        >
+                            <div class="flex items-center gap-3">
+                                <span class="text-xl">{{ opt.icon }}</span>
+                                <div>
+                                    <p class="text-sm font-semibold">{{ opt.label }}</p>
+                                    <p class="text-xs opacity-70">{{ opt.desc }}</p>
+                                </div>
+                                <div class="ml-auto">
+                                    <div class="h-5 w-5 rounded-full border-2" :class="form.urgency === opt.value ? 'border-[#4e1a77] bg-[#4e1a77]' : 'border-gray-300'">
+                                        <svg v-if="form.urgency === opt.value" class="h-full w-full text-white" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex gap-3">
+                <button type="button" @click="prevStep" class="flex-1 rounded-xl border-2 border-gray-200 py-4 text-sm font-semibold text-gray-600 hover:bg-gray-50 active:scale-[0.99] transition">
+                    ← Back
+                </button>
+                <button type="button" @click="nextStep" :disabled="!step2Valid"
+                    class="flex-[2] rounded-xl bg-[#4e1a77] py-4 text-sm font-bold text-white shadow-lg disabled:opacity-40 hover:bg-[#3d1560] active:scale-[0.99] transition">
+                    Continue →
+                </button>
+            </div>
+        </div>
+
+        <!-- ── Step 3: Description & Submit ── -->
+        <div v-if="step === 3" class="space-y-5">
+            <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+                <p class="mb-4 text-xs font-semibold uppercase tracking-wide text-gray-400">Step 3 — Details</p>
+
+                <!-- Summary card -->
+                <div class="mb-5 rounded-xl bg-[#f5f0ff] p-4">
+                    <p class="text-xs font-semibold uppercase tracking-wide text-[#4e1a77]">Your request summary</p>
+                    <p class="mt-1 text-sm font-semibold text-gray-900">{{ form.title }}</p>
+                    <div class="mt-2 flex flex-wrap gap-2">
+                        <span class="rounded-full bg-white px-2.5 py-0.5 text-xs font-medium text-gray-700 shadow-sm">
+                            {{ TYPE_OPTIONS.find(t => t.value === form.type)?.icon }}
+                            {{ TYPE_OPTIONS.find(t => t.value === form.type)?.label }}
+                        </span>
+                        <span class="rounded-full bg-white px-2.5 py-0.5 text-xs font-medium text-gray-700 shadow-sm">
+                            {{ URGENCY_OPTIONS.find(u => u.value === form.urgency)?.icon }}
+                            {{ URGENCY_OPTIONS.find(u => u.value === form.urgency)?.label }}
+                        </span>
                     </div>
                 </div>
 
                 <!-- Description -->
                 <div>
-                    <label for="description" class="mb-1.5 block text-sm font-semibold text-gray-700">
+                    <label class="mb-2 block text-sm font-semibold text-gray-800">
                         Description <span class="text-red-500">*</span>
+                        <span class="ml-1 text-xs font-normal text-gray-400">(min 10 characters)</span>
                     </label>
                     <textarea
-                        id="description"
                         v-model="form.description"
-                        rows="4"
-                        placeholder="Detailed description of the request..."
-                        class="block w-full resize-none rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#4e1a77] focus:bg-white focus:ring-1 focus:ring-[#4e1a77] outline-none transition"
-                        :class="{ 'border-red-400': form.errors.description }"
+                        rows="6"
+                        placeholder="Describe the problem, expected behavior, and any relevant context...&#10;&#10;The more detail you provide, the faster the team can act on this."
+                        class="block w-full resize-none rounded-xl border-2 border-gray-200 bg-gray-50 px-4 py-3.5 text-sm placeholder-gray-400 focus:border-[#4e1a77] focus:bg-white outline-none transition"
+                        :class="{ 'border-red-400 bg-red-50': form.errors.description }"
                     />
-                    <p v-if="form.errors.description" class="mt-1 text-xs text-red-600">{{ form.errors.description }}</p>
-                </div>
-
-                <!-- Merchant -->
-                <div>
-                    <label class="mb-1.5 block text-sm font-semibold text-gray-700">Merchant</label>
-                    <input
-                        v-model="merchantSearch"
-                        type="text"
-                        placeholder="Search merchants..."
-                        class="mb-1.5 block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#4e1a77] focus:ring-1 focus:ring-[#4e1a77] outline-none"
-                    />
-                    <select
-                        id="merchant"
-                        v-model="form.merchant_id"
-                        class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#4e1a77] focus:bg-white focus:ring-1 focus:ring-[#4e1a77] outline-none transition"
-                        :class="{ 'border-red-400': form.errors.merchant_id }"
-                    >
-                        <option value="">Select a merchant</option>
-                        <option
-                            v-for="m in merchants.filter(m => !merchantSearch || m.name.toLowerCase().includes(merchantSearch.toLowerCase()))"
-                            :key="m.id"
-                            :value="m.id"
-                        >
-                            {{ m.name }}
-                        </option>
-                    </select>
-                    <p v-if="form.errors.merchant_id" class="mt-1 text-xs text-red-600">{{ form.errors.merchant_id }}</p>
-                </div>
-
-                <!-- Type + Urgency row -->
-                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                    <div>
-                        <label for="type" class="mb-1.5 block text-sm font-semibold text-gray-700">
-                            Type <span class="text-red-500">*</span>
-                        </label>
-                        <select
-                            id="type"
-                            v-model="form.type"
-                            required
-                            class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#4e1a77] focus:bg-white focus:ring-1 focus:ring-[#4e1a77] outline-none transition"
-                            :class="{ 'border-red-400': form.errors.type }"
-                        >
-                            <option value="">Select type</option>
-                            <option value="bug">Bug</option>
-                            <option value="new_feature">New Feature</option>
-                            <option value="improvement">Improvement</option>
-                        </select>
-                        <p v-if="form.errors.type" class="mt-1 text-xs text-red-600">{{ form.errors.type }}</p>
-                    </div>
-                    <div>
-                        <label for="urgency" class="mb-1.5 block text-sm font-semibold text-gray-700">
-                            Urgency <span class="text-red-500">*</span>
-                        </label>
-                        <select
-                            id="urgency"
-                            v-model="form.urgency"
-                            required
-                            class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm focus:border-[#4e1a77] focus:bg-white focus:ring-1 focus:ring-[#4e1a77] outline-none transition"
-                            :class="{ 'border-red-400': form.errors.urgency }"
-                        >
-                            <option value="">Select urgency</option>
-                            <option value="merchant_blocked">Merchant Blocked</option>
-                            <option value="merchant_unhappy">Merchant Unhappy</option>
-                            <option value="nice_to_have">Nice to Have</option>
-                        </select>
-                        <p v-if="form.errors.urgency" class="mt-1 text-xs text-red-600">{{ form.errors.urgency }}</p>
+                    <div class="mt-1.5 flex items-center justify-between">
+                        <p v-if="form.errors.description" class="text-xs text-red-600">{{ form.errors.description }}</p>
+                        <p class="ml-auto text-xs" :class="form.description.length >= 10 ? 'text-green-600' : 'text-gray-400'">
+                            {{ form.description.length }} chars
+                        </p>
                     </div>
                 </div>
+            </div>
 
-                <!-- Actions -->
-                <div class="flex items-center justify-between gap-3 border-t border-gray-100 pt-4">
-                    <Link
-                        href="/requests"
-                        class="rounded-lg border border-gray-200 px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors"
-                    >
-                        Cancel
-                    </Link>
-                    <button
-                        type="submit"
-                        :disabled="form.processing"
-                        class="inline-flex items-center gap-2 rounded-lg bg-[#4e1a77] px-6 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[#3d1560] disabled:opacity-50 transition-colors"
-                    >
-                        <svg v-if="form.processing" class="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
-                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
-                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
-                        </svg>
-                        {{ form.processing ? 'Submitting...' : 'Submit Request' }}
-                    </button>
-                </div>
-            </form>
+            <div class="flex gap-3">
+                <button type="button" @click="prevStep" class="flex-1 rounded-xl border-2 border-gray-200 py-4 text-sm font-semibold text-gray-600 hover:bg-gray-50 active:scale-[0.99] transition">
+                    ← Back
+                </button>
+                <button
+                    type="button"
+                    @click="submit"
+                    :disabled="!step3Valid || form.processing"
+                    class="flex-[2] inline-flex items-center justify-center gap-2 rounded-xl bg-[#4e1a77] py-4 text-sm font-bold text-white shadow-lg disabled:opacity-40 hover:bg-[#3d1560] active:scale-[0.99] transition"
+                >
+                    <svg v-if="form.processing" class="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+                    </svg>
+                    {{ form.processing ? 'Submitting...' : 'Submit Request ✓' }}
+                </button>
+            </div>
         </div>
     </div>
 </template>

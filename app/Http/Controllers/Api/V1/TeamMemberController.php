@@ -61,19 +61,32 @@ class TeamMemberController extends Controller
         ]);
     }
 
+    private function isManager(): bool
+    {
+        $role = auth()->user()->role;
+        $value = $role instanceof \App\Enums\Role ? $role->value : (string) $role;
+        return in_array($value, ['cto', 'ceo', 'manager']);
+    }
+
     /**
      * Show the create team member form.
+     * Only CTO, CEO, Manager can create team members.
      */
     public function create(): InertiaResponse
     {
+        abort_unless($this->isManager(), 403, 'Only managers can create team members.');
+
         return Inertia::render('TeamMembers/Create');
     }
 
     /**
      * Store a new team member.
+     * Only CTO, CEO, Manager can create team members.
      */
     public function store(Request $request): RedirectResponse
     {
+        abort_unless($this->isManager(), 403, 'Only managers can create team members.');
+
         $validated = $request->validate([
             'name'             => 'required|string|max:255',
             'email'            => 'required|email|max:255|unique:team_members,email',
@@ -230,9 +243,12 @@ class TeamMemberController extends Controller
 
     /**
      * Resend welcome email with a fresh temporary password.
+     * Only CTO, CEO, Manager can resend welcome emails.
      */
     public function resendWelcome(int $id): RedirectResponse
     {
+        abort_unless($this->isManager(), 403, 'Only managers can resend welcome emails.');
+
         $member = TeamMember::where('id', $id)->whereNull('deleted_at')->firstOrFail();
 
         $newPassword = 'Password';

@@ -17,6 +17,12 @@ class Merchant extends Model
     protected $fillable = [
         'name',
         'type',
+        'tier',
+        'industry',
+        'account_manager_id',
+        'contract_value',
+        'contract_start',
+        'contract_end',
         'contact_email',
         'contact_phone',
         'is_active',
@@ -25,7 +31,10 @@ class Merchant extends Model
     protected function casts(): array
     {
         return [
-            'is_active' => 'boolean',
+            'is_active'      => 'boolean',
+            'contract_value' => 'decimal:2',
+            'contract_start' => 'date',
+            'contract_end'   => 'date',
         ];
     }
 

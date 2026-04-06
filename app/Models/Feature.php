@@ -11,6 +11,7 @@ use App\Traits\Auditable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 
@@ -31,12 +32,23 @@ class Feature extends Model
         'business_impact',
         'status',
         'rollout_state',
+        'rollout_percentage',
+        'rollout_notes',
+        'rolled_back_at',
+        'rolled_back_by',
         'deadline',
         'estimated_hours',
+        'cto_estimated_hours',
+        'cto_estimated_by',
         'assigned_to',
         'qa_owner_id',
         'spec_version',
         'tenant_id',
+        'cost_type',
+        'is_one_time_cost',
+        'overhead_multiplier',
+        'maintenance_cost_monthly',
+        'attributed_revenue',
     ];
 
     protected function casts(): array
@@ -47,8 +59,13 @@ class Feature extends Model
             'priority'      => FeaturePriority::class,
             'origin_type'   => FeatureOriginType::class,
             'rollout_state' => FeatureRolloutState::class,
-            'deadline'      => 'date',
-            'estimated_hours' => 'decimal:2',
+            'deadline'              => 'date',
+            'estimated_hours'       => 'decimal:2',
+            'cto_estimated_hours'   => 'decimal:2',
+            'is_one_time_cost'      => 'boolean',
+            'overhead_multiplier'   => 'decimal:2',
+            'rollout_percentage'    => 'integer',
+            'rolled_back_at'        => 'datetime',
         ];
     }
 
@@ -77,12 +94,12 @@ class Feature extends Model
         return $this->hasMany(PmsRequest::class, 'linked_feature_id');
     }
 
-    public function comments()
+    public function comments(): MorphMany
     {
         return $this->morphMany(Comment::class, 'commentable');
     }
 
-    public function documents()
+    public function documents(): MorphMany
     {
         return $this->morphMany(Document::class, 'documentable');
     }

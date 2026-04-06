@@ -75,6 +75,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/features', [FeatureController::class, 'storeWeb'])->name('features.store');
     Route::get('/features/{id}', [FeatureController::class, 'showPage'])->name('features.show');
     Route::put('/features/{id}', [FeatureController::class, 'updateWeb'])->name('features.update');
+    Route::put('/features/{id}/rollout', [FeatureController::class, 'updateRollout'])->name('features.rollout');
+    Route::post('/features/{id}/rollback', [FeatureController::class, 'rollback'])->name('features.rollback');
 
     // Initiatives
     Route::get('/initiatives', [InitiativeController::class, 'index'])->name('initiatives.index');

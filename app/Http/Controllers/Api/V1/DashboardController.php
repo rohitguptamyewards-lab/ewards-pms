@@ -38,15 +38,20 @@ class DashboardController extends Controller
             ]);
         }
 
-        // CEO → business / pipeline view
+        // CEO → business / pipeline view (enhanced)
         if ($role === 'ceo') {
-            $data = $this->dashboardService->assembleCEO();
+            $data = $this->dashboardService->assembleCEOEnhanced();
             return Inertia::render('Dashboard/CEO', [
-                'featurePipeline' => $data['featurePipeline'],
-                'requestPipeline' => $data['requestPipeline'],
-                'activeProjects'  => $data['activeProjects'],
-                'teamSize'        => $data['teamSize'],
-                'hoursThisMonth'  => $data['hoursThisMonth'],
+                'featurePipeline'           => $data['featurePipeline'],
+                'requestPipeline'           => $data['requestPipeline'],
+                'activeProjects'            => $data['activeProjects'],
+                'teamSize'                  => $data['teamSize'],
+                'hoursThisMonth'            => $data['hoursThisMonth'],
+                'narrative'                 => $data['narrative'],
+                'investmentMatrix'          => $data['investment_matrix'],
+                'merchantTierStats'         => $data['merchant_tier_stats'],
+                'featuresWithCtoEstimate'   => $data['features_with_cto_estimate'],
+                'dataFreshness'             => $data['data_freshness'],
             ]);
         }
 
@@ -60,12 +65,14 @@ class DashboardController extends Controller
             ]);
         }
 
-        // Sales → my submitted requests
+        // Sales → my submitted requests (enhanced)
         if ($role === 'sales') {
             $data = $this->dashboardService->assembleSales($user->id);
             return Inertia::render('Dashboard/Sales', [
-                'myRequests' => $data['myRequests'],
-                'stats'      => $data['stats'],
+                'myRequests'         => $data['myRequests'],
+                'stats'              => $data['stats'],
+                'merchantHistory'    => $data['merchant_history'],
+                'newProductFeatures' => $data['new_product_features'],
             ]);
         }
 
@@ -80,33 +87,52 @@ class DashboardController extends Controller
             ]);
         }
 
-        // Analyst → data/reports-focused individual view
+        // Analyst → data/reports-focused individual view (enhanced)
         if ($role === 'analyst') {
-            $data = $this->dashboardService->assembleIndividual($user->id);
+            $data = $this->dashboardService->assembleAnalyst($user->id);
             return Inertia::render('Dashboard/Analyst', [
-                'todaysLogs'  => $data['todaysLogs'],
-                'myTasks'     => $data['myTasks'],
-                'myProjects'  => $data['myProjects'],
-                'weeklyHours' => $data['weeklyHours'],
+                'todaysLogs'          => $data['todaysLogs'],
+                'myTasks'             => $data['myTasks'],
+                'myProjects'          => $data['myProjects'],
+                'weeklyHours'         => $data['weeklyHours'],
+                'specQueue'           => $data['spec_queue'],
+                'specQualityMetrics'  => $data['spec_quality_metrics'],
+                'docCoverage'         => $data['doc_coverage'],
+                'testCoverage'        => $data['test_coverage'],
             ]);
         }
 
-        // Developer + fallback → individual work view
-        $data = $this->dashboardService->assembleIndividual($user->id);
+        // Developer + fallback → individual work view (enhanced)
+        $data = $this->dashboardService->assembleDeveloper($user->id);
         return Inertia::render('Dashboard/Individual', [
-            'todaysLogs'  => $data['todaysLogs'],
-            'myTasks'     => $data['myTasks'],
-            'myProjects'  => $data['myProjects'],
-            'weeklyHours' => $data['weeklyHours'],
+            'todaysLogs'           => $data['todaysLogs'],
+            'myTasks'              => $data['myTasks'],
+            'myProjects'           => $data['myProjects'],
+            'weeklyHours'          => $data['weeklyHours'],
+            'contextSwitchWarning' => $data['context_switch_warning'],
+            'featuresThisWeek'     => $data['features_this_week'],
+            'estimationAccuracy'   => $data['estimation_accuracy'],
+            'sprintKanban'         => $data['sprint_kanban'],
+            'sprintCommitment'     => $data['sprint_commitment'],
+            'activeSprint'         => $data['active_sprint'],
+            'isNewHire'            => $data['is_new_hire'],
+            'onboardingStatus'     => $data['onboarding_status'],
         ]);
     }
 
     /**
      * JSON endpoint for individual dashboard data.
+     * Non-managers can only view their own data.
      */
     public function individual(Request $request): JsonResponse
     {
-        $userId = $request->input('user_id', auth()->id());
+        $userRole = auth()->user()->role;
+        $role = $userRole instanceof Role ? $userRole->value : (string) $userRole;
+        $isManager = in_array($role, ['cto', 'ceo', 'manager']);
+
+        $userId = $isManager
+            ? (int) $request->input('user_id', auth()->id())
+            : auth()->id();
 
         return response()->json(
             $this->dashboardService->assembleIndividual($userId),
@@ -115,9 +141,14 @@ class DashboardController extends Controller
 
     /**
      * JSON endpoint for manager dashboard data.
+     * Only CTO, CEO, Manager can access.
      */
     public function manager(): JsonResponse
     {
+        $userRole = auth()->user()->role;
+        $role = $userRole instanceof Role ? $userRole->value : (string) $userRole;
+        abort_unless(in_array($role, ['cto', 'ceo', 'manager']), 403, 'Only managers can access manager dashboard.');
+
         return response()->json(
             $this->dashboardService->assembleManager(),
         );

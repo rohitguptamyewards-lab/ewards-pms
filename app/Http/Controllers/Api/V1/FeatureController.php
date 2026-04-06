@@ -105,7 +105,7 @@ class FeatureController extends Controller
         $data = $request->validate([
             'title'           => 'required|string|max:255',
             'description'     => 'nullable|string',
-            'type'            => 'nullable|string|in:bug,improvement,new_feature',
+            'type'            => 'nullable|string|in:new_feature,bug_fix,improvement,tech_debt,research',
             'priority'        => 'nullable|string|in:p0,p1,p2,p3',
             'module_id'       => 'nullable|integer|exists:modules,id',
             'initiative_id'   => 'nullable|integer|exists:initiatives,id',
@@ -150,7 +150,7 @@ class FeatureController extends Controller
         $data = $request->validate([
             'title'           => 'sometimes|string|max:255',
             'description'     => 'nullable|string',
-            'type'            => 'nullable|string|in:bug,improvement,new_feature',
+            'type'            => 'nullable|string|in:new_feature,bug_fix,improvement,tech_debt,research',
             'priority'        => 'nullable|string|in:p0,p1,p2,p3',
             'module_id'       => 'nullable|integer|exists:modules,id',
             'initiative_id'   => 'nullable|integer|exists:initiatives,id',
@@ -200,9 +200,12 @@ class FeatureController extends Controller
 
     /**
      * Store a new feature via API (JSON).
+     * Only managers can create features.
      */
     public function store(Request $request): JsonResponse
     {
+        abort_unless($this->isManager(), 403, 'Only managers can create features.');
+
         $data = $request->validate([
             'title'           => 'required|string|max:255',
             'description'     => 'nullable|string',
@@ -237,6 +240,75 @@ class FeatureController extends Controller
         abort_unless($this->isManager(), 403, 'Only managers can update features.');
 
         $this->featureRepository->update($id, $request->all());
+
+        return response()->json($this->featureRepository->findById($id));
+    }
+
+    /**
+     * Item 71 — Update rollout tracking: percentage, state, notes.
+     */
+    public function updateRollout(Request $request, int $id): JsonResponse
+    {
+        abort_unless($this->isManager(), 403);
+
+        $data = $request->validate([
+            'rollout_state'      => 'required|string|in:internal,beta_pilot,gradual_ga,full_ga,sunset',
+            'rollout_percentage' => 'required|integer|min:0|max:100',
+            'rollout_notes'      => 'nullable|string|max:1000',
+        ]);
+
+        DB::table('features')
+            ->where('id', $id)
+            ->update(array_merge($data, ['updated_at' => now()]));
+
+        return response()->json($this->featureRepository->findById($id));
+    }
+
+    /**
+     * Item 71 — Mark a feature as rolled back.
+     */
+    public function rollback(Request $request, int $id): JsonResponse
+    {
+        abort_unless($this->isManager(), 403);
+
+        $data = $request->validate([
+            'rollout_notes' => 'nullable|string|max:1000',
+        ]);
+
+        DB::table('features')
+            ->where('id', $id)
+            ->update([
+                'rollout_state'      => 'internal',
+                'rollout_percentage' => 0,
+                'rolled_back_at'     => now(),
+                'rolled_back_by'     => auth()->id(),
+                'rollout_notes'      => $data['rollout_notes'] ?? null,
+                'updated_at'         => now(),
+            ]);
+
+        return response()->json($this->featureRepository->findById($id));
+    }
+
+    /**
+     * Item 43 — Set CTO-attributed estimate on a feature.
+     */
+    public function setCtoEstimate(Request $request, int $id): JsonResponse
+    {
+        $user = auth()->user();
+        $role = $user->role instanceof \App\Enums\Role ? $user->role->value : (string) $user->role;
+        abort_unless($role === 'cto', 403, 'Only CTO can set attributed estimates.');
+
+        $data = $request->validate([
+            'cto_estimated_hours' => 'required|numeric|min:0',
+        ]);
+
+        DB::table('features')
+            ->where('id', $id)
+            ->update([
+                'cto_estimated_hours' => $data['cto_estimated_hours'],
+                'cto_estimated_by'    => auth()->id(),
+                'updated_at'          => now(),
+            ]);
 
         return response()->json($this->featureRepository->findById($id));
     }

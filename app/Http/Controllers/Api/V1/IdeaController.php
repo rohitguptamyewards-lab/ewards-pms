@@ -94,6 +94,8 @@ class IdeaController extends Controller
 
     public function update(Request $request, int $id): JsonResponse
     {
+        abort_unless($this->isManager(), 403, 'Only managers can update ideas.');
+
         $data = $request->validate([
             'title'       => ['sometimes', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
@@ -108,6 +110,8 @@ class IdeaController extends Controller
 
     public function promote(Request $request, int $id): JsonResponse
     {
+        abort_unless($this->isManager(), 403, 'Only managers can promote ideas.');
+
         $data = $request->validate([
             'target_type' => ['required', 'in:feature,initiative'],
             'target_id'   => ['required', 'integer'],

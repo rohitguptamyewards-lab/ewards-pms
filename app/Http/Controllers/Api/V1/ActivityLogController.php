@@ -21,7 +21,7 @@ class ActivityLogController extends Controller
 
     private function managerRoles(): array
     {
-        return ['cto', 'ceo', 'manager', 'mc_team'];
+        return ['cto', 'ceo', 'manager'];
     }
 
     private function isManager(): bool
@@ -124,6 +124,14 @@ class ActivityLogController extends Controller
 
     public function update(Request $request, int $id): JsonResponse
     {
+        // Only the owner or a manager can update an activity log
+        $log = $this->activityLogRepository->findById($id);
+        abort_unless(
+            $log->team_member_id === auth()->id() || $this->isManager(),
+            403,
+            'You can only edit your own activity logs.'
+        );
+
         $this->activityLogRepository->update($id, $request->all());
 
         return response()->json($this->activityLogRepository->findById($id));
@@ -131,6 +139,14 @@ class ActivityLogController extends Controller
 
     public function destroy(int $id): JsonResponse
     {
+        // Only the owner or a manager can delete an activity log
+        $log = $this->activityLogRepository->findById($id);
+        abort_unless(
+            $log->team_member_id === auth()->id() || $this->isManager(),
+            403,
+            'You can only delete your own activity logs.'
+        );
+
         $this->activityLogRepository->delete($id);
 
         return response()->json(['message' => 'Activity log deleted.']);

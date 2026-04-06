@@ -81,6 +81,8 @@ class ChangelogController extends Controller
 
     public function store(StoreChangelogRequest $request): JsonResponse
     {
+        abort_unless($this->isManager(), 403, 'Only managers can create changelogs.');
+
         $data = $request->validated();
         $data['drafted_by'] = auth()->id();
 

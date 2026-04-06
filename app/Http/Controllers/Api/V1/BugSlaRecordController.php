@@ -25,7 +25,7 @@ class BugSlaRecordController extends Controller
     {
         $role = auth()->user()->role;
         $value = $role instanceof \App\Enums\Role ? $role->value : (string) $role;
-        return in_array($value, ['cto', 'ceo', 'manager', 'mc_team']);
+        return in_array($value, ['cto', 'ceo', 'manager']);
     }
 
     public function index(Request $request): InertiaResponse|JsonResponse
@@ -51,8 +51,17 @@ class BugSlaRecordController extends Controller
         ]);
     }
 
+    private function isDevTest(): bool
+    {
+        $role = auth()->user()->role;
+        $value = $role instanceof \App\Enums\Role ? $role->value : (string) $role;
+        return in_array($value, ['cto', 'ceo', 'manager', 'developer', 'tester']);
+    }
+
     public function create(): InertiaResponse
     {
+        abort_unless($this->isDevTest(), 403, 'Only development team can create bug SLA records.');
+
         $features = DB::table('features')
             ->whereNull('deleted_at')
             ->orderBy('title')
@@ -66,6 +75,8 @@ class BugSlaRecordController extends Controller
 
     public function storeWeb(StoreBugSlaRecordRequest $request)
     {
+        abort_unless($this->isDevTest(), 403, 'Only development team can create bug SLA records.');
+
         $data = $request->validated();
         $this->bugSlaService->create($data);
 
@@ -81,6 +92,8 @@ class BugSlaRecordController extends Controller
 
     public function store(StoreBugSlaRecordRequest $request): JsonResponse
     {
+        abort_unless($this->isDevTest(), 403, 'Only development team can create bug SLA records.');
+
         $id = $this->bugSlaService->create($request->validated());
 
         return response()->json($this->bugSlaRepo->findById($id), 201);
@@ -88,6 +101,8 @@ class BugSlaRecordController extends Controller
 
     public function update(Request $request, int $id): JsonResponse
     {
+        abort_unless($this->isManager(), 403, 'Only managers can update bug SLA records.');
+
         $this->bugSlaRepo->update($id, $request->all());
 
         return response()->json($this->bugSlaRepo->findById($id));
@@ -95,6 +110,8 @@ class BugSlaRecordController extends Controller
 
     public function reopen(int $id): JsonResponse
     {
+        abort_unless($this->isManager(), 403, 'Only managers can reopen bug SLA records.');
+
         $this->bugSlaService->reopen($id);
 
         return response()->json(['message' => 'Bug SLA reopened.']);

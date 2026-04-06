@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Repositories\FeatureCostSnapshotRepository;
 use App\Repositories\ModuleDebtScoreRepository;
+use App\Services\FeatureCostSnapshotService;
 use App\Services\ModuleDebtScoreService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -18,6 +19,7 @@ class CostDashboardController extends Controller
         private readonly FeatureCostSnapshotRepository $costSnapshotRepo,
         private readonly ModuleDebtScoreRepository $debtScoreRepo,
         private readonly ModuleDebtScoreService $debtScoreService,
+        private readonly FeatureCostSnapshotService $costSnapshotService,
     ) {}
 
     private function isCto(): bool
@@ -89,18 +91,22 @@ class CostDashboardController extends Controller
         // Debt scorecard
         $debtScores = $this->debtScoreRepo->findLatestAll();
 
+        // Item 23 — Context-switching cost
+        $contextSwitchingCost = $this->costSnapshotService->calculateContextSwitchingCost();
+
         if ($request->wantsJson()) {
             return response()->json(compact(
-                'featureCosts', 'initiativeCosts', 'moduleCosts', 'meetingCost', 'debtScores'
+                'featureCosts', 'initiativeCosts', 'moduleCosts', 'meetingCost', 'debtScores', 'contextSwitchingCost'
             ));
         }
 
         return Inertia::render('Dashboard/CostDashboard', [
-            'featureCosts'    => $featureCosts,
-            'initiativeCosts' => $initiativeCosts,
-            'moduleCosts'     => $moduleCosts,
-            'meetingCost'     => round($meetingCost, 1),
-            'debtScores'      => $debtScores,
+            'featureCosts'         => $featureCosts,
+            'initiativeCosts'      => $initiativeCosts,
+            'moduleCosts'          => $moduleCosts,
+            'meetingCost'          => round($meetingCost, 1),
+            'debtScores'           => $debtScores,
+            'contextSwitchingCost' => $contextSwitchingCost,
         ]);
     }
 }

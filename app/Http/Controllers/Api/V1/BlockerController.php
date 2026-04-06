@@ -16,6 +16,13 @@ class BlockerController extends Controller
         private readonly BlockerRepository $blockerRepository,
     ) {}
 
+    private function notMcSales(): bool
+    {
+        $role = auth()->user()->role;
+        $value = $role instanceof \App\Enums\Role ? $role->value : (string) $role;
+        return !in_array($value, ['mc_team', 'sales']);
+    }
+
     public function index(Request $request): JsonResponse
     {
         $filters = $request->only(['status', 'feature_id']);
@@ -26,6 +33,8 @@ class BlockerController extends Controller
 
     public function store(StoreBlockerRequest $request): JsonResponse
     {
+        abort_unless($this->notMcSales(), 403, 'You do not have permission to report blockers.');
+
         $data = $request->validated();
         $data['team_member_id'] = auth()->id();
 
@@ -36,6 +45,8 @@ class BlockerController extends Controller
 
     public function resolve(Request $request, int $id): JsonResponse
     {
+        abort_unless($this->notMcSales(), 403, 'You do not have permission to resolve blockers.');
+
         $request->validate([
             'resolution_note' => 'required|string|max:2000',
         ]);

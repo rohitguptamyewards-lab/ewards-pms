@@ -16,6 +16,20 @@ class FeatureSpecVersionController extends Controller
         private readonly FeatureSpecVersionRepository $specRepo,
     ) {}
 
+    private function isManager(): bool
+    {
+        $role = auth()->user()->role;
+        $value = $role instanceof \App\Enums\Role ? $role->value : (string) $role;
+        return in_array($value, ['cto', 'ceo', 'manager']);
+    }
+
+    private function notMcSales(): bool
+    {
+        $role = auth()->user()->role;
+        $value = $role instanceof \App\Enums\Role ? $role->value : (string) $role;
+        return !in_array($value, ['mc_team', 'sales']);
+    }
+
     public function index(int $featureId): JsonResponse
     {
         $versions = $this->specRepo->findByFeature($featureId);
@@ -25,6 +39,8 @@ class FeatureSpecVersionController extends Controller
 
     public function store(StoreFeatureSpecVersionRequest $request): JsonResponse
     {
+        abort_unless($this->notMcSales(), 403, 'You do not have permission to create spec versions.');
+
         $data = $request->validated();
         $data['author_id'] = auth()->id();
 
@@ -43,6 +59,8 @@ class FeatureSpecVersionController extends Controller
 
     public function freeze(int $id): JsonResponse
     {
+        abort_unless($this->isManager(), 403, 'Only managers can freeze spec versions.');
+
         $this->specService->freeze($id);
 
         return response()->json(['message' => 'Spec version frozen.']);

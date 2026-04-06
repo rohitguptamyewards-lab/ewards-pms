@@ -98,6 +98,63 @@ class FeatureCostSnapshotService
         }
     }
 
+    /**
+     * Item 23 — Context-switching cost: estimated overhead when a team member
+     * touches 4+ features in a single week. Returns total estimated extra
+     * cost across all team members for the given week.
+     */
+    public function calculateContextSwitchingCost(string $weekStartDate = null): array
+    {
+        $weekStart = $weekStartDate
+            ? \Carbon\Carbon::parse($weekStartDate)->startOfWeek()
+            : now()->startOfWeek();
+        $weekEnd = $weekStart->copy()->endOfWeek();
+
+        $members = DB::table('activity_logs')
+            ->whereNull('deleted_at')
+            ->whereBetween('log_date', [$weekStart->toDateString(), $weekEnd->toDateString()])
+            ->whereNotNull('feature_id')
+            ->select('team_member_id', DB::raw('COUNT(DISTINCT feature_id) as feature_count'))
+            ->groupBy('team_member_id')
+            ->having(DB::raw('COUNT(DISTINCT feature_id)'), '>=', 4)
+            ->get();
+
+        $totalSwitchingCost = 0;
+        $details = [];
+
+        foreach ($members as $m) {
+            $rate = $this->costRateRepository->findActive($m->team_member_id, $weekStart->toDateString());
+            $hourlyRate = 0;
+            if ($rate && $rate->loaded_hourly_rate) {
+                try {
+                    $hourlyRate = (float) Crypt::decryptString($rate->loaded_hourly_rate);
+                } catch (\Throwable $e) {
+                    $hourlyRate = 0;
+                }
+            }
+
+            // Estimated overhead: 15 min per extra feature beyond 3, per work day
+            $extraFeatures = $m->feature_count - 3;
+            $overheadHours = $extraFeatures * 0.25 * 5;
+            $cost = round($overheadHours * $hourlyRate, 2);
+
+            $totalSwitchingCost += $cost;
+            $details[] = [
+                'team_member_id' => $m->team_member_id,
+                'feature_count'  => $m->feature_count,
+                'overhead_hours' => round($overheadHours, 1),
+                'estimated_cost' => $cost,
+            ];
+        }
+
+        return [
+            'week'              => $weekStart->toDateString(),
+            'total_cost'        => round($totalSwitchingCost, 2),
+            'members_affected'  => count($details),
+            'details'           => $details,
+        ];
+    }
+
     private function durationToHours(string $duration): float
     {
         return match ($duration) {

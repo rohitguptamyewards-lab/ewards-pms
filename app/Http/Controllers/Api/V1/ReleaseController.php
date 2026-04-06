@@ -88,6 +88,8 @@ class ReleaseController extends Controller
 
     public function store(StoreReleaseRequest $request): JsonResponse
     {
+        abort_unless($this->isManager(), 403, 'Only managers can create releases.');
+
         $data = $request->validated();
         $featureIds = $data['feature_ids'] ?? [];
         unset($data['feature_ids']);

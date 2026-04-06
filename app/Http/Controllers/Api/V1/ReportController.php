@@ -21,7 +21,7 @@ class ReportController extends Controller
     {
         $role = auth()->user()->role;
         $value = $role instanceof \App\Enums\Role ? $role->value : (string) $role;
-        return in_array($value, ['cto', 'ceo', 'manager', 'mc_team']);
+        return in_array($value, ['cto', 'ceo', 'manager']);
     }
 
     /**
@@ -54,11 +54,12 @@ class ReportController extends Controller
             ->get();
 
         return Inertia::render('Reports/WorkLogs', [
-            'report'      => $data,
-            'filters'     => $filters,
-            'teamMembers' => $teamMembers,
-            'projects'    => $projects,
-            'tasks'       => $tasks,
+            'report'       => $data,
+            'filters'      => $filters,
+            'teamMembers'  => $teamMembers,
+            'projects'     => $projects,
+            'tasks'        => $tasks,
+            'dataFreshness' => now()->toIso8601String(), // Item 37
         ]);
     }
 
@@ -83,9 +84,10 @@ class ReportController extends Controller
             ->where('is_active', true)->orderBy('name')->select('id', 'name')->get();
 
         return Inertia::render('Reports/Projects', [
-            'report'      => $data,
-            'filters'     => $filters,
-            'teamMembers' => $teamMembers,
+            'report'       => $data,
+            'filters'      => $filters,
+            'teamMembers'  => $teamMembers,
+            'dataFreshness' => now()->toIso8601String(), // Item 37
         ]);
     }
 
@@ -114,10 +116,11 @@ class ReportController extends Controller
             : collect();
 
         return Inertia::render('Reports/Individual', [
-            'report'      => $data,
-            'filters'     => $filters,
-            'teamMembers' => $teamMembers,
-            'isManager'   => $this->isManager(),
+            'report'       => $data,
+            'filters'      => $filters,
+            'teamMembers'  => $teamMembers,
+            'isManager'    => $this->isManager(),
+            'dataFreshness' => now()->toIso8601String(), // Item 37
         ]);
     }
 }

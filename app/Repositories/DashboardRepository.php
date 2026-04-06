@@ -266,7 +266,7 @@ class DashboardRepository
                 'team_members.name as requester_name'
             )
             ->where('requests.urgency', 'merchant_blocked')
-            ->whereNotIn('requests.status', ['rejected', 'completed'])
+            ->whereNotIn('requests.status', ['rejected', 'fulfilled'])
             ->whereNull('requests.deleted_at')
             ->orderBy('requests.created_at')
             ->get()
@@ -274,10 +274,10 @@ class DashboardRepository
 
         $total           = DB::table('requests')->whereNull('deleted_at')->count();
         $untriaged       = DB::table('requests')->where('status', 'received')->whereNull('deleted_at')->count();
-        $accepted        = DB::table('requests')->where('status', 'accepted')->whereNull('deleted_at')->count();
+        $linked          = DB::table('requests')->where('status', 'linked')->whereNull('deleted_at')->count();
         $merchantBlocked = DB::table('requests')
             ->where('urgency', 'merchant_blocked')
-            ->whereNotIn('status', ['rejected', 'completed'])
+            ->whereNotIn('status', ['rejected', 'fulfilled'])
             ->whereNull('deleted_at')
             ->count();
 
@@ -287,10 +287,336 @@ class DashboardRepository
             'stats' => [
                 'total'           => $total,
                 'untriaged'       => $untriaged,
-                'accepted'        => $accepted,
+                'linked'          => $linked,
                 'merchantBlocked' => $merchantBlocked,
             ],
         ];
+    }
+
+    /**
+     * Developer dashboard — enhanced with context-switching, estimation accuracy,
+     * personal kanban (sprint features), sprint commitment, onboarding view.
+     * Items 44, 45, 47, 48, 49.
+     */
+    public function getDeveloperData(int $userId): array
+    {
+        $base = $this->getIndividualData($userId);
+
+        // Item 44 — Context-switching warning: count distinct features worked on this week
+        $weekAgo = Carbon::today()->subDays(7)->toDateString();
+        $today   = Carbon::today()->toDateString();
+
+        $featuresThisWeek = DB::table('work_logs')
+            ->where('user_id', $userId)
+            ->whereNotNull('feature_id')
+            ->whereBetween('log_date', [$weekAgo, $today])
+            ->whereNull('deleted_at')
+            ->distinct('feature_id')
+            ->count('feature_id');
+
+        $contextSwitchWarning = $featuresThisWeek >= 4
+            ? "You've worked on {$featuresThisWeek} different features this week. Context switching may reduce productivity."
+            : null;
+
+        // Item 45 — Estimation accuracy feedback
+        $estimationAccuracy = DB::table('feature_assignments')
+            ->where('team_member_id', $userId)
+            ->whereNotNull('actual_hours')
+            ->whereNotNull('estimated_hours')
+            ->where('estimated_hours', '>', 0)
+            ->select(
+                DB::raw('AVG(actual_hours / estimated_hours * 100) as avg_accuracy_pct'),
+                DB::raw('COUNT(*) as sample_count')
+            )
+            ->first();
+
+        // Item 47 — Personal kanban: my assigned sprint features by status
+        $activeSprint = DB::table('sprints')
+            ->whereNull('deleted_at')
+            ->where('status', 'active')
+            ->orderByDesc('start_date')
+            ->first();
+
+        $sprintKanban = [];
+        if ($activeSprint) {
+            $sprintKanban = DB::table('sprint_features')
+                ->join('features', 'sprint_features.feature_id', '=', 'features.id')
+                // sprint_features has no softDeletes
+                ->whereNull('features.deleted_at')
+                ->where('sprint_features.sprint_id', $activeSprint->id)
+                ->where('features.assigned_to', $userId)
+                ->select('features.id', 'features.title', 'features.status', 'features.priority', 'features.estimated_hours')
+                ->get()
+                ->toArray();
+        }
+
+        // Item 48 — Sprint commitment view
+        $sprintCommitment = null;
+        if ($activeSprint) {
+            $totalFeatures = DB::table('sprint_features')
+                ->join('features', 'sprint_features.feature_id', '=', 'features.id')
+                ->where('sprint_features.sprint_id', $activeSprint->id)
+                // sprint_features has no softDeletes
+                ->whereNull('features.deleted_at')
+                ->where('features.assigned_to', $userId)
+                ->count();
+
+            $completedFeatures = DB::table('sprint_features')
+                ->join('features', 'sprint_features.feature_id', '=', 'features.id')
+                ->where('sprint_features.sprint_id', $activeSprint->id)
+                // sprint_features has no softDeletes
+                ->whereNull('features.deleted_at')
+                ->where('features.assigned_to', $userId)
+                ->where('features.status', 'released')
+                ->count();
+
+            $sprintCommitment = [
+                'sprint_id'          => $activeSprint->id,
+                'sprint_name'        => $activeSprint->name ?? "Sprint #{$activeSprint->sprint_number}",
+                'end_date'           => $activeSprint->end_date,
+                'total_committed'    => $totalFeatures,
+                'completed'          => $completedFeatures,
+                'completion_rate'    => $totalFeatures > 0
+                    ? round($completedFeatures / $totalFeatures * 100, 1)
+                    : 0,
+            ];
+        }
+
+        // Item 49 — Onboarding view for new hires (<4 weeks since joining)
+        $member = DB::table('team_members')->where('id', $userId)->first();
+        $isNewHire = false;
+        $onboardingStatus = null;
+
+        if ($member && $member->joining_date) {
+            $joiningDate = Carbon::parse($member->joining_date);
+            $weeksSinceJoining = $joiningDate->diffInWeeks(now());
+            if ($weeksSinceJoining < 4) {
+                $isNewHire = true;
+                $onboardingRecord = DB::table('team_members')
+                    ->where('id', $userId)
+                    ->select('onboarding_status', 'onboarding_checklist')
+                    ->first();
+                $onboardingStatus = $onboardingRecord ? [
+                    'weeks_since_joining' => $weeksSinceJoining,
+                    'status'              => $onboardingRecord->onboarding_status ?? 'not_started',
+                    'checklist'           => json_decode($onboardingRecord->onboarding_checklist ?? '{}', true),
+                ] : null;
+            }
+        }
+
+        return array_merge($base, [
+            'features_this_week'    => $featuresThisWeek,
+            'context_switch_warning' => $contextSwitchWarning,
+            'estimation_accuracy'   => $estimationAccuracy ? [
+                'avg_pct'     => round((float) $estimationAccuracy->avg_accuracy_pct, 1),
+                'sample_count' => (int) $estimationAccuracy->sample_count,
+            ] : null,
+            'sprint_kanban'       => $sprintKanban,
+            'sprint_commitment'   => $sprintCommitment,
+            'is_new_hire'         => $isNewHire,
+            'onboarding_status'   => $onboardingStatus,
+            'active_sprint'       => $activeSprint ? [
+                'id'         => $activeSprint->id,
+                'name'       => $activeSprint->name ?? "Sprint #{$activeSprint->sprint_number}",
+                'end_date'   => $activeSprint->end_date,
+            ] : null,
+        ]);
+    }
+
+    /**
+     * Analyst dashboard — enhanced with spec writing queue, spec quality metrics,
+     * documentation coverage, test scenario coverage.
+     * Items 54, 55, 56, 57.
+     */
+    public function getAnalystData(int $userId): array
+    {
+        $base = $this->getIndividualData($userId);
+
+        // Item 54 — Spec writing queue sorted by dev start urgency
+        $specQueue = DB::table('features')
+            ->leftJoin('modules', 'features.module_id', '=', 'modules.id')
+            ->leftJoin('sprints', function ($join) {
+                $join->on('sprints.id', '=', DB::raw(
+                    '(SELECT sf.sprint_id FROM sprint_features sf JOIN sprints s ON s.id = sf.sprint_id WHERE sf.feature_id = features.id AND s.status = \'active\' LIMIT 1)'
+                ));
+            })
+            ->whereNull('features.deleted_at')
+            ->whereIn('features.status', ['backlog', 'in_progress'])
+            ->where(function ($q) {
+                $q->whereNull('features.spec_version')
+                  ->orWhere('features.spec_version', '');
+            })
+            ->select(
+                'features.id',
+                'features.title',
+                'features.priority',
+                'features.status',
+                'features.deadline',
+                'features.estimated_hours',
+                'modules.name as module_name',
+                'sprints.start_date as sprint_start'
+            )
+            ->orderByRaw("CASE features.priority WHEN 'p0' THEN 1 WHEN 'p1' THEN 2 WHEN 'p2' THEN 3 ELSE 4 END")
+            ->orderBy('features.deadline')
+            ->limit(20)
+            ->get()
+            ->toArray();
+
+        // Item 55 — Spec quality metrics (freeze-to-dev ratio, change rate)
+        $totalSpecs = DB::table('feature_spec_versions')
+            ->whereNull('deleted_at')
+            ->count();
+
+        $frozenSpecs = DB::table('feature_spec_versions')
+            ->whereNull('deleted_at')
+            ->where('state', 'frozen')
+            ->count();
+
+        // Features that went to dev after spec freeze
+        $frozenThenDev = DB::table('feature_spec_versions')
+            ->join('features', 'feature_spec_versions.feature_id', '=', 'features.id')
+            ->whereNull('feature_spec_versions.deleted_at')
+            ->where('feature_spec_versions.state', 'frozen')
+            ->whereIn('features.status', ['in_progress', 'in_review', 'in_qa', 'ready_for_release', 'released'])
+            ->count();
+
+        $specQualityMetrics = [
+            'total_specs'         => $totalSpecs,
+            'frozen_specs'        => $frozenSpecs,
+            'freeze_to_dev_ratio' => $frozenSpecs > 0
+                ? round($frozenThenDev / $frozenSpecs * 100, 1)
+                : 0,
+        ];
+
+        // Item 56 — Documentation coverage
+        $featuresWithDocs = DB::table('features')
+            ->whereNull('deleted_at')
+            ->whereExists(function ($q) {
+                $q->select(DB::raw(1))
+                  ->from('documents')
+                  ->whereColumn('documents.documentable_id', 'features.id')
+                  ->where('documents.documentable_type', 'feature');
+                  // documents table has no deleted_at (no softDeletes)
+            })
+            ->count();
+
+        $totalFeatures = DB::table('features')->whereNull('deleted_at')->count();
+        $docCoverage = $totalFeatures > 0
+            ? round($featuresWithDocs / $totalFeatures * 100, 1)
+            : 0;
+
+        // Item 57 — Test scenario coverage (features with spec versions in testing state)
+        $featuresWithTests = DB::table('features')
+            ->whereNull('deleted_at')
+            ->whereExists(function ($q) {
+                $q->select(DB::raw(1))
+                  ->from('feature_spec_versions')
+                  ->whereColumn('feature_spec_versions.feature_id', 'features.id')
+                  ->whereNull('feature_spec_versions.deleted_at')
+                  ->where('feature_spec_versions.state', 'frozen');
+            })
+            ->count();
+
+        $testCoverage = $totalFeatures > 0
+            ? round($featuresWithTests / $totalFeatures * 100, 1)
+            : 0;
+
+        return array_merge($base, [
+            'spec_queue'           => $specQueue,
+            'spec_quality_metrics' => $specQualityMetrics,
+            'doc_coverage'         => [
+                'coverage_pct'        => $docCoverage,
+                'features_with_docs'  => $featuresWithDocs,
+                'total_features'      => $totalFeatures,
+            ],
+            'test_coverage' => [
+                'coverage_pct'         => $testCoverage,
+                'features_with_tests'  => $featuresWithTests,
+                'total_features'       => $totalFeatures,
+            ],
+        ]);
+    }
+
+    /**
+     * CEO dashboard — enhanced with narrative summary, investment vs impact matrix,
+     * merchant tier fulfilment rates, CTO-attributed estimates.
+     * Items 39, 40, 41, 43.
+     */
+    public function getCEODataEnhanced(): array
+    {
+        $base = $this->getCEOData();
+
+        // Item 39 — Auto-generated narrative summary
+        $inProgress = $base['featurePipeline']['in_progress'] ?? 0;
+        $released   = $base['featurePipeline']['released'] ?? 0;
+        $backlog    = $base['featurePipeline']['backlog'] ?? 0;
+
+        $narrative = "The team currently has {$inProgress} feature(s) actively in development, "
+                   . "{$released} released, and {$backlog} in the backlog. "
+                   . "{$base['activeProjects']} project(s) are active with {$base['teamSize']} team members. "
+                   . "{$base['hoursThisMonth']}h logged this month.";
+
+        // Item 40 — Investment vs impact matrix (features with cost + revenue data)
+        $investmentMatrix = DB::table('features')
+            ->whereNull('deleted_at')
+            ->whereNotNull('attributed_revenue')
+            ->whereNotNull('maintenance_cost_monthly')
+            ->select(
+                'id', 'title', 'status', 'priority',
+                'attributed_revenue', 'maintenance_cost_monthly',
+                'estimated_hours', 'cto_estimated_hours',
+                DB::raw('COALESCE(attributed_revenue, 0) - COALESCE(maintenance_cost_monthly, 0) as roi_monthly')
+            )
+            ->orderByDesc('roi_monthly')
+            ->limit(20)
+            ->get()
+            ->toArray();
+
+        // Item 41 — Merchant tier fulfilment rates
+        $merchantTierStats = DB::table('merchants')
+            ->join('requests', 'merchants.id', '=', 'requests.merchant_id')
+            ->whereNull('merchants.deleted_at')
+            ->whereNull('requests.deleted_at')
+            ->select(
+                'merchants.tier',
+                DB::raw('COUNT(requests.id) as total_requests'),
+                DB::raw("SUM(CASE WHEN requests.status = 'fulfilled' THEN 1 ELSE 0 END) as fulfilled"),
+                DB::raw("SUM(CASE WHEN requests.status = 'linked' THEN 1 ELSE 0 END) as linked"),
+                DB::raw("SUM(CASE WHEN requests.status = 'rejected' THEN 1 ELSE 0 END) as rejected")
+            )
+            ->groupBy('merchants.tier')
+            ->get()
+            ->toArray();
+
+        // Add fulfilment rate per tier
+        $merchantTierStats = array_map(function ($row) {
+            $row = (array) $row;
+            $row['fulfilment_rate'] = $row['total_requests'] > 0
+                ? round(($row['fulfilled'] + $row['linked']) / $row['total_requests'] * 100, 1)
+                : 0;
+            return $row;
+        }, $merchantTierStats);
+
+        // Item 43 — CTO-attributed estimate labeling
+        $featuresWithCtoEstimate = DB::table('features')
+            ->join('team_members', 'features.cto_estimated_by', '=', 'team_members.id')
+            ->whereNull('features.deleted_at')
+            ->whereNotNull('features.cto_estimated_hours')
+            ->select(
+                'features.id', 'features.title', 'features.estimated_hours',
+                'features.cto_estimated_hours', 'team_members.name as cto_name'
+            )
+            ->limit(10)
+            ->get()
+            ->toArray();
+
+        return array_merge($base, [
+            'narrative'                  => $narrative,
+            'investment_matrix'          => $investmentMatrix,
+            'merchant_tier_stats'        => $merchantTierStats,
+            'features_with_cto_estimate' => $featuresWithCtoEstimate,
+            'data_freshness'             => now()->toIso8601String(),
+        ]);
     }
 
     /**
@@ -328,9 +654,90 @@ class DashboardRepository
             $stats[$row->status] = (int) $row->count;
         }
 
+        // Item 50 — ETA on requests from sprint planning
+        $myRequests = array_map(function ($req) {
+            $req = (array) $req;
+            // Look up sprint ETA from requests table
+            $etaRow = DB::table('requests')
+                ->where('id', $req['id'])
+                ->select('sprint_eta', 'linked_sprint_id')
+                ->first();
+
+            $req['sprint_eta']      = $etaRow?->sprint_eta;
+            $req['linked_sprint_id'] = $etaRow?->linked_sprint_id;
+
+            // Item 53 — Translated status labels (human-readable)
+            $req['status_label'] = match ($req['status']) {
+                'received'              => 'Received — awaiting review',
+                'under_review'          => 'Under Review',
+                'clarification_needed'  => 'Clarification Needed',
+                'linked'                => 'Linked — planned for development',
+                'deferred'              => 'Deferred — postponed',
+                'rejected'              => 'Rejected',
+                'fulfilled'             => 'Fulfilled',
+                default                 => ucfirst(str_replace('_', ' ', $req['status'])),
+            };
+
+            return $req;
+        }, $myRequests);
+
+        // Item 51 — Merchant lookup with full history
+        $merchantId = DB::table('requests')
+            ->where('requested_by', $userId)
+            ->whereNotNull('merchant_id')
+            ->value('merchant_id');
+
+        $merchantHistory = null;
+        if ($merchantId) {
+            $merchant = DB::table('merchants')->where('id', $merchantId)->first();
+            if ($merchant) {
+                $merchantHistory = [
+                    'merchant'        => (array) $merchant,
+                    'total_requests'  => DB::table('requests')
+                        ->where('merchant_id', $merchantId)
+                        ->whereNull('deleted_at')
+                        ->count(),
+                    'fulfilled'       => DB::table('requests')
+                        ->where('merchant_id', $merchantId)
+                        ->where('status', 'fulfilled')
+                        ->whereNull('deleted_at')
+                        ->count(),
+                    'recent_requests' => DB::table('requests')
+                        ->where('merchant_id', $merchantId)
+                        ->whereNull('deleted_at')
+                        ->orderByDesc('created_at')
+                        ->select('id', 'title', 'status', 'type', 'created_at')
+                        ->limit(5)
+                        ->get()
+                        ->toArray(),
+                ];
+            }
+        }
+
+        // Item 52 — New product features feed (recently released features)
+        $newProductFeatures = DB::table('features')
+            ->leftJoin('modules', 'features.module_id', '=', 'modules.id')
+            ->whereNull('features.deleted_at')
+            ->where('features.status', 'released')
+            ->where('features.updated_at', '>=', now()->subDays(30))
+            ->select(
+                'features.id',
+                'features.title',
+                'features.description',
+                'features.rollout_state',
+                'features.updated_at as released_at',
+                'modules.name as module_name'
+            )
+            ->orderByDesc('features.updated_at')
+            ->limit(10)
+            ->get()
+            ->toArray();
+
         return [
-            'myRequests' => $myRequests,
-            'stats'      => $stats,
+            'myRequests'        => $myRequests,
+            'stats'             => $stats,
+            'merchant_history'  => $merchantHistory,
+            'new_product_features' => $newProductFeatures,
         ];
     }
 }

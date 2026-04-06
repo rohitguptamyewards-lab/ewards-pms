@@ -5,6 +5,8 @@ namespace App\Models;
 use App\Enums\RequestStatus;
 use App\Enums\RequestType;
 use App\Enums\RequestUrgency;
+use App\Models\Comment;
+use App\Models\Document;
 use App\Traits\Auditable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -29,6 +31,8 @@ class PmsRequest extends Model
         'revenue_impact',
         'status',
         'linked_feature_id',
+        'sprint_eta',
+        'linked_sprint_id',
         'tenant_id',
     ];
 
@@ -61,5 +65,10 @@ class PmsRequest extends Model
     public function comments(): MorphMany
     {
         return $this->morphMany(Comment::class, 'commentable');
+    }
+
+    public function documents(): MorphMany
+    {
+        return $this->morphMany(Document::class, 'documentable');
     }
 }

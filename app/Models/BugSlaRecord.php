@@ -25,6 +25,8 @@ class BugSlaRecord extends Model
         'reopen_count',
         'root_cause',
         'origin',
+        'attributed_dev_cost',
+        'origin_feature_id',
     ];
 
     protected function casts(): array
@@ -35,8 +37,14 @@ class BugSlaRecord extends Model
             'origin'       => BugOrigin::class,
             'sla_deadline' => 'datetime',
             'breached_at'  => 'datetime',
-            'reopen_count' => 'integer',
+            'reopen_count'        => 'integer',
+            'attributed_dev_cost' => 'decimal:2',
         ];
+    }
+
+    public function originFeature(): BelongsTo
+    {
+        return $this->belongsTo(Feature::class, 'origin_feature_id');
     }
 
     public function feature(): BelongsTo

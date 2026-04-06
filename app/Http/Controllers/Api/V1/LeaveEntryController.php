@@ -54,6 +54,8 @@ class LeaveEntryController extends Controller
 
     public function create(): InertiaResponse
     {
+        abort_unless($this->isManager(), 403, 'Only managers can manage leave entries.');
+
         $teamMembers = DB::table('team_members')
             ->whereNull('deleted_at')
             ->where('is_active', true)
@@ -68,6 +70,8 @@ class LeaveEntryController extends Controller
 
     public function storeWeb(StoreLeaveEntryRequest $request)
     {
+        abort_unless($this->isManager(), 403, 'Only managers can manage leave entries.');
+
         $data = $request->validated();
         $this->leaveEntryService->create($data);
 
@@ -76,6 +80,8 @@ class LeaveEntryController extends Controller
 
     public function store(StoreLeaveEntryRequest $request): JsonResponse
     {
+        abort_unless($this->isManager(), 403, 'Only managers can manage leave entries.');
+
         $data = $request->validated();
         $id = $this->leaveEntryService->create($data);
 
@@ -84,6 +90,8 @@ class LeaveEntryController extends Controller
 
     public function update(int $id, StoreLeaveEntryRequest $request): JsonResponse
     {
+        abort_unless($this->isManager(), 403, 'Only managers can manage leave entries.');
+
         $this->leaveEntryService->update($id, $request->validated());
 
         return response()->json($this->leaveEntryRepository->findById($id));
@@ -91,6 +99,8 @@ class LeaveEntryController extends Controller
 
     public function destroy(int $id): JsonResponse
     {
+        abort_unless($this->isManager(), 403, 'Only managers can manage leave entries.');
+
         $this->leaveEntryService->delete($id);
 
         return response()->json(['message' => 'Deleted']);

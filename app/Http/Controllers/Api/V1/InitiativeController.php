@@ -38,6 +38,8 @@ class InitiativeController extends Controller
 
     public function create(): InertiaResponse
     {
+        abort_unless($this->isManager(), 403);
+
         $modules = DB::table('modules')->where('is_active', true)->select('id', 'name')->get();
         $teamMembers = DB::table('team_members')->where('is_active', true)->select('id', 'name', 'role')->get();
 
@@ -49,6 +51,8 @@ class InitiativeController extends Controller
 
     public function storeWeb(StoreInitiativeRequest $request)
     {
+        abort_unless($this->isManager(), 403);
+
         $data = $request->validated();
         $data['tenant_id'] = null;
 

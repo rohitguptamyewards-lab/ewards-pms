@@ -28,7 +28,7 @@ class DocumentController extends Controller
 
         $request->validate([
             'type'             => ['nullable', 'in:file,link'],
-            'documentable_type' => ['required', 'string', 'in:task,project,request,feature'],
+            'documentable_type' => ['required', 'string', 'in:task,project,request,feature,initiative,idea,decision'],
             'documentable_id'  => ['required', 'integer'],
             'description'      => ['nullable', 'string', 'max:500'],
         ]);
@@ -93,12 +93,26 @@ class DocumentController extends Controller
         );
     }
 
+    private function isManager(): bool
+    {
+        $role = auth()->user()->role;
+        $value = $role instanceof \App\Enums\Role ? $role->value : (string) $role;
+        return in_array($value, ['cto', 'ceo', 'manager']);
+    }
+
     /**
      * Delete a document and its file from storage (skipped for link-type).
+     * Only the uploader or a manager can delete documents.
      */
     public function destroy(int $id): JsonResponse
     {
         $document = $this->documentRepository->findById($id);
+
+        abort_unless(
+            $document->uploaded_by === auth()->id() || $this->isManager(),
+            403,
+            'You can only delete your own documents.'
+        );
 
         if (($document->type ?? 'file') === 'file' && $document->file_path) {
             Storage::disk('local')->delete($document->file_path);

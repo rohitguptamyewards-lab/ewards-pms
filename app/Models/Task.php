@@ -6,6 +6,8 @@ use App\Enums\TaskPriority;
 use App\Enums\TaskStatus;
 use App\Traits\Auditable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Comment;
+use App\Models\Document;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
@@ -55,5 +57,10 @@ class Task extends Model
     public function comments(): MorphMany
     {
         return $this->morphMany(Comment::class, 'commentable');
+    }
+
+    public function documents(): MorphMany
+    {
+        return $this->morphMany(Document::class, 'documentable');
     }
 }

@@ -20,6 +20,13 @@ class PromptTemplateController extends Controller
         private readonly AiToolRepository $aiToolRepository,
     ) {}
 
+    private function isCto(): bool
+    {
+        $role = auth()->user()->role;
+        $value = $role instanceof \App\Enums\Role ? $role->value : (string) $role;
+        return $value === 'cto';
+    }
+
     public function index(Request $request): InertiaResponse|JsonResponse
     {
         $templates = $this->promptTemplateRepository->findAll(
@@ -42,6 +49,8 @@ class PromptTemplateController extends Controller
 
     public function create(): InertiaResponse
     {
+        abort_unless($this->isCto(), 403, 'Only CTO can manage prompt templates.');
+
         $tools = $this->aiToolRepository->findActive();
 
         return Inertia::render('AiIntelligence/TemplateCreate', [
@@ -51,6 +60,8 @@ class PromptTemplateController extends Controller
 
     public function storeWeb(StorePromptTemplateRequest $request)
     {
+        abort_unless($this->isCto(), 403, 'Only CTO can manage prompt templates.');
+
         $data = $request->validated();
         $data['created_by'] = auth()->id();
 
@@ -61,6 +72,8 @@ class PromptTemplateController extends Controller
 
     public function store(StorePromptTemplateRequest $request): JsonResponse
     {
+        abort_unless($this->isCto(), 403, 'Only CTO can manage prompt templates.');
+
         $data = $request->validated();
         $data['created_by'] = auth()->id();
 
@@ -71,6 +84,8 @@ class PromptTemplateController extends Controller
 
     public function update(int $id, StorePromptTemplateRequest $request): JsonResponse
     {
+        abort_unless($this->isCto(), 403, 'Only CTO can manage prompt templates.');
+
         $this->promptTemplateService->update($id, $request->validated());
 
         return response()->json($this->promptTemplateRepository->findById($id));

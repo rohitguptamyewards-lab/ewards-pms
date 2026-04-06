@@ -33,3 +33,12 @@
     --color-warning:      #f59e0b;
     --color-success:      #16a34a;
 }
+
+/* Item 36/42 — PDF export: hide sidebar, nav, and buttons when printing */
+@media print {
+    nav, aside, .sidebar, [data-sidebar], .print\\:hidden { display: none !important; }
+    main, [data-main-content] { margin-left: 0 !important; padding: 1rem !important; width: 100% !important; }
+    body { background: white !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .rounded-xl, .rounded-2xl, .rounded-lg { border-radius: 4px !important; }
+    .shadow-sm, .shadow { box-shadow: none !important; }
+}

@@ -17,19 +17,20 @@ function isActive(href) {
 
 const MANAGER  = ['cto', 'ceo', 'manager'];
 const MC_UP    = [...MANAGER, 'mc_team'];
-const REPORTS  = MC_UP;
+const REPORTS  = MANAGER; // Only managers can see reports
 const ALL      = [...MC_UP, 'developer', 'tester', 'analyst', 'sales'];
 const DEV_TEST = [...MANAGER, 'developer', 'tester'];
 const CTO_ONLY = ['cto'];
-/* MC & Sales can only see Requests + their linked project status */
-const MC_SALES = ['mc_team', 'sales'];
+/* Sales can only see Dashboard + Requests + Team */
+const SALES_ONLY = ['sales'];
 const NOT_MC_SALES = ['cto', 'ceo', 'manager', 'developer', 'tester', 'analyst'];
+const NOT_SALES = [...NOT_MC_SALES, 'mc_team'];
 
 const navItems = computed(() => {
     const chevIcon = `<path stroke-linecap="round" stroke-linejoin="round" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />`;
 
-    /* If MC or Sales, show a very limited sidebar */
-    if (MC_SALES.includes(role.value)) {
+    /* Sales see only Dashboard + Requests + Team */
+    if (SALES_ONLY.includes(role.value)) {
         return [
             {
                 label: 'Dashboard', href: '/', roles: null,
@@ -38,15 +39,6 @@ const navItems = computed(() => {
             {
                 label: 'Requests', href: '/requests', roles: null,
                 icon: `<path stroke-linecap="round" stroke-linejoin="round" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />`,
-            },
-            {
-                label: 'My Projects', href: '/projects', roles: null,
-                icon: `<path stroke-linecap="round" stroke-linejoin="round" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />`,
-            },
-            { label: 'PERSONAL', href: null, roles: null, header: true },
-            {
-                label: 'My Dashboard', href: '/personal/history', roles: null, indent: true,
-                icon: `<path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5" />`,
             },
             {
                 label: 'Team', href: '/team-members', roles: null,
@@ -77,7 +69,7 @@ const navItems = computed(() => {
             icon: `<path stroke-linecap="round" stroke-linejoin="round" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />`,
         },
         {
-            label: 'Tasks', href: '/tasks', roles: [...MC_UP, 'developer', 'tester', 'analyst'],
+            label: 'Tasks', href: '/tasks', roles: [...MANAGER, 'developer', 'tester', 'analyst'],
             icon: `<path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />`,
         },
         {
@@ -103,7 +95,7 @@ const navItems = computed(() => {
             icon: `<path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />`,
         },
         {
-            label: 'Ideas', href: '/ideas', roles: NOT_MC_SALES, indent: true,
+            label: 'Ideas', href: '/ideas', roles: NOT_SALES, indent: true,
             icon: `<path stroke-linecap="round" stroke-linejoin="round" d="M12 18v-5.25m0 0a6.01 6.01 0 001.5-.189m-1.5.189a6.01 6.01 0 01-1.5-.189m3.75 7.478a12.06 12.06 0 01-4.5 0m3.75 2.383a14.406 14.406 0 01-3 0M14.25 18v-.192c0-.983.658-1.823 1.508-2.316a7.5 7.5 0 10-7.517 0c.85.493 1.509 1.333 1.509 2.316V18" />`,
         },
         {
@@ -133,7 +125,7 @@ const navItems = computed(() => {
 
         { label: 'PERSONAL', href: null, roles: null, header: true },
         {
-            label: 'My Dashboard', href: '/personal/history', roles: NOT_MC_SALES, indent: true,
+            label: 'My Dashboard', href: '/personal/history', roles: NOT_SALES, indent: true,
             icon: `<path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5" />`,
         },
         {

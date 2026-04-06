@@ -11,7 +11,7 @@ const props = defineProps({
     merchantBlockedRequests: { type: Array, default: () => [] },
     stats: {
         type: Object,
-        default: () => ({ total: 0, untriaged: 0, accepted: 0, merchantBlocked: 0 }),
+        default: () => ({ total: 0, untriaged: 0, linked: 0, merchantBlocked: 0 }),
     },
 });
 
@@ -78,7 +78,7 @@ function getType(t)    { return typeConfig[t]    || { classes: 'bg-gray-100 text
         <div class="mb-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
             <StatsCard label="Total Requests"    :value="stats.total"           color="gray"   />
             <StatsCard label="Needs Triage"      :value="stats.untriaged"       color="yellow" />
-            <StatsCard label="Accepted"          :value="stats.accepted"        color="green"  />
+            <StatsCard label="Linked"            :value="stats.linked"          color="green"  />
             <StatsCard label="Merchant Blocked"  :value="stats.merchantBlocked" color="red"    />
         </div>
 

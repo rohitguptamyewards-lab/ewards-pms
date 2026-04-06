@@ -9,10 +9,14 @@ import ProgressBar from '@/Components/ProgressBar.vue';
 defineOptions({ layout: AppLayout });
 
 const props = defineProps({
-    todaysLogs:   { type: Array,  default: () => [] },
-    myTasks:      { type: Array,  default: () => [] },
-    myProjects:   { type: Array,  default: () => [] },
-    weeklyHours:  { type: Number, default: 0 },
+    todaysLogs:          { type: Array,  default: () => [] },
+    myTasks:             { type: Array,  default: () => [] },
+    myProjects:          { type: Array,  default: () => [] },
+    weeklyHours:         { type: Number, default: 0 },
+    specQueue:           { type: Array,  default: () => [] },
+    specQualityMetrics:  { type: Object, default: () => ({}) },
+    docCoverage:         { type: Object, default: () => ({}) },
+    testCoverage:        { type: Object, default: () => ({}) },
 });
 
 const openTasks  = computed(() => props.myTasks.filter(t => t.status !== 'done'));
@@ -29,10 +33,14 @@ function formatDate(dateStr) {
 }
 
 const REPORTS = [
-    { label: 'Work Log Report',    href: '/reports/work-logs',  desc: 'Team time entries',      icon: 'M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z' },
-    { label: 'Project Report',     href: '/reports/projects',   desc: 'Status & progress',      icon: 'M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z' },
-    { label: 'Individual Report',  href: '/reports/individual', desc: 'Personal breakdown',     icon: 'M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z' },
+    { label: 'Work Log Report',    href: '/reports/work-logs',  desc: 'Team time entries',  icon: 'M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z' },
+    { label: 'Project Report',     href: '/reports/projects',   desc: 'Status & progress',  icon: 'M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z' },
+    { label: 'Individual Report',  href: '/reports/individual', desc: 'Personal breakdown', icon: 'M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z' },
 ];
+
+function priorityBadgeClass(p) {
+    return { p0: 'bg-red-100 text-red-700', p1: 'bg-orange-100 text-orange-700', p2: 'bg-yellow-100 text-yellow-700', p3: 'bg-gray-100 text-gray-600' }[p] || 'bg-gray-100 text-gray-600';
+}
 </script>
 
 <template>
@@ -43,7 +51,7 @@ const REPORTS = [
         <div class="mb-6 flex flex-wrap items-center justify-between gap-4">
             <div>
                 <h1 class="text-2xl font-bold text-gray-900">Analyst Dashboard</h1>
-                <p class="mt-0.5 text-sm text-gray-500">Your work summary & report access</p>
+                <p class="mt-0.5 text-sm text-gray-500">Your work summary, spec queue & quality metrics</p>
             </div>
             <Link href="/work-logs/create" class="inline-flex items-center gap-2 rounded-lg bg-[#4e1a77] px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-[#3d1560] transition-colors">
                 <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -59,6 +67,49 @@ const REPORTS = [
             <StatsCard label="Today's Hours"   :value="todayHours + 'h'"                     color="indigo" />
             <StatsCard label="Open Tasks"      :value="openTasks.length"                     color="yellow" />
             <StatsCard label="Active Projects" :value="myProjects.length"                    color="green"  />
+        </div>
+
+        <!-- Item 55/56/57: Quality Metrics Row -->
+        <div class="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
+            <!-- Spec Quality -->
+            <div class="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+                <p class="text-xs font-semibold uppercase tracking-wide text-gray-400">Spec Quality</p>
+                <div class="mt-2 flex items-end justify-between">
+                    <p class="text-3xl font-bold text-[#4e1a77]">{{ specQualityMetrics.freeze_to_dev_ratio ?? 0 }}%</p>
+                    <p class="text-xs text-gray-400 text-right">Freeze-to-dev<br>ratio</p>
+                </div>
+                <p class="mt-1 text-xs text-gray-400">{{ specQualityMetrics.frozen_specs ?? 0 }} / {{ specQualityMetrics.total_specs ?? 0 }} specs frozen</p>
+            </div>
+
+            <!-- Item 56: Doc Coverage -->
+            <div class="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+                <p class="text-xs font-semibold uppercase tracking-wide text-gray-400">Documentation Coverage</p>
+                <div class="mt-2 flex items-end justify-between">
+                    <p class="text-3xl font-bold" :class="docCoverage.coverage_pct >= 70 ? 'text-green-600' : docCoverage.coverage_pct >= 40 ? 'text-yellow-600' : 'text-red-600'">
+                        {{ docCoverage.coverage_pct ?? 0 }}%
+                    </p>
+                    <p class="text-xs text-gray-400 text-right">Features<br>documented</p>
+                </div>
+                <div class="mt-2">
+                    <ProgressBar :percentage="docCoverage.coverage_pct || 0" />
+                </div>
+                <p class="mt-1 text-xs text-gray-400">{{ docCoverage.features_with_docs ?? 0 }} / {{ docCoverage.total_features ?? 0 }} features</p>
+            </div>
+
+            <!-- Item 57: Test Scenario Coverage -->
+            <div class="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+                <p class="text-xs font-semibold uppercase tracking-wide text-gray-400">Test Scenario Coverage</p>
+                <div class="mt-2 flex items-end justify-between">
+                    <p class="text-3xl font-bold" :class="testCoverage.coverage_pct >= 70 ? 'text-green-600' : testCoverage.coverage_pct >= 40 ? 'text-yellow-600' : 'text-red-600'">
+                        {{ testCoverage.coverage_pct ?? 0 }}%
+                    </p>
+                    <p class="text-xs text-gray-400 text-right">Features<br>with specs</p>
+                </div>
+                <div class="mt-2">
+                    <ProgressBar :percentage="testCoverage.coverage_pct || 0" />
+                </div>
+                <p class="mt-1 text-xs text-gray-400">{{ testCoverage.features_with_tests ?? 0 }} / {{ testCoverage.total_features ?? 0 }} features</p>
+            </div>
         </div>
 
         <!-- Quick Report Links -->
@@ -82,6 +133,50 @@ const REPORTS = [
                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
                 </svg>
             </Link>
+        </div>
+
+        <!-- Item 54: Spec Writing Queue -->
+        <div v-if="specQueue.length" class="mb-6 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+            <div class="flex items-center justify-between border-b border-gray-100 px-5 py-4">
+                <div class="flex items-center gap-2">
+                    <svg class="h-4 w-4 text-[#4e1a77]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    <h2 class="font-semibold text-gray-900">Spec Writing Queue</h2>
+                    <span class="rounded-full bg-red-100 px-2 py-0.5 text-xs font-medium text-red-700">{{ specQueue.length }} features need specs</span>
+                </div>
+                <Link href="/features" class="text-xs font-medium text-[#4e1a77] hover:underline">View all →</Link>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead class="border-b border-gray-50 bg-gray-50 text-xs font-semibold uppercase tracking-wide text-gray-400">
+                        <tr>
+                            <th class="px-5 py-3 text-left">Feature</th>
+                            <th class="px-5 py-3 text-left hidden sm:table-cell">Module</th>
+                            <th class="px-5 py-3 text-left">Priority</th>
+                            <th class="px-5 py-3 text-left hidden md:table-cell">Deadline</th>
+                            <th class="px-5 py-3 text-left hidden md:table-cell">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-50">
+                        <tr v-for="feat in specQueue" :key="feat.id" class="hover:bg-gray-50 transition-colors">
+                            <td class="px-5 py-3">
+                                <Link :href="`/features/${feat.id}`" class="font-medium text-[#4e1a77] hover:underline">{{ feat.title }}</Link>
+                            </td>
+                            <td class="px-5 py-3 hidden sm:table-cell text-gray-500">{{ feat.module_name || '—' }}</td>
+                            <td class="px-5 py-3">
+                                <span :class="priorityBadgeClass(feat.priority)" class="rounded-full px-2 py-0.5 text-xs font-semibold uppercase">{{ feat.priority || '—' }}</span>
+                            </td>
+                            <td class="px-5 py-3 hidden md:table-cell text-xs" :class="isOverdue(feat.deadline) ? 'text-red-500 font-semibold' : 'text-gray-400'">
+                                {{ formatDate(feat.deadline) }}
+                            </td>
+                            <td class="px-5 py-3 hidden md:table-cell">
+                                <StatusBadge :status="feat.status" type="feature" />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
 
         <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">

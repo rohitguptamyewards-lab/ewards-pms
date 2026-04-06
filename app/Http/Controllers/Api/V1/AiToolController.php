@@ -87,6 +87,8 @@ class AiToolController extends Controller
 
     public function store(StoreAiToolRequest $request): JsonResponse
     {
+        abort_unless($this->isManager(), 403, 'Only managers can create AI tools.');
+
         $data = $request->validated();
         $id = $this->aiToolService->create($data);
 
@@ -95,6 +97,8 @@ class AiToolController extends Controller
 
     public function update(int $id, StoreAiToolRequest $request): JsonResponse
     {
+        abort_unless($this->isManager(), 403, 'Only managers can update AI tools.');
+
         $this->aiToolService->update($id, $request->validated());
 
         return response()->json($this->aiToolRepository->findById($id));
@@ -102,6 +106,8 @@ class AiToolController extends Controller
 
     public function assign(int $id, Request $request): JsonResponse
     {
+        abort_unless($this->isManager(), 403, 'Only managers can assign AI tools.');
+
         $request->validate(['team_member_id' => 'required|exists:team_members,id']);
 
         $this->aiToolService->assignToMember($id, $request->integer('team_member_id'));
@@ -111,6 +117,8 @@ class AiToolController extends Controller
 
     public function revoke(int $id, Request $request): JsonResponse
     {
+        abort_unless($this->isManager(), 403, 'Only managers can revoke AI tools.');
+
         $request->validate(['team_member_id' => 'required|exists:team_members,id']);
 
         $this->aiToolService->revokeFromMember($id, $request->integer('team_member_id'));

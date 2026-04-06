@@ -61,11 +61,18 @@ class AppServiceProvider extends ServiceProvider
         Event::listen(RequestCreated::class, SendRequestCreatedEmail::class);
 
         // Morph map — keeps short type strings in DB consistent with model lookups.
-        // Deadline.deadlineable and PmsNotification.notifiable rely on these.
+        // Deadline.deadlineable, PmsNotification.notifiable, Comment.commentable,
+        // and Document.documentable all rely on these entries.
         Relation::morphMap([
             'feature'     => \App\Models\Feature::class,
             'initiative'  => \App\Models\Initiative::class,
             'team_member' => \App\Models\TeamMember::class,
+            'task'        => \App\Models\Task::class,
+            'project'     => \App\Models\Project::class,
+            'request'     => \App\Models\PmsRequest::class,
+            'module'      => \App\Models\Module::class,
+            'idea'        => \App\Models\Idea::class,
+            'decision'    => \App\Models\Decision::class,
         ]);
     }
 }

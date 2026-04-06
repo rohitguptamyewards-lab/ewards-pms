@@ -111,6 +111,8 @@ class DeadlineController extends Controller
 
     public function destroy(int $id): JsonResponse
     {
+        abort_unless($this->isManager(), 403, 'Only managers can delete deadlines.');
+
         $this->deadlineRepository->delete($id);
 
         return response()->json(['message' => 'Deadline deleted.']);

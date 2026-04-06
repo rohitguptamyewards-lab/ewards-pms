@@ -156,9 +156,12 @@ class RequestController extends Controller
 
     /**
      * Merge a request into a target request.
+     * Only CTO, CEO, Manager can merge requests.
      */
     public function merge(Request $request, int $id): JsonResponse
     {
+        abort_unless(in_array($this->authRole(), ['cto', 'ceo', 'manager']), 403, 'Only managers can merge requests.');
+
         $request->validate(['target_id' => 'required|integer|exists:requests,id']);
 
         $success = $this->requestService->merge($id, $request->input('target_id'));

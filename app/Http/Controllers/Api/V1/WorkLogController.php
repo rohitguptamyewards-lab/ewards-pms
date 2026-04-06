@@ -104,7 +104,7 @@ class WorkLogController extends Controller
         $user    = auth()->user();
         $roleRaw = $user->role;
         $role    = $roleRaw instanceof \App\Enums\Role ? $roleRaw->value : (string) $roleRaw;
-        $isManager = in_array($role, ['cto', 'ceo', 'manager', 'mc_team']);
+        $isManager = in_array($role, ['cto', 'ceo', 'manager']);
 
         if ($isManager) {
             $projects = DB::table('projects')

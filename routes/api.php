@@ -69,6 +69,11 @@ Route::prefix('v1')->name('api.')->middleware(['auth'])->group(function () {
 
     // Features
     Route::apiResource('features', FeatureController::class)->only(['index', 'store', 'show', 'update']);
+    // Item 71 — Rollout tracking + rollback
+    Route::put('features/{id}/rollout', [FeatureController::class, 'updateRollout']);
+    Route::post('features/{id}/rollback', [FeatureController::class, 'rollback']);
+    // Item 43 — CTO-attributed estimate
+    Route::put('features/{id}/cto-estimate', [FeatureController::class, 'setCtoEstimate']);
 
     // Comments
     Route::get('comments/mentions', [CommentController::class, 'mentionSearch']);
@@ -231,6 +236,7 @@ Route::prefix('v1')->name('api.')->middleware(['auth'])->group(function () {
 });
 
 // Git Webhook — no auth, uses HMAC signature verification
-Route::prefix('v1')->group(function () {
+// Item 68 — Rate limiting on webhook endpoints (60 per minute per repo)
+Route::prefix('v1')->middleware(['throttle:60,1'])->group(function () {
     Route::post('webhooks/git/{repoName}', [GitWebhookController::class, 'handle']);
 });

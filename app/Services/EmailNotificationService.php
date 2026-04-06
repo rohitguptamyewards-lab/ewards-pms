@@ -375,6 +375,133 @@ class EmailNotificationService
         $this->sendToEmails([$email], $subject, $heading, $body, $loginUrl, 'Login to eWards PMS');
     }
 
+    /**
+     * Item 32 — Weekly report email for sales/managers.
+     */
+    public function sendWeeklyReport(object $member, array $report, \Illuminate\Support\Carbon $from, \Illuminate\Support\Carbon $to): void
+    {
+        $fromLabel = $from->format('M d');
+        $toLabel   = $to->format('M d, Y');
+        $shipped   = count($report['features_shipped'] ?? []);
+        $newReqs   = count($report['new_requests'] ?? []);
+        $releases  = count($report['releases'] ?? []);
+
+        $subject = "Weekly Product Summary: {$fromLabel} – {$toLabel}";
+        $heading = "Weekly Product Update";
+        $body    = "Hi {$member->name},\n\nHere's your weekly product summary for {$fromLabel} – {$toLabel}:\n\n"
+                 . "• Features shipped: {$shipped}\n"
+                 . "• New requests received: {$newReqs}\n"
+                 . "• Requests triaged: {$report['requests_triaged']}\n"
+                 . "• Team hours logged: {$report['hours_logged']}h\n"
+                 . "• Critical bugs open: {$report['critical_bugs']}\n"
+                 . "• Releases: {$releases}\n\n"
+                 . "Data as of: {$report['data_freshness']}";
+
+        $url = $this->baseUrl() . '/features';
+        $this->sendToEmails([$member->email], $subject, $heading, $body, $url, 'View Pipeline');
+    }
+
+    /**
+     * Item 33 — Monthly report email for CEO/CTO.
+     */
+    public function sendMonthlyReport(object $member, array $report, \Illuminate\Support\Carbon $from, \Illuminate\Support\Carbon $to): void
+    {
+        $monthLabel = $from->format('F Y');
+
+        $subject = "Monthly Executive Summary: {$monthLabel}";
+        $heading = "Monthly Executive Report — {$monthLabel}";
+        $body    = "Hi {$member->name},\n\n"
+                 . ($report['narrative'] ?? '') . "\n\n"
+                 . "FEATURE PIPELINE:\n"
+                 . "• In Progress: " . ($report['pipeline']['in_progress'] ?? 0) . "\n"
+                 . "• In Review: "   . ($report['pipeline']['in_review']   ?? 0) . "\n"
+                 . "• In QA: "       . ($report['pipeline']['in_qa']       ?? 0) . "\n"
+                 . "• Released: "    . ($report['pipeline']['released']    ?? 0) . "\n"
+                 . "• Backlog: "     . ($report['pipeline']['backlog']     ?? 0) . "\n\n"
+                 . "TEAM PERFORMANCE:\n"
+                 . "• Total hours logged: {$report['hours_logged']}h\n"
+                 . "• Team size: {$report['team_size']}\n"
+                 . "• Active projects: {$report['active_projects']}\n\n"
+                 . "Data as of: {$report['data_freshness']}";
+
+        $url = $this->baseUrl() . '/dashboard/ceo';
+        $this->sendToEmails([$member->email], $subject, $heading, $body, $url, 'View CEO Dashboard');
+    }
+
+    /**
+     * Item 34 — Quarterly deep-dive report email for CTO/CEO.
+     */
+    public function sendQuarterlyReport(object $member, array $report, \Illuminate\Support\Carbon $from, \Illuminate\Support\Carbon $to): void
+    {
+        $subject = "Quarterly Deep-Dive: {$report['quarter']}";
+        $heading = "Quarterly Report — {$report['quarter']}";
+
+        $body = "Hi {$member->name},\n\nHere is your quarterly deep-dive for {$report['quarter']}:\n\n"
+            . "HIGHLIGHTS:\n"
+            . "• Features shipped: {$report['features_shipped']}\n"
+            . "• Total investment: Rs. " . number_format($report['total_cost'], 0) . "\n"
+            . "• Hours logged: {$report['hours_logged']}h\n\n";
+
+        if (!empty($report['initiative_metrics'])) {
+            $body .= "INITIATIVE ROI:\n";
+            foreach (array_slice($report['initiative_metrics'], 0, 5) as $i) {
+                $roi = $i->total_cost > 0 ? round($i->revenue / $i->total_cost, 1) . 'x' : 'N/A';
+                $body .= "• {$i->title}: Rs. " . number_format($i->total_cost, 0) . " cost, {$i->features_released}/{$i->feature_count} shipped, ROI: {$roi}\n";
+            }
+            $body .= "\n";
+        }
+
+        if ($report['bug_stats']) {
+            $body .= "BUG SUMMARY:\n"
+                . "• Total bugs: {$report['bug_stats']['total']}\n"
+                . "• SLA breached: {$report['bug_stats']['breached']}\n\n";
+        }
+
+        $body .= "Data as of: {$report['data_freshness']}";
+
+        $url = $this->baseUrl() . '/dashboard/ceo';
+        $this->sendToEmails([$member->email], $subject, $heading, $body, $url, 'View Dashboard');
+    }
+
+    /**
+     * Item 35 — Personal weekly summary email for each team member.
+     */
+    public function sendPersonalWeeklySummary(object $member, array $summary, \Illuminate\Support\Carbon $from, \Illuminate\Support\Carbon $to): void
+    {
+        $fromLabel = $from->format('M d');
+        $toLabel   = $to->format('M d, Y');
+
+        $subject = "Your Week in Review: {$fromLabel} – {$toLabel}";
+        $heading = "Personal Weekly Summary";
+
+        $body = "Hi {$member->name},\n\nHere's your week in review:\n\n"
+            . "• Hours logged: {$summary['hours_logged']}h\n"
+            . "• Tasks completed: {$summary['tasks_completed']}\n"
+            . "• Features worked on: {$summary['features_worked']}\n"
+            . "• Activity log entries: {$summary['activity_log_count']}\n";
+
+        if ($summary['streak'] > 0) {
+            $body .= "• Logging streak: {$summary['streak']} days\n";
+        }
+
+        if (!empty($summary['upcoming_deadlines'])) {
+            $body .= "\nUPCOMING DEADLINES:\n";
+            foreach ($summary['upcoming_deadlines'] as $d) {
+                $body .= "• {$d->feature_title} — due {$d->due_date} ({$d->state})\n";
+            }
+        }
+
+        if (!empty($summary['blockers'])) {
+            $body .= "\nACTIVE BLOCKERS:\n";
+            foreach ($summary['blockers'] as $b) {
+                $body .= "• {$b->feature_title}: {$b->description}\n";
+            }
+        }
+
+        $url = $this->baseUrl() . '/personal/history';
+        $this->sendToEmails([$member->email], $subject, $heading, $body, $url, 'View Your Dashboard');
+    }
+
     public function onBugSlaCreated(int $featureId, string $severity): void
     {
         $feature = DB::table('features')

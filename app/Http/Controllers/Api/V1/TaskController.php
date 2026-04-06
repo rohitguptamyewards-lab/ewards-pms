@@ -67,9 +67,13 @@ class TaskController extends Controller
 
     /**
      * Store a new task.
+     * MC Team & Sales cannot create tasks.
      */
     public function store(StoreTaskRequest $request): JsonResponse
     {
+        $role = $this->authRole();
+        abort_if(in_array($role, ['mc_team', 'sales']), 403, 'You do not have permission to create tasks.');
+
         $data = $request->validated();
         $id = $this->taskRepository->create($data);
 

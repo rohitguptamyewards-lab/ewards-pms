@@ -47,6 +47,8 @@ class CapacityPlanningController extends Controller
 
     public function forecast(int $initiativeId): JsonResponse
     {
+        abort_unless($this->isManager(), 403, 'Only managers can view forecasts.');
+
         $forecast = $this->velocityService->forecastInitiativeCompletion($initiativeId);
         $scope    = $this->velocityService->getScopeCreep($initiativeId);
 

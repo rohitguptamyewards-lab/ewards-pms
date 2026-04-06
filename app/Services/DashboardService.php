@@ -45,4 +45,19 @@ class DashboardService
     {
         return $this->dashboardRepository->getSalesData($userId);
     }
+
+    public function assembleDeveloper(int $userId): array
+    {
+        return $this->dashboardRepository->getDeveloperData($userId);
+    }
+
+    public function assembleAnalyst(int $userId): array
+    {
+        return $this->dashboardRepository->getAnalystData($userId);
+    }
+
+    public function assembleCEOEnhanced(): array
+    {
+        return $this->dashboardRepository->getCEODataEnhanced();
+    }
 }

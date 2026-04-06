@@ -29,13 +29,13 @@ class OnboardingController extends Controller
             ->whereNotNull('onboarding_status')
             ->where('onboarding_status', '!=', 'completed')
             ->where('is_active', true)
-            ->orderBy('join_date')
+            ->orderBy('joining_date')
             ->get();
 
         $completed = DB::table('team_members')
             ->where('onboarding_status', 'completed')
             ->where('is_active', true)
-            ->orderByDesc('join_date')
+            ->orderByDesc('joining_date')
             ->limit(10)
             ->get();
 

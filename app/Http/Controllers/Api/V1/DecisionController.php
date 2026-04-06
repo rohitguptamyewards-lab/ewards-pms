@@ -41,6 +41,8 @@ class DecisionController extends Controller
 
     public function create(): InertiaResponse
     {
+        abort_unless($this->isManager(), 403);
+
         $teamMembers = DB::table('team_members')->where('is_active', true)->select('id', 'name', 'role')->get();
         $features = DB::table('features')->whereNull('deleted_at')->select('id', 'title')->orderBy('title')->get();
         $initiatives = DB::table('initiatives')->whereNull('deleted_at')->select('id', 'title')->orderBy('title')->get();
@@ -122,6 +124,8 @@ class DecisionController extends Controller
 
     public function updateStatus(Request $request, int $id): JsonResponse
     {
+        abort_unless($this->isManager(), 403, 'Only managers can update decision status.');
+
         $data = $request->validate([
             'status' => ['required', 'in:proposed,open,decided'],
         ]);

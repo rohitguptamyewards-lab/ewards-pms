@@ -81,8 +81,10 @@ function submit() {
                         >
                             <option value="">Select type</option>
                             <option value="new_feature">New Feature</option>
+                            <option value="bug_fix">Bug Fix</option>
                             <option value="improvement">Improvement</option>
-                            <option value="bug">Bug Fix</option>
+                            <option value="tech_debt">Tech Debt</option>
+                            <option value="research">Research</option>
                         </select>
                         <p v-if="form.errors.type" class="mt-1 text-xs text-red-600">{{ form.errors.type }}</p>
                     </div>

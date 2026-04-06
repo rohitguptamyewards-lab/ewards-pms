@@ -19,18 +19,25 @@ class MerchantCommunicationController extends Controller
         private readonly MerchantCommunicationRepository $merchantCommRepo,
     ) {}
 
+    private function isMcUp(): bool
+    {
+        $role = auth()->user()->role;
+        $value = $role instanceof \App\Enums\Role ? $role->value : (string) $role;
+        return in_array($value, ['cto', 'ceo', 'manager', 'mc_team']);
+    }
+
     private function isManager(): bool
     {
         $role = auth()->user()->role;
         $value = $role instanceof \App\Enums\Role ? $role->value : (string) $role;
-        return in_array($value, ['cto', 'ceo', 'manager', 'mc_team', 'sales']);
+        return in_array($value, ['cto', 'ceo', 'manager']);
     }
 
     public function index(Request $request): InertiaResponse|JsonResponse
     {
         $filters = $request->only(['merchant_id', 'team_member_id', 'channel', 'commitment_made']);
 
-        if (!$this->isManager()) {
+        if (!$this->isMcUp()) {
             $filters['team_member_id'] = auth()->id();
         }
 
@@ -52,11 +59,11 @@ class MerchantCommunicationController extends Controller
             ->select('id', 'title')
             ->get();
 
-        $members = $this->isManager()
+        $members = $this->isMcUp()
             ? DB::table('team_members')->where('is_active', true)->orderBy('name')->select('id', 'name')->get()
             : collect();
 
-        $slippedCommitments = $this->isManager()
+        $slippedCommitments = $this->isMcUp()
             ? $this->merchantCommService->findSlippedCommitments()
             : [];
 
@@ -67,12 +74,14 @@ class MerchantCommunicationController extends Controller
             'features'           => $features,
             'teamMembers'        => $members,
             'slippedCommitments' => $slippedCommitments,
-            'isManager'          => $this->isManager(),
+            'isManager'          => $this->isMcUp(),
         ]);
     }
 
     public function create(): InertiaResponse
     {
+        abort_unless($this->isMcUp(), 403, 'Only managers and MC team can log merchant communications.');
+
         $merchants = DB::table('merchants')
             ->where('is_active', true)
             ->orderBy('name')
@@ -94,6 +103,8 @@ class MerchantCommunicationController extends Controller
 
     public function storeWeb(StoreMerchantCommunicationRequest $request)
     {
+        abort_unless($this->isMcUp(), 403, 'Only managers and MC team can log merchant communications.');
+
         $data = $request->validated();
         $data['team_member_id'] = auth()->id();
 
@@ -105,6 +116,8 @@ class MerchantCommunicationController extends Controller
 
     public function store(StoreMerchantCommunicationRequest $request): JsonResponse
     {
+        abort_unless($this->isMcUp(), 403, 'Only managers and MC team can log merchant communications.');
+
         $data = $request->validated();
         $data['team_member_id'] = auth()->id();
 
@@ -115,6 +128,8 @@ class MerchantCommunicationController extends Controller
 
     public function update(Request $request, int $id): JsonResponse
     {
+        abort_unless($this->isMcUp(), 403, 'Only managers and MC team can update merchant communications.');
+
         $this->merchantCommRepo->update($id, $request->all());
 
         return response()->json($this->merchantCommRepo->findById($id));

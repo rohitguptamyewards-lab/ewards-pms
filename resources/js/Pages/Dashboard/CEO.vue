@@ -6,35 +6,64 @@ import StatsCard from '@/Components/StatsCard.vue';
 defineOptions({ layout: AppLayout });
 
 const props = defineProps({
-    featurePipeline: { type: Object, default: () => ({}) },
-    requestPipeline: { type: Object, default: () => ({}) },
-    activeProjects:  { type: Number, default: 0 },
-    teamSize:        { type: Number, default: 0 },
-    hoursThisMonth:  { type: Number, default: 0 },
+    featurePipeline:          { type: Object, default: () => ({}) },
+    requestPipeline:          { type: Object, default: () => ({}) },
+    activeProjects:           { type: Number, default: 0 },
+    teamSize:                 { type: Number, default: 0 },
+    hoursThisMonth:           { type: Number, default: 0 },
+    // Item 39: narrative summary
+    narrative:                { type: String, default: null },
+    // Item 40: investment vs impact matrix
+    investmentMatrix:         { type: Array,  default: () => [] },
+    // Item 41: merchant tier stats
+    merchantTierStats:        { type: Array,  default: () => [] },
+    // Item 43: CTO-attributed estimates
+    featuresWithCtoEstimate:  { type: Array,  default: () => [] },
+    // Item 37: data freshness
+    dataFreshness:            { type: String, default: null },
 });
 
 const FEATURE_STAGES = [
     { key: 'backlog',            label: 'Backlog',             color: '#94a3b8' },
     { key: 'in_progress',        label: 'In Progress',         color: '#4e1a77' },
     { key: 'in_review',          label: 'In Review',           color: '#8b5cf6' },
+    { key: 'ready_for_qa',       label: 'Ready for QA',        color: '#f97316' },
     { key: 'in_qa',              label: 'In QA',               color: '#f59e0b' },
     { key: 'ready_for_release',  label: 'Ready for Release',   color: '#10b981' },
     { key: 'released',           label: 'Released',            color: '#16a34a' },
 ];
 
 const REQUEST_STAGES = [
-    { key: 'received',     label: 'Received',     color: '#64748b' },
-    { key: 'under_review', label: 'Under Review', color: '#4e1a77' },
-    { key: 'accepted',     label: 'Accepted',     color: '#10b981' },
-    { key: 'deferred',     label: 'Deferred',     color: '#f59e0b' },
-    { key: 'rejected',     label: 'Rejected',     color: '#ef4444' },
-    { key: 'completed',    label: 'Completed',    color: '#16a34a' },
+    { key: 'received',              label: 'Received',              color: '#64748b' },
+    { key: 'under_review',          label: 'Under Review',          color: '#4e1a77' },
+    { key: 'clarification_needed',  label: 'Clarification Needed',  color: '#f97316' },
+    { key: 'linked',                label: 'Linked',                color: '#10b981' },
+    { key: 'deferred',              label: 'Deferred',              color: '#f59e0b' },
+    { key: 'rejected',              label: 'Rejected',              color: '#ef4444' },
+    { key: 'fulfilled',             label: 'Fulfilled',             color: '#16a34a' },
 ];
+
+const TIER_LABELS = { enterprise: 'Enterprise', mid_market: 'Mid-Market', smb: 'SMB' };
 
 const totalFeatures = () => Object.values(props.featurePipeline).reduce((a, b) => a + b, 0);
 const totalRequests = () => Object.values(props.requestPipeline).reduce((a, b) => a + b, 0);
 const featuresInProgress = () => (props.featurePipeline.in_progress ?? 0) + (props.featurePipeline.in_review ?? 0) + (props.featurePipeline.in_qa ?? 0);
 const featuresReleased = () => props.featurePipeline.released ?? 0;
+
+function formatCurrency(val) {
+    if (!val) return '—';
+    return '₹' + Number(val).toLocaleString('en-IN', { maximumFractionDigits: 0 });
+}
+
+function formatDate(dateStr) {
+    if (!dateStr) return '—';
+    return new Date(dateStr).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' });
+}
+
+/** Item 36/42 — Board-ready PDF export via browser print dialog. */
+function exportPdf() {
+    window.print();
+}
 </script>
 
 <template>
@@ -47,13 +76,34 @@ const featuresReleased = () => props.featurePipeline.released ?? 0;
                 <h1 class="text-2xl font-bold text-gray-900">Business Overview</h1>
                 <p class="mt-0.5 text-sm text-gray-500">Product pipeline & team performance at a glance</p>
             </div>
-            <div class="flex gap-3">
+            <div class="flex items-center gap-3">
+                <!-- Item 37: Data freshness indicator -->
+                <span v-if="dataFreshness" class="text-xs text-gray-400">
+                    Updated: {{ formatDate(dataFreshness) }}
+                </span>
                 <Link href="/features" class="inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-600 shadow-sm hover:bg-gray-50 transition-colors">
                     Feature Pipeline
                 </Link>
                 <Link href="/requests" class="inline-flex items-center gap-2 rounded-lg bg-[#4e1a77] px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-[#3d1560] transition-colors">
                     All Requests
                 </Link>
+                <button @click="exportPdf" class="inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-600 shadow-sm hover:bg-gray-50 transition-colors print:hidden">
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" /></svg>
+                    Export PDF
+                </button>
+            </div>
+        </div>
+
+        <!-- Item 39: Narrative Summary -->
+        <div v-if="narrative" class="mb-6 rounded-xl border border-[#ddd0f7] bg-[#f5f0ff] px-5 py-4">
+            <div class="flex items-start gap-3">
+                <svg class="mt-0.5 h-5 w-5 shrink-0 text-[#4e1a77]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                <div>
+                    <p class="text-xs font-semibold uppercase tracking-wide text-[#4e1a77]">Executive Summary</p>
+                    <p class="mt-1 text-sm text-[#361963]">{{ narrative }}</p>
+                </div>
             </div>
         </div>
 
@@ -137,6 +187,95 @@ const featuresReleased = () => props.featurePipeline.released ?? 0;
                 <div class="border-t border-gray-100 px-5 py-3 bg-gray-50">
                     <Link href="/requests" class="text-xs font-medium text-[#4e1a77] hover:underline">View all requests →</Link>
                 </div>
+            </div>
+        </div>
+
+        <!-- Item 41: Merchant Tier Fulfilment Rates -->
+        <div v-if="merchantTierStats.length" class="mt-6 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+            <div class="border-b border-gray-100 px-5 py-4">
+                <h2 class="font-semibold text-gray-900">Merchant Tier Fulfilment Rates</h2>
+                <p class="mt-0.5 text-xs text-gray-400">Request completion rates by merchant segment</p>
+            </div>
+            <div class="grid grid-cols-1 divide-y divide-gray-50 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+                <div v-for="tier in merchantTierStats" :key="tier.tier" class="px-6 py-5">
+                    <p class="text-sm font-semibold text-gray-500">{{ TIER_LABELS[tier.tier] || tier.tier }}</p>
+                    <p class="mt-1 text-3xl font-bold" :class="tier.fulfilment_rate >= 70 ? 'text-green-600' : tier.fulfilment_rate >= 40 ? 'text-yellow-600' : 'text-red-600'">
+                        {{ tier.fulfilment_rate }}%
+                    </p>
+                    <p class="mt-1 text-xs text-gray-400">{{ tier.fulfilled + tier.linked }} / {{ tier.total_requests }} requests fulfilled</p>
+                    <div class="mt-2 flex gap-3 text-xs text-gray-400">
+                        <span class="text-green-600">✓ {{ tier.fulfilled }} fulfilled</span>
+                        <span class="text-red-500">✗ {{ tier.rejected }} rejected</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Item 40: Investment vs Impact Matrix -->
+        <div v-if="investmentMatrix.length" class="mt-6 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+            <div class="flex items-center justify-between border-b border-gray-100 px-5 py-4">
+                <div>
+                    <h2 class="font-semibold text-gray-900">Investment vs Impact</h2>
+                    <p class="mt-0.5 text-xs text-gray-400">Features ranked by monthly ROI (revenue - maintenance cost)</p>
+                </div>
+                <Link href="/cost-vs-impact" class="text-xs font-medium text-[#4e1a77] hover:underline">Full matrix →</Link>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead class="border-b border-gray-50 bg-gray-50 text-xs font-semibold uppercase tracking-wide text-gray-400">
+                        <tr>
+                            <th class="px-5 py-3 text-left">Feature</th>
+                            <th class="px-5 py-3 text-right">Revenue/mo</th>
+                            <th class="px-5 py-3 text-right">Cost/mo</th>
+                            <th class="px-5 py-3 text-right">ROI/mo</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-50">
+                        <tr v-for="feat in investmentMatrix.slice(0, 8)" :key="feat.id" class="hover:bg-gray-50">
+                            <td class="px-5 py-3">
+                                <Link :href="`/features/${feat.id}`" class="font-medium text-[#4e1a77] hover:underline">{{ feat.title }}</Link>
+                            </td>
+                            <td class="px-5 py-3 text-right text-gray-600">{{ formatCurrency(feat.attributed_revenue) }}</td>
+                            <td class="px-5 py-3 text-right text-gray-600">{{ formatCurrency(feat.maintenance_cost_monthly) }}</td>
+                            <td class="px-5 py-3 text-right font-semibold" :class="feat.roi_monthly >= 0 ? 'text-green-600' : 'text-red-600'">
+                                {{ formatCurrency(feat.roi_monthly) }}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Item 43: CTO-Attributed Estimates -->
+        <div v-if="featuresWithCtoEstimate.length" class="mt-6 overflow-hidden rounded-xl border border-blue-100 bg-blue-50 shadow-sm">
+            <div class="border-b border-blue-100 px-5 py-4">
+                <h2 class="font-semibold text-gray-900">CTO-Attributed Estimates</h2>
+                <p class="mt-0.5 text-xs text-gray-500">Features where CTO provided an independent estimate</p>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead class="border-b border-blue-100 text-xs font-semibold uppercase tracking-wide text-gray-400">
+                        <tr>
+                            <th class="px-5 py-3 text-left">Feature</th>
+                            <th class="px-5 py-3 text-right">Dev Est.</th>
+                            <th class="px-5 py-3 text-right">CTO Est.</th>
+                            <th class="px-5 py-3 text-right">Variance</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-blue-50">
+                        <tr v-for="feat in featuresWithCtoEstimate" :key="feat.id" class="hover:bg-blue-100/30">
+                            <td class="px-5 py-3">
+                                <Link :href="`/features/${feat.id}`" class="font-medium text-[#4e1a77] hover:underline">{{ feat.title }}</Link>
+                                <p class="text-xs text-gray-400">By {{ feat.cto_name }}</p>
+                            </td>
+                            <td class="px-5 py-3 text-right text-gray-600">{{ feat.estimated_hours || '—' }}h</td>
+                            <td class="px-5 py-3 text-right font-semibold text-blue-700">{{ feat.cto_estimated_hours }}h</td>
+                            <td class="px-5 py-3 text-right text-xs font-semibold" :class="feat.estimated_hours && feat.cto_estimated_hours > feat.estimated_hours ? 'text-red-600' : 'text-green-600'">
+                                {{ feat.estimated_hours ? (feat.cto_estimated_hours - feat.estimated_hours > 0 ? '+' : '') + (feat.cto_estimated_hours - feat.estimated_hours).toFixed(1) + 'h' : '—' }}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
 

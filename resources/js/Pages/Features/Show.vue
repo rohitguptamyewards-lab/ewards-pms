@@ -61,9 +61,52 @@ const ORIGIN_CONFIG = {
     idea:       { label: 'Idea',       classes: 'bg-teal-100 text-teal-700' },
 };
 
-const currentStatus = ref(props.feature.status || 'backlog');
-const updatingStatus = ref(false);
-const statusError = ref('');
+const currentStatus      = ref(props.feature.status || 'backlog');
+const updatingStatus     = ref(false);
+const statusError        = ref('');
+
+// ── Rollout tracking (Item 71) ───────────────────────────────────────────────
+const rolloutMode        = ref(false);
+const rolloutUpdating    = ref(false);
+const rolloutError       = ref('');
+const rolloutForm        = ref({
+    rollout_state:      props.feature.rollout_state || 'internal',
+    rollout_percentage: props.feature.rollout_percentage ?? 0,
+    rollout_notes:      props.feature.rollout_notes || '',
+});
+const currentRolloutState = ref(props.feature.rollout_state || null);
+const currentRolloutPct   = ref(props.feature.rollout_percentage ?? 0);
+const rolledBackAt        = ref(props.feature.rolled_back_at || null);
+
+async function saveRollout() {
+    rolloutUpdating.value = true;
+    rolloutError.value = '';
+    try {
+        await axios.put(`/api/v1/features/${props.feature.id}/rollout`, rolloutForm.value);
+        currentRolloutState.value = rolloutForm.value.rollout_state;
+        currentRolloutPct.value   = rolloutForm.value.rollout_percentage;
+        rolloutMode.value = false;
+    } catch (e) {
+        rolloutError.value = e.response?.data?.message || 'Failed to update rollout.';
+    } finally {
+        rolloutUpdating.value = false;
+    }
+}
+
+async function doRollback() {
+    if (!confirm('Mark this feature as rolled back? This will reset rollout to 0% / Internal.')) return;
+    rolloutUpdating.value = true;
+    try {
+        await axios.post(`/api/v1/features/${props.feature.id}/rollback`, { rollout_notes: rolloutForm.value.rollout_notes });
+        currentRolloutState.value = 'internal';
+        currentRolloutPct.value   = 0;
+        rolledBackAt.value        = new Date().toISOString();
+    } catch (e) {
+        rolloutError.value = e.response?.data?.message || 'Failed to rollback.';
+    } finally {
+        rolloutUpdating.value = false;
+    }
+}
 
 const nextStatuses = computed(() => STATUS_FLOW[currentStatus.value] || []);
 
@@ -218,8 +261,10 @@ function formatDate(d) {
                             <select v-model="form.type" class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#4e1a77] focus:ring-1 focus:ring-[#4e1a77] outline-none">
                                 <option value="">None</option>
                                 <option value="new_feature">New Feature</option>
+                                <option value="bug_fix">Bug Fix</option>
                                 <option value="improvement">Improvement</option>
-                                <option value="bug">Bug Fix</option>
+                                <option value="tech_debt">Tech Debt</option>
+                                <option value="research">Research</option>
                             </select>
                         </div>
                         <div>
@@ -348,6 +393,96 @@ function formatDate(d) {
                         <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                     </svg>
                     Feature Released
+                </div>
+            </div>
+        </div>
+
+        <!-- Item 71: Rollout Tracking Section -->
+        <div v-if="currentStatus === 'released' || currentRolloutState" class="mt-6 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+            <div class="flex items-center justify-between border-b border-gray-100 px-5 py-4">
+                <div>
+                    <h2 class="font-semibold text-gray-900">Rollout Tracking</h2>
+                    <p class="mt-0.5 text-xs text-gray-400">Track feature rollout to users/merchants</p>
+                </div>
+                <button v-if="isManager && !rolloutMode && !rolledBackAt"
+                    @click="rolloutMode = true"
+                    class="rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-50 transition-colors">
+                    Update Rollout
+                </button>
+            </div>
+
+            <!-- Rolled back alert -->
+            <div v-if="rolledBackAt" class="flex items-center gap-3 bg-red-50 px-5 py-3 border-b border-red-100">
+                <svg class="h-4 w-4 shrink-0 text-red-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+                <p class="text-sm font-semibold text-red-800">This feature was rolled back on {{ formatDate(rolledBackAt) }}</p>
+            </div>
+
+            <div v-if="!rolloutMode" class="px-5 py-5">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <span :class="ROLLOUT_CONFIG[currentRolloutState]?.classes || 'bg-gray-100 text-gray-600'"
+                            class="rounded-full px-3 py-1 text-sm font-semibold capitalize">
+                            {{ ROLLOUT_CONFIG[currentRolloutState]?.label || currentRolloutState || 'Not set' }}
+                        </span>
+                    </div>
+                    <span class="text-2xl font-bold text-gray-900">{{ currentRolloutPct }}%</span>
+                </div>
+                <div class="mt-3 h-3 w-full overflow-hidden rounded-full bg-gray-100">
+                    <div
+                        class="h-full rounded-full transition-all duration-500"
+                        :style="{ width: currentRolloutPct + '%', background: currentRolloutPct >= 100 ? '#16a34a' : currentRolloutPct >= 50 ? '#8b5cf6' : '#4e1a77' }"
+                    ></div>
+                </div>
+                <p v-if="feature.rollout_notes" class="mt-3 text-xs text-gray-500 italic">{{ feature.rollout_notes }}</p>
+            </div>
+
+            <!-- Edit rollout form -->
+            <div v-if="rolloutMode && isManager" class="px-5 py-5">
+                <div class="space-y-4">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="mb-1 block text-xs font-semibold uppercase tracking-wide text-gray-400">Rollout State</label>
+                            <select v-model="rolloutForm.rollout_state"
+                                class="block w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#4e1a77] focus:ring-1 focus:ring-[#4e1a77] outline-none">
+                                <option value="internal">Internal</option>
+                                <option value="beta_pilot">Beta / Pilot</option>
+                                <option value="gradual_ga">Gradual GA</option>
+                                <option value="full_ga">Full GA</option>
+                                <option value="sunset">Sunset</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="mb-1 block text-xs font-semibold uppercase tracking-wide text-gray-400">
+                                Rollout % ({{ rolloutForm.rollout_percentage }}%)
+                            </label>
+                            <input v-model.number="rolloutForm.rollout_percentage" type="range" min="0" max="100" step="5"
+                                class="block w-full accent-[#4e1a77]" />
+                        </div>
+                    </div>
+                    <div>
+                        <label class="mb-1 block text-xs font-semibold uppercase tracking-wide text-gray-400">Notes</label>
+                        <textarea v-model="rolloutForm.rollout_notes" rows="2" placeholder="Any rollout-specific notes..."
+                            class="block w-full resize-none rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-[#4e1a77] focus:ring-1 focus:ring-[#4e1a77] outline-none" />
+                    </div>
+                    <p v-if="rolloutError" class="text-xs text-red-600">{{ rolloutError }}</p>
+                    <div class="flex items-center justify-between gap-3">
+                        <button type="button" @click="doRollback" :disabled="rolloutUpdating"
+                            class="rounded-lg border border-red-200 bg-red-50 px-3 py-1.5 text-xs font-semibold text-red-700 hover:bg-red-100 disabled:opacity-50 transition-colors">
+                            Mark as Rolled Back
+                        </button>
+                        <div class="flex gap-2">
+                            <button type="button" @click="rolloutMode = false"
+                                class="rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-50 transition-colors">
+                                Cancel
+                            </button>
+                            <button type="button" @click="saveRollout" :disabled="rolloutUpdating"
+                                class="rounded-lg bg-[#4e1a77] px-4 py-1.5 text-xs font-semibold text-white hover:bg-[#3d1560] disabled:opacity-50 transition-colors">
+                                {{ rolloutUpdating ? 'Saving...' : 'Save Rollout' }}
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

@@ -29,9 +29,9 @@ class ProjectController extends Controller
         $user    = auth()->user();
         $roleRaw = $user->role;
         $role    = $roleRaw instanceof \App\Enums\Role ? $roleRaw->value : (string) $roleRaw;
-        $isManager = in_array($role, ['cto', 'ceo', 'manager']);
+        $canViewAll = in_array($role, ['cto', 'ceo', 'manager', 'mc_team']);
 
-        if ($isManager) {
+        if ($canViewAll) {
             $projects = $this->projectRepository->findAll();
         } else {
             $projects = $this->projectRepository->findByMember($user->id);
@@ -48,9 +48,12 @@ class ProjectController extends Controller
 
     /**
      * Show the create form with team members list.
+     * Only CTO, CEO, Manager, MC Team can create projects.
      */
     public function create(): InertiaResponse
     {
+        abort_unless(in_array($this->authRole(), ['cto', 'ceo', 'manager', 'mc_team']), 403, 'You do not have permission to create projects.');
+
         $teamMembers = DB::table('team_members')
             ->where('is_active', true)
             ->select('id', 'name', 'role')
@@ -68,7 +71,7 @@ class ProjectController extends Controller
      */
     public function store(StoreProjectRequest $request)
     {
-        abort_unless(in_array($this->authRole(), ['cto', 'ceo', 'manager']), 403, 'Only managers can create projects.');
+        abort_unless(in_array($this->authRole(), ['cto', 'ceo', 'manager', 'mc_team']), 403, 'Only managers and MC team can create projects.');
         $data = $request->validated();
         $memberIds = $data['member_ids'] ?? [];
         unset($data['member_ids']);
@@ -239,9 +242,12 @@ class ProjectController extends Controller
 
     /**
      * Remove a member from a project.
+     * Only CTO, CEO, Manager can remove members.
      */
     public function removeMember(int $projectId, int $userId): JsonResponse
     {
+        abort_unless(in_array($this->authRole(), ['cto', 'ceo', 'manager']), 403, 'Only managers can remove project members.');
+
         $this->projectRepository->removeMember($projectId, $userId);
 
         return response()->json(['message' => 'Member removed successfully.']);

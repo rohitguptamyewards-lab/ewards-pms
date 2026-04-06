@@ -23,7 +23,7 @@ class CommentController extends Controller
     public function index(Request $request): JsonResponse
     {
         $request->validate([
-            'commentable_type' => 'required|string|in:task,project,request',
+            'commentable_type' => 'required|string|in:task,project,request,feature,initiative,idea,decision',
             'commentable_id' => 'required|integer',
         ]);
 

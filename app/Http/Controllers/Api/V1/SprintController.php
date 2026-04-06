@@ -127,6 +127,8 @@ class SprintController extends Controller
 
     public function activate(int $id): JsonResponse
     {
+        abort_unless($this->isManager(), 403, 'Only managers can activate sprints.');
+
         $this->sprintService->activate($id);
 
         return response()->json(['message' => 'Sprint activated.']);
@@ -134,6 +136,8 @@ class SprintController extends Controller
 
     public function complete(int $id): JsonResponse
     {
+        abort_unless($this->isManager(), 403, 'Only managers can complete sprints.');
+
         $this->sprintService->complete($id);
 
         return response()->json(['message' => 'Sprint completed.']);
@@ -141,6 +145,8 @@ class SprintController extends Controller
 
     public function addFeature(Request $request, int $id): JsonResponse
     {
+        abort_unless($this->isManager(), 403, 'Only managers can add features to sprints.');
+
         $data = $request->validate([
             'feature_id'      => 'required|integer|exists:features,id',
             'committed_hours' => 'nullable|integer|min:0',
@@ -153,6 +159,8 @@ class SprintController extends Controller
 
     public function removeFeature(int $id, int $featureId): JsonResponse
     {
+        abort_unless($this->isManager(), 403, 'Only managers can remove features from sprints.');
+
         $this->sprintRepository->removeFeature($id, $featureId);
 
         return response()->json(['message' => 'Feature removed from sprint.']);
