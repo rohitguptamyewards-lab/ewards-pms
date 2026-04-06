@@ -53,7 +53,7 @@
     <br><br>
     <p style="text-align:center; font-size:12pt; color:#666;">Implementation Guide | Technical Reference | User Manual</p>
     <br><br><br>
-    <p class="version">Version 1.1</p>
+    <p class="version">Version 2.0</p>
     <p class="version">April 2026</p>
     <p class="version">Prepared for: eWards Team</p>
 </div>
@@ -112,6 +112,21 @@
     <li><a href="#database">Complete Database Schema</a></li>
     <li><a href="#api">Complete API Reference</a></li>
     <li><a href="#flows">Application Flows</a></li>
+    <li><a href="#role-flows">Role-Wise Detailed Flows</a>
+        <ol type="a">
+            <li>MC Team - Complete Flow (Raising Requests, Tracking, Responding)</li>
+            <li>Sales - Complete Flow (Submit &amp; Track Only)</li>
+            <li>CTO - Complete Flow (Full Access + Cost/AI Intelligence)</li>
+            <li>CEO - Complete Flow (Business View + Triage)</li>
+            <li>Manager - Complete Flow (Operations + Sprint Management)</li>
+            <li>Developer - Complete Flow (Daily Coding Workflow)</li>
+            <li>Tester (QA) - Complete Flow (Testing + Bug SLA)</li>
+            <li>Analyst - Complete Flow (Specs + Research)</li>
+            <li>Sidebar Navigation Guide (What Each Role Sees)</li>
+            <li>Complete Request Lifecycle (End-to-End All Stages)</li>
+            <li>Complete Feature Lifecycle (All 9 Stages + Rollout)</li>
+        </ol>
+    </li>
     <li><a href="#architecture">Architecture & Implementation Guide</a></li>
 </ol>
 </div>
@@ -304,10 +319,10 @@
     <tr><td><b>Ideas</b></td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td></tr>
     <tr><td><b>Decisions</b></td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td></tr>
     <tr><td><b>Sprints</b></td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td></tr>
-    <tr><td><b>Work Logs (Own)</b></td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td></tr>
-    <tr><td><b>Work Logs (Team)</b></td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td></tr>
-    <tr><td><b>Activity Logs (Own)</b></td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td></tr>
-    <tr><td><b>Activity Logs (Team)</b></td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td></tr>
+    <tr><td><b>Work Logs (Own)</b></td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td></tr>
+    <tr><td><b>Work Logs (Team)</b></td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td></tr>
+    <tr><td><b>Activity Logs (Own)</b></td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td></tr>
+    <tr><td><b>Activity Logs (Team)</b></td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td></tr>
     <tr><td><b>Journal (Own)</b></td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td></tr>
     <tr><td><b>Team Journal</b></td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td></tr>
     <tr><td><b>Releases</b></td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td></tr>
@@ -321,7 +336,7 @@
     <tr><td><b>Bus Factor</b></td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td></tr>
     <tr><td><b>Capacity Planning</b></td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td></tr>
     <tr><td><b>Leave Entries</b></td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td></tr>
-    <tr><td><b>Reports</b></td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td></tr>
+    <tr><td><b>Reports</b></td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td></tr>
     <tr><td><b>CEO Dashboard</b></td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td></tr>
     <tr><td><b>Cost Dashboard</b></td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td></tr>
     <tr><td><b>Cost vs Impact</b></td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td></tr>
@@ -660,40 +675,79 @@
 <p>If a feature isn't completed during a sprint, it can be "carried over" to the next sprint with a reason: Blocked, Underestimated, Scope Crept, or Deprioritised.</p>
 
 <!-- === WORK LOGS === -->
-<h2>6j. Work Logs</h2>
+<h2>6j. Work Logs (Clockify-Style Time Tracker)</h2>
 <h3>What Is It?</h3>
-<p>Every team member logs their daily work hours here. You select a project, optionally a task, enter start and end time, and the system automatically calculates how many hours you worked.</p>
+<p>Every team member logs their daily work hours here. The interface is designed like Clockify - a professional time tracking tool. You type what you worked on, select a project, set start and end time, and click ADD. Everything happens on one page - no separate "create" form needed.</p>
 
-<h3>How It Works</h3>
+<h3>Page Layout</h3>
+<p><b>URL:</b> <code>/work-logs</code></p>
+<p>The page has three sections:</p>
 <ol>
-    <li>Go to Work Logs > Log Work</li>
-    <li>Select a Project (and optionally a Task)</li>
-    <li>Enter the Date (defaults to today)</li>
-    <li>Enter Start Time (auto-filled from your last log's end time)</li>
-    <li>Enter End Time</li>
-    <li>Hours are calculated automatically (End Time - Start Time)</li>
-    <li>Select Status: Done, In Progress, or Blocked</li>
-    <li>Add a Note about what you worked on (optional)</li>
-    <li>If Blocked, describe the blocker</li>
-    <li>Click "Log Work" to save</li>
+    <li><b>Header Bar</b> - Title "Work Logs", a weekly total display (e.g., "This Week 32:45:00"), and a Filters toggle button</li>
+    <li><b>Inline Entry Bar</b> - A form bar at the top where you type your entry and click ADD (like Clockify's top bar)</li>
+    <li><b>Entries Grouped by Date</b> - All your logged entries grouped under date headers (e.g., "Mon, Apr 6") with daily totals</li>
 </ol>
 
+<h3>How to Log Work (Step by Step)</h3>
+<ol>
+    <li>Go to Work Logs from the sidebar</li>
+    <li>In the <b>inline entry bar</b> at the top of the page, type what you worked on in the "What have you worked on?" field</li>
+    <li>Click the <b>Project dropdown</b> (searchable) and select your project. A colored dot appears next to the project name</li>
+    <li>Optionally select a <b>Task</b> from the dropdown (only shows tasks for the selected project)</li>
+    <li>Set the <b>Status</b> (Done, In Progress, or Blocked). If Blocked, a blocker description field appears</li>
+    <li>Set the <b>Date</b> (defaults to today)</li>
+    <li>Enter <b>Start Time</b> (auto-filled from your last log's end time) and <b>End Time</b></li>
+    <li>The <b>Duration</b> is calculated automatically and displayed (e.g., "02:30")</li>
+    <li>Click the green <b>ADD</b> button to save</li>
+    <li>Your entry immediately appears in the grouped list below</li>
+</ol>
+
+<h3>Entry List Features</h3>
+<ul>
+    <li><b>Grouped by Date</b> - Entries are organized under date headers (e.g., "Sat, Apr 5") with the number of entries and daily total hours</li>
+    <li><b>Each Entry Shows:</b> Description, project name with color dot, task name, status badge, time range, duration in HH:MM format</li>
+    <li><b>Hover Actions:</b> When you hover over an entry, three action buttons appear:
+        <ul>
+            <li>Edit (pencil icon) - Edit the note, times, and status inline</li>
+            <li>Delete (trash icon) - Delete the entry (with confirmation)</li>
+            <li>Replay (play icon) - Copy this entry's details into the top bar to quickly create a similar entry</li>
+        </ul>
+    </li>
+    <li><b>Weekly Total</b> - Displayed prominently in the header showing your total hours for the current week (Mon-Sun)</li>
+</ul>
+
 <h3>Smart Auto-fill</h3>
-<p>When you create a new work log, the Start Time is automatically set to the End Time of your last log for today. This way, if you logged 9:00-12:00, your next log will start at 12:00.</p>
+<p>When you open the Work Logs page, the Start Time is automatically set to the End Time of your last log for today. This way, if you logged 9:00-12:00, your next log will start at 12:00. No gaps in your time tracking.</p>
+
+<h3>Filters</h3>
+<p>Click the "Filters" button to expand the filter panel. You can filter by:</p>
+<ul>
+    <li><b>Project</b> - Show only entries for a specific project</li>
+    <li><b>Team Member</b> - (Managers only) Filter by team member to view their logs</li>
+    <li><b>Date From / Date To</b> - Show entries within a date range</li>
+</ul>
 
 <h3>Fields</h3>
 <table>
     <tr><th>Field</th><th>Required?</th><th>Description</th></tr>
-    <tr><td>Project</td><td>Yes</td><td>Which project you worked on</td></tr>
-    <tr><td>Task</td><td>No</td><td>Specific task (optional, loads based on selected project)</td></tr>
-    <tr><td>Date</td><td>Yes</td><td>When you did the work (defaults to today)</td></tr>
+    <tr><td>Note (Description)</td><td>No</td><td>"What have you worked on?" - appears as the entry title</td></tr>
+    <tr><td>Project</td><td>Yes</td><td>Searchable dropdown with color-coded project dots</td></tr>
+    <tr><td>Task</td><td>No</td><td>Specific task (filtered by selected project)</td></tr>
+    <tr><td>Status</td><td>Yes</td><td>Done (green) / In Progress (purple) / Blocked (red)</td></tr>
+    <tr><td>Blocker</td><td>Required if Blocked</td><td>Describe what's blocking you (appears when status is Blocked)</td></tr>
+    <tr><td>Date</td><td>Yes</td><td>Date picker (defaults to today)</td></tr>
     <tr><td>Start Time</td><td>Yes</td><td>When you started (auto-filled from last log)</td></tr>
     <tr><td>End Time</td><td>Yes</td><td>When you stopped</td></tr>
-    <tr><td>Hours</td><td>Auto-calculated</td><td>Calculated from End - Start time</td></tr>
-    <tr><td>Status</td><td>Yes</td><td>Done / In Progress / Blocked</td></tr>
-    <tr><td>Note</td><td>No</td><td>What you worked on</td></tr>
-    <tr><td>Blocker</td><td>Required if Blocked</td><td>What's blocking you</td></tr>
+    <tr><td>Duration</td><td>Auto-calculated</td><td>Displayed in HH:MM format (End - Start)</td></tr>
 </table>
+
+<h3>Who Can Access?</h3>
+<ul>
+    <li><b>Everyone (except MC Team and Sales):</b> Can see and manage their own work logs</li>
+    <li><b>Managers (CTO, CEO, Manager):</b> Can see all team members' work logs and filter by person</li>
+    <li><b>MC Team and Sales:</b> Do not have access to Work Logs (it does not appear in their sidebar)</li>
+    <li><b>Edit/Delete:</b> You can only edit or delete your own entries (CTO can edit/delete anyone's)</li>
+</ul>
 
 <!-- === ACTIVITY LOGS === -->
 <h2>6k. Activity Logs</h2>
@@ -1480,7 +1534,7 @@
 
 
 <!-- ======================= 9. FLOWS ======================= -->
-<h1 id="flows">9. Application Flows</h1>
+<h1 id="flows">9. Application Flows (Overview)</h1>
 
 <h2>Flow 1: Merchant Request to Feature Release</h2>
 <div class="flow-step"><b>Step 1:</b> Merchant contacts Sales team about a need</div>
@@ -1535,8 +1589,438 @@
 <div class="flow-step"><b>Reopen:</b> If the bug comes back, the reopen count increases and a new SLA cycle starts.</div>
 
 
-<!-- ======================= 10. ARCHITECTURE ======================= -->
-<h1 id="architecture">10. Architecture & Implementation Guide</h1>
+<!-- ======================= 10. ROLE-WISE DETAILED FLOWS ======================= -->
+<h1 id="role-flows">10. Role-Wise Detailed Flows</h1>
+<p class="section-intro">This section explains in detail what each role does in the system, step by step. Every stage, every action, and every permission is documented here so there is zero ambiguity about who does what.</p>
+
+<!-- ── MC TEAM FLOW ── -->
+<h2>10a. MC Team (Merchant Communications) - Complete Flow</h2>
+<p>The MC Team's primary job is to handle merchant requests and communications. Here is every action they perform:</p>
+
+<h3>1. Raising a Merchant Request</h3>
+<div class="flow-step"><b>Step 1:</b> MC Team member receives a call/email/message from a merchant who needs something (new feature, bug fix, improvement)</div>
+<div class="flow-arrow">&#8595;</div>
+<div class="flow-step"><b>Step 2:</b> MC Team member logs into PMS and goes to <b>Requests &gt; Create New Request</b> (<code>/requests/create</code>)</div>
+<div class="flow-arrow">&#8595;</div>
+<div class="flow-step"><b>Step 3:</b> Fills in the request form:
+<ul>
+    <li><b>Title:</b> Short description (e.g., "Add Google Pay support for merchant XYZ")</li>
+    <li><b>Description:</b> Detailed explanation of what the merchant needs</li>
+    <li><b>Type:</b> Bug / New Feature / Improvement</li>
+    <li><b>Urgency:</b> Merchant Blocked / Merchant Unhappy / Nice to Have</li>
+    <li><b>Merchant:</b> Select the merchant from dropdown</li>
+    <li><b>Revenue Impact:</b> How much revenue is at stake (in INR)</li>
+    <li><b>Demand Count:</b> How many merchants want this same thing</li>
+</ul>
+</div>
+<div class="flow-arrow">&#8595;</div>
+<div class="flow-step"><b>Step 4:</b> Clicks "Submit". Request is created with status <span class="badge badge-purple">Received</span></div>
+<div class="flow-arrow">&#8595;</div>
+<div class="flow-step"><b>Step 5:</b> Request appears on the dashboard of CTO, CEO, and Manager as an "Untriaged Request"</div>
+
+<h3>2. What Happens After Submission (Triage by CTO/CEO/Manager)</h3>
+<div class="note">
+<b>Important:</b> MC Team CANNOT triage requests. Only CTO, CEO, and Manager roles can accept, reject, defer, or ask for clarification. MC Team can only submit and track.
+</div>
+<div class="flow-step"><b>Step 6:</b> CTO/CEO/Manager opens the request and reviews it. They have four options:</div>
+
+<table>
+    <tr><th>Triage Action</th><th>What Happens</th><th>Email Notification</th></tr>
+    <tr><td><b>Accept (Link to Feature)</b></td><td>Request is linked to a new or existing Feature. Status changes to <span class="badge badge-green">Linked</span>. The feature enters the development pipeline.</td><td>Email sent to MC Team member who submitted it: "Your request has been accepted and linked to feature [name]"</td></tr>
+    <tr><td><b>Reject</b></td><td>Request is rejected with a reason. Status changes to <span class="badge badge-red">Rejected</span>.</td><td>Email sent to MC Team member: "Your request was rejected. Reason: [reason]"</td></tr>
+    <tr><td><b>Defer</b></td><td>Request is postponed. Status changes to <span class="badge badge-yellow">Deferred</span>.</td><td>Email sent to MC Team member: "Your request has been deferred. Reason: [reason]"</td></tr>
+    <tr><td><b>Ask Clarification</b></td><td>Manager needs more information. Status changes to <span class="badge badge-blue">Clarification Needed</span>.</td><td>Email sent to MC Team member: "Clarification needed on your request. Please respond via comments."</td></tr>
+</table>
+
+<h3>3. Responding to Clarification Requests</h3>
+<div class="flow-step"><b>Step 7:</b> MC Team member receives an email saying "Clarification needed on your request"</div>
+<div class="flow-arrow">&#8595;</div>
+<div class="flow-step"><b>Step 8:</b> MC Team member logs in, opens the request detail page (<code>/requests/{id}</code>)</div>
+<div class="flow-arrow">&#8595;</div>
+<div class="flow-step"><b>Step 9:</b> Reads the clarification question in the comments section</div>
+<div class="flow-arrow">&#8595;</div>
+<div class="flow-step"><b>Step 10:</b> Types a reply in the comment box and submits it</div>
+<div class="flow-arrow">&#8595;</div>
+<div class="flow-step"><b>Step 11:</b> The manager sees the reply and can now triage the request (Accept/Reject/Defer)</div>
+
+<h3>4. Tracking Request Progress</h3>
+<p>After submission, the MC Team member can:</p>
+<ul>
+    <li>View the request list page (<code>/requests</code>) to see all their submitted requests</li>
+    <li>See the current status of each request: Received, Under Review, Clarification Needed, Linked, Deferred, Rejected, Fulfilled</li>
+    <li>If linked to a feature, they can see the feature's progress (which stage it's in)</li>
+    <li>Once the feature is released, the request status automatically becomes <span class="badge badge-green">Fulfilled</span></li>
+</ul>
+
+<h3>5. Other MC Team Actions</h3>
+<table>
+    <tr><th>Action</th><th>Can Do?</th><th>Where</th></tr>
+    <tr><td>Create Projects</td><td class="check">&#10003; Yes</td><td><code>/projects/create</code></td></tr>
+    <tr><td>View All Projects</td><td class="check">&#10003; Yes</td><td><code>/projects</code></td></tr>
+    <tr><td>View Features</td><td class="check">&#10003; Yes</td><td><code>/features</code></td></tr>
+    <tr><td>View Kanban Board</td><td class="check">&#10003; Yes</td><td><code>/features/kanban</code></td></tr>
+    <tr><td>Log Merchant Communications</td><td class="check">&#10003; Yes</td><td><code>/merchant-communications/create</code></td></tr>
+    <tr><td>Submit Ideas</td><td class="check">&#10003; Yes</td><td><code>/ideas/create</code></td></tr>
+    <tr><td>View My Dashboard</td><td class="check">&#10003; Yes</td><td><code>/personal/history</code></td></tr>
+    <tr><td>Create Tasks</td><td class="cross">&#10007; No</td><td>Blocked - "You do not have permission"</td></tr>
+    <tr><td>Create Features</td><td class="cross">&#10007; No</td><td>Blocked - only managers can create features</td></tr>
+    <tr><td>Log Work / Activity</td><td class="cross">&#10007; No</td><td>Not visible in sidebar</td></tr>
+    <tr><td>Triage Requests</td><td class="cross">&#10007; No</td><td>Triage button not shown</td></tr>
+    <tr><td>Access Reports</td><td class="cross">&#10007; No</td><td>Not visible in sidebar</td></tr>
+</table>
+
+<!-- ── SALES FLOW ── -->
+<h2>10b. Sales - Complete Flow</h2>
+<p>Sales has the most restricted access. Their sole purpose is to submit merchant requests and track their status.</p>
+
+<h3>What Sales Can Do</h3>
+<div class="flow-step"><b>1. Dashboard:</b> See their own submitted requests summary (pending, accepted, rejected counts)</div>
+<div class="flow-arrow">&#8595;</div>
+<div class="flow-step"><b>2. Create Request:</b> Go to Requests &gt; Create. Fill in merchant request details and submit</div>
+<div class="flow-arrow">&#8595;</div>
+<div class="flow-step"><b>3. Track Requests:</b> View all their submitted requests with current status</div>
+<div class="flow-arrow">&#8595;</div>
+<div class="flow-step"><b>4. Respond to Clarifications:</b> When a manager asks for clarification, respond via comments</div>
+<div class="flow-arrow">&#8595;</div>
+<div class="flow-step"><b>5. View Team Directory:</b> See the list of team members</div>
+
+<h3>What Sales CANNOT Do</h3>
+<p>Sales sees only <b>three items</b> in their sidebar: Dashboard, Requests, Team. Everything else is hidden:</p>
+<ul>
+    <li class="cross">Cannot access Projects, Tasks, Features, Kanban Board</li>
+    <li class="cross">Cannot access Work Logs, Journal, Activity Logs</li>
+    <li class="cross">Cannot access Sprints, Initiatives, Decisions</li>
+    <li class="cross">Cannot access Reports, Merchant Communications</li>
+    <li class="cross">Cannot access any Management or Intelligence tools</li>
+    <li class="cross">Cannot triage requests (accept/reject/defer)</li>
+</ul>
+
+<!-- ── CTO FLOW ── -->
+<h2>10c. CTO - Complete Flow</h2>
+<p>The CTO has <b>full access to everything</b> in the system. This includes all modules visible to every other role, plus exclusive access to cost intelligence and AI intelligence.</p>
+
+<h3>CTO's Unique Capabilities (No Other Role Has These)</h3>
+<table>
+    <tr><th>Exclusive Module</th><th>URL</th><th>What It Does</th></tr>
+    <tr><td><b>Cost Dashboard</b></td><td><code>/dashboard/cost</code></td><td>See feature costs, initiative costs, module costs, meeting cost analysis, tech debt scores</td></tr>
+    <tr><td><b>Cost vs Impact</b></td><td><code>/cost-vs-impact</code></td><td>Compare build cost vs. business impact for each feature</td></tr>
+    <tr><td><b>Cost Rates</b></td><td><code>/cost-rates</code></td><td>Set hourly cost rates for each team member (CTC, overhead multiplier)</td></tr>
+    <tr><td><b>AI Dashboard</b></td><td><code>/dashboard/ai</code></td><td>AI tool adoption, effectiveness, ROI analytics</td></tr>
+    <tr><td><b>AI Tools</b></td><td><code>/ai-tools</code></td><td>Register AI tools, manage licenses, assign/revoke access</td></tr>
+    <tr><td><b>Prompt Templates</b></td><td><code>/prompt-templates</code></td><td>Create and manage reusable AI prompt templates</td></tr>
+    <tr><td><b>AI Knowledge Base</b></td><td><code>/ai-knowledge-base</code></td><td>AI best practices and guidelines</td></tr>
+</table>
+
+<h3>CTO's Daily Workflow</h3>
+<div class="flow-step"><b>Morning:</b> Check Manager Dashboard - see blocked tasks, overdue items, untriaged requests</div>
+<div class="flow-arrow">&#8595;</div>
+<div class="flow-step"><b>Triage:</b> Review and triage merchant requests (accept/reject/defer/clarify)</div>
+<div class="flow-arrow">&#8595;</div>
+<div class="flow-step"><b>Sprint Management:</b> Activate sprints, add/remove features, monitor progress</div>
+<div class="flow-arrow">&#8595;</div>
+<div class="flow-step"><b>Cost Analysis:</b> Review Cost Dashboard - which features are expensive, which have good ROI</div>
+<div class="flow-arrow">&#8595;</div>
+<div class="flow-step"><b>AI Oversight:</b> Check AI Dashboard - team adoption, tool effectiveness, optimize spending</div>
+<div class="flow-arrow">&#8595;</div>
+<div class="flow-step"><b>Team Management:</b> Add new team members, manage onboarding, review capacity</div>
+
+<!-- ── CEO FLOW ── -->
+<h2>10d. CEO - Complete Flow</h2>
+<p>The CEO sees the <b>big business picture</b>. They have access to most modules but focus on business metrics rather than individual tasks.</p>
+
+<h3>CEO's Primary Actions</h3>
+<div class="flow-step"><b>1. CEO Dashboard</b> (<code>/dashboard/ceo</code>) - Weekly narrative, roadmap completion, module ROI, team health, risk indicators</div>
+<div class="flow-arrow">&#8595;</div>
+<div class="flow-step"><b>2. Feature Pipeline</b> - View features across all stages. See what's being built and what's been released</div>
+<div class="flow-arrow">&#8595;</div>
+<div class="flow-step"><b>3. Triage Requests</b> - Can accept/reject/defer merchant requests alongside CTO and Manager</div>
+<div class="flow-arrow">&#8595;</div>
+<div class="flow-step"><b>4. Create Features &amp; Initiatives</b> - Can set strategic direction by creating initiatives and features</div>
+<div class="flow-arrow">&#8595;</div>
+<div class="flow-step"><b>5. Reports</b> - View work log, project, and individual performance reports</div>
+
+<h3>What CEO Does NOT See</h3>
+<ul>
+    <li class="cross">Cost Dashboard (only CTO) - individual salary data is sensitive</li>
+    <li class="cross">Cost Rates (only CTO)</li>
+    <li class="cross">AI Tools management, AI Dashboard, Prompt Templates, AI Knowledge Base (only CTO)</li>
+</ul>
+
+<!-- ── MANAGER FLOW ── -->
+<h2>10e. Manager - Complete Flow</h2>
+<p>The Manager is the operational leader. They handle day-to-day management of the team, sprints, and features.</p>
+
+<h3>Manager's Key Responsibilities</h3>
+<table>
+    <tr><th>Responsibility</th><th>Actions</th></tr>
+    <tr><td><b>Request Triage</b></td><td>Accept, reject, defer, or ask clarification on merchant requests</td></tr>
+    <tr><td><b>Feature Management</b></td><td>Create features, update status, assign team members, set deadlines</td></tr>
+    <tr><td><b>Sprint Planning</b></td><td>Create sprints, add features with committed hours, activate/complete sprints</td></tr>
+    <tr><td><b>Task Management</b></td><td>Create tasks in projects, assign to team members, track progress</td></tr>
+    <tr><td><b>Team Management</b></td><td>Add new team members, manage onboarding/offboarding, send welcome emails</td></tr>
+    <tr><td><b>Reports</b></td><td>View work log, project, and individual performance reports</td></tr>
+    <tr><td><b>Leave &amp; Capacity</b></td><td>Manage leave entries, view capacity planning, forecast delivery</td></tr>
+    <tr><td><b>Bug SLA</b></td><td>View bug SLA records, update status, reopen bugs</td></tr>
+    <tr><td><b>Releases</b></td><td>Create releases, link features, manage changelogs</td></tr>
+</table>
+
+<h3>Manager's Sprint Cycle Flow</h3>
+<div class="flow-step"><b>Day 1 (Planning):</b> Go to Sprints &gt; Create. Set sprint goal, dates, capacity hours. Add features with committed hours.</div>
+<div class="flow-arrow">&#8595;</div>
+<div class="flow-step"><b>Activation:</b> Click "Activate Sprint". Team sees their committed features in their dashboard.</div>
+<div class="flow-arrow">&#8595;</div>
+<div class="flow-step"><b>Daily Check:</b> Monitor team journals, work logs, and task status. Resolve blockers.</div>
+<div class="flow-arrow">&#8595;</div>
+<div class="flow-step"><b>Sprint End:</b> Click "Complete Sprint". Review what was done vs. planned. Carry over unfinished features with reason.</div>
+
+<!-- ── DEVELOPER FLOW ── -->
+<h2>10f. Developer - Complete Flow</h2>
+<p>Developers do the coding work. Their daily routine involves logging hours, updating task status, and writing journal entries.</p>
+
+<h3>Developer's Daily Workflow</h3>
+<div class="flow-step"><b>Morning Check-in:</b> Log in &gt; Dashboard shows today's tasks, weekly hours, assigned projects</div>
+<div class="flow-arrow">&#8595;</div>
+<div class="flow-step"><b>Start Working:</b> Go to Work Logs. In the inline entry bar, type what you're working on, select project/task, set start time. Work on the task.</div>
+<div class="flow-arrow">&#8595;</div>
+<div class="flow-step"><b>Complete Work Block:</b> Set end time in the entry bar, click ADD. Duration is auto-calculated. Start a new entry for the next block.</div>
+<div class="flow-arrow">&#8595;</div>
+<div class="flow-step"><b>Update Task Status:</b> Go to Tasks. Mark tasks as In Progress, Done, or Blocked as you work.</div>
+<div class="flow-arrow">&#8595;</div>
+<div class="flow-step"><b>Log Activity:</b> Go to Activity Logs &gt; Create. Log detailed activity: type (Coding, Bug Fix, Code Review), feature, duration, AI tool usage.</div>
+<div class="flow-arrow">&#8595;</div>
+<div class="flow-step"><b>End of Day:</b> Go to Journal &gt; Create. Write accomplishments, blockers, plans for tomorrow, mood.</div>
+
+<h3>Developer's Access Summary</h3>
+<ul>
+    <li class="check">Work Logs, Activity Logs, Journal - full access to own entries</li>
+    <li class="check">Tasks - view assigned tasks, update status</li>
+    <li class="check">Projects - view projects they are members of</li>
+    <li class="check">Features, Kanban Board, Ideas, Decisions, Releases, Changelogs - view access</li>
+    <li class="check">Bug SLA - can create bug SLA records (they find bugs too)</li>
+    <li class="check">Personal Dashboard, Review Prep - own history and performance summary</li>
+    <li class="cross">Cannot create features, initiatives, projects, or sprints</li>
+    <li class="cross">Cannot triage requests or access management tools</li>
+    <li class="cross">Cannot view Reports, Merchant Comms, or other team members' data</li>
+</ul>
+
+<!-- ── TESTER FLOW ── -->
+<h2>10g. Tester (QA) - Complete Flow</h2>
+<p>Testers ensure quality. They test features, report bugs, track bug fix deadlines (SLA), and verify fixes.</p>
+
+<h3>Tester's Key Workflow</h3>
+<div class="flow-step"><b>1. Check Dashboard:</b> See features that are "Ready for QA" or "In QA"</div>
+<div class="flow-arrow">&#8595;</div>
+<div class="flow-step"><b>2. Test Feature:</b> Pick a feature in "Ready for QA" status. Start testing. Log activity as "Manual Testing" or "Test Case Writing"</div>
+<div class="flow-arrow">&#8595;</div>
+<div class="flow-step"><b>3. Bug Found:</b> Go to Bug SLA &gt; Create. Set severity (P0-P3), link to feature. SLA clock starts automatically.</div>
+<div class="flow-arrow">&#8595;</div>
+<div class="flow-step"><b>4. Bug Fixed by Dev:</b> Verify the fix. If good, the bug SLA record is closed (SLA met or breached). If not fixed properly, report again.</div>
+<div class="flow-arrow">&#8595;</div>
+<div class="flow-step"><b>5. Feature Passes QA:</b> All bugs fixed. Manager moves feature to "Ready for Release".</div>
+<div class="flow-arrow">&#8595;</div>
+<div class="flow-step"><b>6. Daily Logging:</b> Log Work Logs, Activity Logs, Journal entries - same as Developer.</div>
+
+<h3>Bug SLA Tracking Detail</h3>
+<table>
+    <tr><th>Severity</th><th>SLA Deadline</th><th>What Happens if Breached</th></tr>
+    <tr><td><span class="badge badge-red">P0 - Critical</span></td><td>4 hours</td><td><code>breached_at</code> timestamp recorded. Flagged on manager dashboard.</td></tr>
+    <tr><td><span class="badge badge-yellow">P1 - High</span></td><td>24 hours</td><td><code>breached_at</code> recorded. Shows as "SLA Breached" in bug list.</td></tr>
+    <tr><td><span class="badge badge-blue">P2 - Medium</span></td><td>72 hours</td><td><code>breached_at</code> recorded.</td></tr>
+    <tr><td><span class="badge badge-gray">P3 - Low</span></td><td>Next Sprint</td><td>Carried over to next sprint.</td></tr>
+</table>
+
+<!-- ── ANALYST FLOW ── -->
+<h2>10h. Analyst - Complete Flow</h2>
+<p>Analysts write specifications, gather requirements, research, and review feature specs. Their access is similar to Developers.</p>
+
+<h3>Analyst's Key Workflow</h3>
+<div class="flow-step"><b>1. Specification Writing:</b> Write feature specifications using the Feature Spec Version system. Each version is tracked.</div>
+<div class="flow-arrow">&#8595;</div>
+<div class="flow-step"><b>2. Requirement Gathering:</b> Talk to merchants/stakeholders, document requirements in feature descriptions and comments.</div>
+<div class="flow-arrow">&#8595;</div>
+<div class="flow-step"><b>3. Activity Logging:</b> Log activities as: Specification Writing, Requirement Gathering, Technical Documentation, Research, Spec Review, Meeting.</div>
+<div class="flow-arrow">&#8595;</div>
+<div class="flow-step"><b>4. Idea Submission:</b> Submit ideas based on research insights. Good ideas get promoted to features.</div>
+<div class="flow-arrow">&#8595;</div>
+<div class="flow-step"><b>5. Daily Routine:</b> Log Work Logs, Activity Logs, and Journal entries daily.</div>
+
+<!-- ── SIDEBAR NAVIGATION GUIDE ── -->
+<h2>10i. Sidebar Navigation - What Each Role Sees</h2>
+<p>The sidebar is the main navigation of the application. Different roles see different menu items. Here is the exact sidebar for each role:</p>
+
+<h3>Sales Sidebar (Most Restricted - 3 items only)</h3>
+<table>
+    <tr><th>#</th><th>Menu Item</th><th>URL</th></tr>
+    <tr><td>1</td><td>Dashboard</td><td><code>/</code></td></tr>
+    <tr><td>2</td><td>Requests</td><td><code>/requests</code></td></tr>
+    <tr><td>3</td><td>Team</td><td><code>/team-members</code></td></tr>
+</table>
+
+<h3>MC Team Sidebar</h3>
+<table>
+    <tr><th>#</th><th>Menu Item</th><th>URL</th><th>Section</th></tr>
+    <tr><td>1</td><td>Dashboard</td><td><code>/</code></td><td>-</td></tr>
+    <tr><td>2</td><td>Projects</td><td><code>/projects</code></td><td>-</td></tr>
+    <tr><td>3</td><td>Requests</td><td><code>/requests</code></td><td>-</td></tr>
+    <tr><td>4</td><td>Features</td><td><code>/features</code></td><td>PRODUCT</td></tr>
+    <tr><td>5</td><td>Board (Kanban)</td><td><code>/features/kanban</code></td><td>PRODUCT</td></tr>
+    <tr><td>6</td><td>Initiatives</td><td><code>/initiatives</code></td><td>PRODUCT</td></tr>
+    <tr><td>7</td><td>Ideas</td><td><code>/ideas</code></td><td>PRODUCT</td></tr>
+    <tr><td>8</td><td>Decisions</td><td><code>/decisions</code></td><td>PRODUCT</td></tr>
+    <tr><td>9</td><td>Releases</td><td><code>/releases</code></td><td>PRODUCT</td></tr>
+    <tr><td>10</td><td>Changelogs</td><td><code>/changelogs</code></td><td>PRODUCT</td></tr>
+    <tr><td>11</td><td>Deadlines</td><td><code>/deadlines</code></td><td>PRODUCT</td></tr>
+    <tr><td>12</td><td>Merchant Comms</td><td><code>/merchant-communications</code></td><td>PRODUCT</td></tr>
+    <tr><td>13</td><td>My Dashboard</td><td><code>/personal/history</code></td><td>PERSONAL</td></tr>
+    <tr><td>14</td><td>Team</td><td><code>/team-members</code></td><td>-</td></tr>
+</table>
+
+<h3>Developer / Tester / Analyst Sidebar</h3>
+<table>
+    <tr><th>#</th><th>Menu Item</th><th>URL</th><th>Section</th></tr>
+    <tr><td>1</td><td>Dashboard</td><td><code>/</code></td><td>-</td></tr>
+    <tr><td>2</td><td>Work Logs</td><td><code>/work-logs</code></td><td>-</td></tr>
+    <tr><td>3</td><td>Journal</td><td><code>/journal</code></td><td>-</td></tr>
+    <tr><td>4</td><td>Activity Logs</td><td><code>/activity-logs</code></td><td>-</td></tr>
+    <tr><td>5</td><td>Projects</td><td><code>/projects</code></td><td>-</td></tr>
+    <tr><td>6</td><td>Tasks</td><td><code>/tasks</code></td><td>-</td></tr>
+    <tr><td>7</td><td>Sprints</td><td><code>/sprints</code></td><td>- (Dev/Test only)</td></tr>
+    <tr><td>8</td><td>Features</td><td><code>/features</code></td><td>PRODUCT (view only)</td></tr>
+    <tr><td>9</td><td>Board (Kanban)</td><td><code>/features/kanban</code></td><td>PRODUCT (view only)</td></tr>
+    <tr><td>10</td><td>Ideas</td><td><code>/ideas</code></td><td>PRODUCT</td></tr>
+    <tr><td>11</td><td>Releases</td><td><code>/releases</code></td><td>PRODUCT (view)</td></tr>
+    <tr><td>12</td><td>Changelogs</td><td><code>/changelogs</code></td><td>PRODUCT (view)</td></tr>
+    <tr><td>13</td><td>Deadlines</td><td><code>/deadlines</code></td><td>PRODUCT (view)</td></tr>
+    <tr><td>14</td><td>Bug SLA</td><td><code>/bug-sla</code></td><td>PRODUCT (Dev/Test only)</td></tr>
+    <tr><td>15</td><td>My Dashboard</td><td><code>/personal/history</code></td><td>PERSONAL</td></tr>
+    <tr><td>16</td><td>Review Prep</td><td><code>/personal/review-prep</code></td><td>PERSONAL</td></tr>
+    <tr><td>17</td><td>Team</td><td><code>/team-members</code></td><td>-</td></tr>
+</table>
+
+<h3>Manager / CEO Sidebar (includes MANAGEMENT section)</h3>
+<table>
+    <tr><th>#</th><th>Menu Item</th><th>URL</th><th>Section</th></tr>
+    <tr><td>1</td><td>Dashboard</td><td><code>/</code></td><td>-</td></tr>
+    <tr><td>2</td><td>Work Logs</td><td><code>/work-logs</code></td><td>-</td></tr>
+    <tr><td>3</td><td>Journal</td><td><code>/journal</code></td><td>-</td></tr>
+    <tr><td>4</td><td>Activity Logs</td><td><code>/activity-logs</code></td><td>-</td></tr>
+    <tr><td>5</td><td>Projects</td><td><code>/projects</code></td><td>-</td></tr>
+    <tr><td>6</td><td>Tasks</td><td><code>/tasks</code></td><td>-</td></tr>
+    <tr><td>7</td><td>Requests</td><td><code>/requests</code></td><td>-</td></tr>
+    <tr><td>8</td><td>Sprints</td><td><code>/sprints</code></td><td>-</td></tr>
+    <tr><td>9-18</td><td>Features, Board, Initiatives, Ideas, Decisions, Releases, Changelogs, Deadlines, Bug SLA, Merchant Comms</td><td>All PRODUCT section items</td><td>PRODUCT</td></tr>
+    <tr><td>19</td><td>My Dashboard</td><td><code>/personal/history</code></td><td>PERSONAL</td></tr>
+    <tr><td>20</td><td>Review Prep</td><td><code>/personal/review-prep</code></td><td>PERSONAL</td></tr>
+    <tr><td>21</td><td>Team</td><td><code>/team-members</code></td><td>-</td></tr>
+    <tr><td>22</td><td>Team Journal</td><td><code>/journal/team</code></td><td>MANAGEMENT</td></tr>
+    <tr><td>23</td><td>Onboarding</td><td><code>/onboarding</code></td><td>MANAGEMENT</td></tr>
+    <tr><td>24</td><td>Offboarding</td><td><code>/offboarding</code></td><td>MANAGEMENT</td></tr>
+    <tr><td>25</td><td>Bus Factor</td><td><code>/bus-factor</code></td><td>MANAGEMENT</td></tr>
+    <tr><td>26</td><td>Capacity</td><td><code>/capacity</code></td><td>MANAGEMENT</td></tr>
+    <tr><td>27</td><td>Leave Entries</td><td><code>/leave-entries</code></td><td>MANAGEMENT</td></tr>
+    <tr><td>28</td><td>CEO Dashboard</td><td><code>/dashboard/ceo</code></td><td>BUSINESS (CEO/CTO only)</td></tr>
+    <tr><td>29</td><td>Git Providers</td><td><code>/git-providers</code></td><td>GIT</td></tr>
+    <tr><td>30</td><td>Repositories</td><td><code>/git-repositories</code></td><td>GIT</td></tr>
+    <tr><td>31-33</td><td>Work Log Report, Project Report, Individual Report</td><td><code>/reports/*</code></td><td>REPORTS</td></tr>
+</table>
+
+<h3>CTO Sidebar (Manager + INTELLIGENCE section)</h3>
+<p>The CTO sees everything the Manager sees, plus these additional items in the <b>INTELLIGENCE</b> section:</p>
+<table>
+    <tr><th>#</th><th>Menu Item</th><th>URL</th></tr>
+    <tr><td>34</td><td>Cost Dashboard</td><td><code>/dashboard/cost</code></td></tr>
+    <tr><td>35</td><td>Cost vs Impact</td><td><code>/cost-vs-impact</code></td></tr>
+    <tr><td>36</td><td>Cost Rates</td><td><code>/cost-rates</code></td></tr>
+    <tr><td>37</td><td>AI Dashboard</td><td><code>/dashboard/ai</code></td></tr>
+    <tr><td>38</td><td>AI Tools</td><td><code>/ai-tools</code></td></tr>
+    <tr><td>39</td><td>AI Templates</td><td><code>/prompt-templates</code></td></tr>
+    <tr><td>40</td><td>AI Knowledge Base</td><td><code>/ai-knowledge-base</code></td></tr>
+</table>
+
+<!-- ── COMPLETE REQUEST LIFECYCLE ── -->
+<h2>10j. Complete Request Lifecycle (End-to-End with All Stages)</h2>
+<p>This is the most detailed view of how a merchant request flows through the entire system, from initial contact to delivery:</p>
+
+<div class="flow-step"><b>Stage 1: RECEIVED</b><br>
+<i>Who:</i> MC Team or Sales submits the request<br>
+<i>What happens:</i> Request is created in the system. Status = "Received". It appears as "Untriaged" on the Manager Dashboard.<br>
+<i>Email:</i> None at this stage
+</div>
+<div class="flow-arrow">&#8595;</div>
+
+<div class="flow-step"><b>Stage 2: UNDER REVIEW</b><br>
+<i>Who:</i> CTO, CEO, or Manager opens the request<br>
+<i>What happens:</i> The triage process begins. Manager checks for duplicates, evaluates urgency and revenue impact.
+</div>
+<div class="flow-arrow">&#8595;</div>
+
+<div class="flow-step" style="border-color: #2563eb;"><b>Stage 2a: CLARIFICATION NEEDED (optional)</b><br>
+<i>Who:</i> Manager needs more information<br>
+<i>What happens:</i> Manager clicks "Ask Clarification" and types a question. Status changes to "Clarification Needed".<br>
+<i>Email:</i> Sent to the original requester (MC Team/Sales member) with the question.<br>
+<i>Response:</i> Requester logs in, reads the question in comments, types a reply. Flow returns to Stage 2.
+</div>
+<div class="flow-arrow">&#8595;</div>
+
+<div class="flow-step" style="border-color: #059669;"><b>Stage 3a: LINKED (Accepted)</b><br>
+<i>Who:</i> Manager accepts the request<br>
+<i>What happens:</i> A new Feature is created (or request is linked to an existing feature). Request status = "Linked". Feature status starts at "Backlog".<br>
+<i>Email:</i> Sent to requester: "Your request has been accepted and linked to feature [name]"
+</div>
+<div class="flow-arrow">&#8595;</div>
+
+<div class="flow-step"><b>Stage 4: FEATURE IN DEVELOPMENT</b><br>
+<i>Who:</i> Development team<br>
+<i>What happens:</i> Feature moves through pipeline: Backlog &rarr; In Progress &rarr; In Review &rarr; Ready for QA &rarr; In QA &rarr; Ready for Release
+</div>
+<div class="flow-arrow">&#8595;</div>
+
+<div class="flow-step"><b>Stage 5: RELEASED</b><br>
+<i>Who:</i> Manager creates a Release<br>
+<i>What happens:</i> Feature is included in a Release. Deployed to production. Feature status = "Released".<br>
+<i>Changelog:</i> Written, approved by manager, published.
+</div>
+<div class="flow-arrow">&#8595;</div>
+
+<div class="flow-step" style="border-color: #059669;"><b>Stage 6: FULFILLED</b><br>
+<i>Who:</i> Automatic<br>
+<i>What happens:</i> When the linked feature is released, the request status automatically changes to "Fulfilled". The merchant's need has been delivered.
+</div>
+
+<p><b>Alternative Outcomes (instead of Stage 3a):</b></p>
+<div class="flow-step" style="border-color: #f59e0b;"><b>DEFERRED:</b> Manager decides to postpone. Request can be re-evaluated later. Email sent to requester.</div>
+<div class="flow-step" style="border-color: #dc2626;"><b>REJECTED:</b> Manager decides not to implement. Reason is recorded. Email sent to requester with rejection reason.</div>
+
+<!-- ── FEATURE LIFECYCLE DETAILED ── -->
+<h2>10k. Complete Feature Lifecycle (All 9 Stages)</h2>
+
+<table>
+    <tr><th>Stage</th><th>Status</th><th>Who Acts</th><th>What Happens</th><th>Next Stage</th></tr>
+    <tr><td>1</td><td><span class="badge badge-gray">Backlog</span></td><td>Manager</td><td>Feature is defined. Waiting to be picked up for a sprint.</td><td>In Progress</td></tr>
+    <tr><td>2</td><td><span class="badge badge-purple">In Progress</span></td><td>Developer</td><td>Coding has started. Developer logs work hours and activity.</td><td>In Review</td></tr>
+    <tr><td>3</td><td><span class="badge badge-blue">In Review</span></td><td>Developer / Peer</td><td>Code is written. Peer code review in progress.</td><td>Ready for QA</td></tr>
+    <tr><td>4</td><td><span class="badge badge-yellow">Ready for QA</span></td><td>Manager</td><td>Code review passed. Assigned to tester.</td><td>In QA</td></tr>
+    <tr><td>5</td><td><span class="badge badge-yellow">In QA</span></td><td>Tester</td><td>Testing in progress. Bugs found are logged as Bug SLA records.</td><td>Ready for Release (if passes) or back to In Progress (if bugs found)</td></tr>
+    <tr><td>6</td><td><span class="badge badge-green">Ready for Release</span></td><td>Manager</td><td>All tests passed. Ready to deploy to production.</td><td>Released</td></tr>
+    <tr><td>7</td><td><span class="badge badge-green">Released</span></td><td>Manager</td><td>Deployed to production. Included in a Release record. Changelog published.</td><td>End (or Sunset later)</td></tr>
+    <tr><td>Alt</td><td><span class="badge badge-gray">Deferred</span></td><td>Manager</td><td>Postponed to a later sprint or quarter.</td><td>Back to Backlog when ready</td></tr>
+    <tr><td>Alt</td><td><span class="badge badge-red">Rejected</span></td><td>Manager</td><td>Feature will not be built. Reason documented.</td><td>End</td></tr>
+</table>
+
+<h3>Feature Rollout States (After Release)</h3>
+<p>After a feature is released, it can go through rollout stages:</p>
+<table>
+    <tr><th>Rollout State</th><th>Description</th></tr>
+    <tr><td><b>Internal</b></td><td>Only available internally for testing</td></tr>
+    <tr><td><b>Beta Pilot</b></td><td>Available to a few selected merchants for testing</td></tr>
+    <tr><td><b>Gradual GA</b></td><td>Gradually rolling out to more merchants</td></tr>
+    <tr><td><b>Full GA</b></td><td>Available to all merchants (General Availability)</td></tr>
+    <tr><td><b>Sunset</b></td><td>Being phased out and will be removed</td></tr>
+</table>
+
+
+<!-- ======================= 11. ARCHITECTURE ======================= -->
+<h1 id="architecture">11. Architecture & Implementation Guide</h1>
 
 <h2>Deployment Architecture</h2>
 <table>
@@ -1564,16 +2048,20 @@
     <tr><td>Total HTTP Routes</td><td>288 (182 web + 106 API)</td></tr>
     <tr><td>Vue Page Components</td><td>81</td></tr>
     <tr><td>Database Tables</td><td>44 (38 application + 6 system)</td></tr>
+    <tr><td>Database Migrations</td><td>62+</td></tr>
     <tr><td>Enum Definitions</td><td>50</td></tr>
     <tr><td>User Roles</td><td>8</td></tr>
-    <tr><td>Controllers</td><td>30+</td></tr>
+    <tr><td>Controllers</td><td>42</td></tr>
+    <tr><td>Services</td><td>31</td></tr>
+    <tr><td>Repositories</td><td>34</td></tr>
+    <tr><td>Models</td><td>44</td></tr>
     <tr><td>Total Modules</td><td>38</td></tr>
 </table>
 
 <br><br>
 <hr>
 <p style="text-align:center; color:#999; font-size:10pt;">
-    eWards PMS Documentation v1.0 | Generated April 2026 | Confidential
+    eWards PMS Documentation v2.0 | Updated April 2026 | Confidential
 </p>
 
 </body>

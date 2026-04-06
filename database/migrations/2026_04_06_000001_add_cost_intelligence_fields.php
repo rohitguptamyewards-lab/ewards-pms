@@ -14,31 +14,44 @@ return new class extends Migration
     {
         // Item 25 — One-time vs recurring cost flag on features
         Schema::table('features', function (Blueprint $table) {
-            $table->boolean('is_one_time_cost')->default(false)->after('cost_type')
-                ->comment('true = one-time build cost; false = recurring operational cost');
-            $table->decimal('overhead_multiplier', 5, 2)->default(1.0)->after('is_one_time_cost')
-                ->comment('Per-feature overhead multiplier applied on top of raw dev cost');
+            if (!Schema::hasColumn('features', 'is_one_time_cost')) {
+                $table->boolean('is_one_time_cost')->default(false)->after('cost_type')
+                    ->comment('true = one-time build cost; false = recurring operational cost');
+            }
+            if (!Schema::hasColumn('features', 'overhead_multiplier')) {
+                $table->decimal('overhead_multiplier', 5, 2)->default(1.0)->after('is_one_time_cost')
+                    ->comment('Per-feature overhead multiplier applied on top of raw dev cost');
+            }
         });
 
         // Item 22 — Bug cost attribution back to originating feature
         Schema::table('bug_sla_records', function (Blueprint $table) {
-            $table->decimal('attributed_dev_cost', 12, 2)->nullable()->after('reopen_count')
-                ->comment('Estimated dev cost attributed to fixing this bug');
-            $table->unsignedBigInteger('origin_feature_id')->nullable()->after('attributed_dev_cost')
-                ->comment('Feature that introduced this bug (for cost attribution)');
-            $table->foreign('origin_feature_id')->references('id')->on('features')->nullOnDelete();
+            if (!Schema::hasColumn('bug_sla_records', 'attributed_dev_cost')) {
+                $table->decimal('attributed_dev_cost', 12, 2)->nullable()->after('reopen_count')
+                    ->comment('Estimated dev cost attributed to fixing this bug');
+            }
+            if (!Schema::hasColumn('bug_sla_records', 'origin_feature_id')) {
+                $table->unsignedBigInteger('origin_feature_id')->nullable()->after('attributed_dev_cost')
+                    ->comment('Feature that introduced this bug (for cost attribution)');
+                $table->foreign('origin_feature_id')->references('id')->on('features')->nullOnDelete();
+            }
         });
     }
 
     public function down(): void
     {
         Schema::table('bug_sla_records', function (Blueprint $table) {
-            $table->dropForeign(['origin_feature_id']);
-            $table->dropColumn(['attributed_dev_cost', 'origin_feature_id']);
+            if (Schema::hasColumn('bug_sla_records', 'origin_feature_id')) {
+                $table->dropForeign(['origin_feature_id']);
+                $table->dropColumn(['attributed_dev_cost', 'origin_feature_id']);
+            }
         });
 
         Schema::table('features', function (Blueprint $table) {
-            $table->dropColumn(['is_one_time_cost', 'overhead_multiplier']);
+            $cols = [];
+            if (Schema::hasColumn('features', 'is_one_time_cost')) $cols[] = 'is_one_time_cost';
+            if (Schema::hasColumn('features', 'overhead_multiplier')) $cols[] = 'overhead_multiplier';
+            if ($cols) $table->dropColumn($cols);
         });
     }
 };

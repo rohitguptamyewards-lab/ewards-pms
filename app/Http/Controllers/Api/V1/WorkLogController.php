@@ -87,12 +87,54 @@ class WorkLogController extends Controller
             ? DB::table('team_members')->where('is_active', true)->orderBy('name')->select('id', 'name')->get()
             : collect();
 
+        // --- Data for the inline "Add Entry" bar (Clockify-style) ---
+        $user = auth()->user();
+        $isManager = in_array($userRole, $managerRoles);
+
+        if ($isManager) {
+            $projectsWithTasks = DB::table('projects')
+                ->where('status', 'active')
+                ->whereNull('deleted_at')
+                ->select('id', 'name')
+                ->orderBy('name')
+                ->get();
+        } else {
+            $projectsWithTasks = DB::table('projects')
+                ->join('project_members', 'projects.id', '=', 'project_members.project_id')
+                ->where('project_members.user_id', $user->id)
+                ->where('projects.status', 'active')
+                ->whereNull('projects.deleted_at')
+                ->select('projects.id', 'projects.name')
+                ->orderBy('projects.name')
+                ->get();
+        }
+
+        foreach ($projectsWithTasks as $project) {
+            $project->tasks = DB::table('tasks')
+                ->select('id', 'project_id', 'title')
+                ->where('project_id', $project->id)
+                ->whereNull('deleted_at')
+                ->get()
+                ->toArray();
+        }
+
+        $today = now()->toDateString();
+        $lastEndTime = $this->workLogService->getLastEndTime($user->id, $today);
+
+        // Week total (Mon-Sun of current week)
+        $weekStart = now()->startOfWeek()->toDateString();
+        $weekEnd   = now()->endOfWeek()->toDateString();
+        $weekTotal = $this->workLogRepository->sumHoursForUser($user->id, $weekStart, $weekEnd);
+
         return Inertia::render('WorkLogs/Index', [
-            'workLogs'    => $workLogs,
-            'filters'     => $filters,
-            'projects'    => $projectsForFilter,
-            'teamMembers' => $membersForFilter,
-            'isManager'   => in_array($userRole, $managerRoles),
+            'workLogs'          => $workLogs,
+            'filters'           => $filters,
+            'projects'          => $projectsForFilter,
+            'projectsWithTasks' => $projectsWithTasks,
+            'teamMembers'       => $membersForFilter,
+            'isManager'         => $isManager,
+            'lastEndTime'       => $lastEndTime,
+            'weekTotal'         => $weekTotal,
         ]);
     }
 
