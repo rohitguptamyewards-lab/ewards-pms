@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    public $withinTransaction = false;
+
     public function up(): void
     {
         DB::statement("ALTER TABLE merchants ADD COLUMN IF NOT EXISTS tier VARCHAR(255) NOT NULL DEFAULT 'smb'");

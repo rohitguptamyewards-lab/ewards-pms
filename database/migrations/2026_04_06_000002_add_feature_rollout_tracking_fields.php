@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    public $withinTransaction = false;
+
     public function up(): void
     {
         DB::statement("ALTER TABLE features ADD COLUMN IF NOT EXISTS rollout_percentage SMALLINT NOT NULL DEFAULT 0");
