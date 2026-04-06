@@ -665,19 +665,30 @@ class DashboardRepository
             $stats[$row->status] = (int) $row->count;
         }
 
-        // Item 50 — ETA on requests from sprint planning
-        $myRequests = array_map(function ($req) {
+        // Item 50 — ETA on requests from sprint planning + Item 53 — status labels
+        // Batch-fetch sprint_eta if column exists (added by migration 000003)
+        $sprintEtaMap = [];
+        try {
+            $ids = array_column($myRequests, 'id');
+            if ($ids) {
+                $etaRows = DB::table('requests')
+                    ->whereIn('id', $ids)
+                    ->select('id', 'sprint_eta', 'linked_sprint_id')
+                    ->get();
+                foreach ($etaRows as $row) {
+                    $sprintEtaMap[$row->id] = $row;
+                }
+            }
+        } catch (\Throwable $e) {
+            // sprint_eta / linked_sprint_id columns may not exist yet
+        }
+
+        $myRequests = array_map(function ($req) use ($sprintEtaMap) {
             $req = (array) $req;
-            // Look up sprint ETA from requests table
-            $etaRow = DB::table('requests')
-                ->where('id', $req['id'])
-                ->select('sprint_eta', 'linked_sprint_id')
-                ->first();
+            $eta = $sprintEtaMap[$req['id']] ?? null;
+            $req['sprint_eta']       = $eta?->sprint_eta;
+            $req['linked_sprint_id'] = $eta?->linked_sprint_id;
 
-            $req['sprint_eta']      = $etaRow?->sprint_eta;
-            $req['linked_sprint_id'] = $etaRow?->linked_sprint_id;
-
-            // Item 53 — Translated status labels (human-readable)
             $req['status_label'] = match ($req['status']) {
                 'received'              => 'Received — awaiting review',
                 'under_review'          => 'Under Review',
